@@ -1,0 +1,39 @@
+.user-profile-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  grid-column: 1;
+  grid-row: 1;
+  max-width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.user-info {
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.user-info strong {
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.set-details-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 14px;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+}
+
+.set-details-btn:hover {
+  background-color: #0056b3;
+}

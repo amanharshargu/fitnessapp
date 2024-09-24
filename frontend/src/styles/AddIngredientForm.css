@@ -1,0 +1,8 @@
+.add-ingredient-form {
+	padding-bottom: 20px;
+}
+
+.add-ingredient-form .form-control:focus {
+	color: #000000;
+	border-color: #000000;
+}

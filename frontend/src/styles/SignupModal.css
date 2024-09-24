@@ -1,0 +1,120 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.form-outline {
+  position: relative;
+  margin-bottom: 3rem !important; /* Increase space between input fields and use !important */
+}
+
+.signup-modal .form-control {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid white;
+  border-radius: 0;
+  color: white;
+  padding: 0.5rem 0;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  width: 100%;
+  padding-right: 30px; /* Add space for error icon */
+  padding-top: 0.25rem; /* Add a small top padding to the input */
+  padding-bottom: 0.25rem; /* Add a small bottom padding to the input */
+  font-size: 0.9rem; /* Reduce font size */
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: white;
+  background-color: transparent;
+  color: white;
+}
+
+.form-label {
+  position: absolute;
+  top: 0.25rem;
+  left: 0;
+  transition: all 0.2s ease-out;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  font-size: 1rem; /* Increase font size */
+}
+
+.form-outline.focused .form-label,
+.form-control:not(:placeholder-shown) + .form-label {
+  top: -1.2rem; /* Adjust top position to accommodate larger font */
+  font-size: 0.85rem; /* Increase font size when label is above input */
+  color: white;
+}
+
+.btn-outline-light {
+  border-color: white;
+}
+
+.btn-outline-light:hover {
+  background-color: white;
+  color: #6a11cb;
+}
+
+.form-control:-webkit-autofill,
+.form-control:-webkit-autofill:hover,
+.form-control:-webkit-autofill:focus,
+.form-control:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #212529 inset !important;
+  -webkit-text-fill-color: white !important;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+  border-width: 2px;
+}
+
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
+.invalid-feedback {
+  position: absolute;
+  top: calc(100% + 0.25rem); /* Position below the input */
+  left: 0;
+  font-size: 0.75rem;
+  color: #dc3545;
+}
+
+/* Remove or comment out this rule if it exists */
+/* form > div:last-of-type {
+  margin-bottom: 1rem;
+} */
+
+/* Add this new rule to ensure consistent spacing */
+.form-outline:not(:last-child) {
+  margin-bottom: 3rem !important;
+}
+
+.error-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #dc3545;
+  font-size: 1.2rem;
+}

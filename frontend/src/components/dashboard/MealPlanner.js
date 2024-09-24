@@ -1,0 +1,409 @@
+import React, { useState } from "react";
+import axios from "axios";
+import RecipeCard from "../recipes/RecipeCard";
+import "../../styles/MealPlanner.css";
+
+const MEALPLAN_APP_ID = process.env.REACT_APP_MEALPLAN_APP_ID;
+const MEALPLAN_APP_KEY = process.env.REACT_APP_MEALPLAN_APP_KEY;
+const EDAMAM_APP_ID = process.env.REACT_APP_EDAMAM_APP_ID;
+const EDAMAM_APP_KEY = process.env.REACT_APP_EDAMAM_APP_KEY;
+const EDAMAM_USER_ID = process.env.REACT_APP_EDAMAM_USER_ID;
+console.log(`User ID: ${EDAMAM_USER_ID}`);
+
+
+const initialFilters = {
+  health: [],
+  diet: [],
+  calories: { min: 1000, max: 2000 },
+  breakfastCalories: { min: 100, max: 600 },
+  lunchCalories: { min: 300, max: 900 },
+  dinnerCalories: { min: 200, max: 900 },
+};
+
+function MealPlanner() {
+  const [mealPlan, setMealPlan] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [filters, setFilters] = useState(initialFilters);
+
+  const fetchMealPlan = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.post(
+        `https://api.edamam.com/api/meal-planner/v1/${MEALPLAN_APP_ID}/select?app_id=${MEALPLAN_APP_ID}&app_key=${MEALPLAN_APP_KEY}`,
+        {
+          plan: {
+            accept: {
+              all: [
+                { health: filters.health },
+                { diet: filters.diet },
+              ],
+            },
+            fit: {
+              ENERC_KCAL: filters.calories,
+            },
+            sections: {
+              Breakfast: {
+                accept: {
+                  all: [{ meal: ["breakfast"] }],
+                },
+                fit: {
+                  ENERC_KCAL: filters.breakfastCalories,
+                },
+              },
+              Lunch: {
+                accept: {
+                  all: [{ meal: ["lunch/dinner"] }],
+                },
+                fit: {
+                  ENERC_KCAL: filters.lunchCalories,
+                },
+              },
+              Dinner: {
+                accept: {
+                  all: [{ meal: ["lunch/dinner"] }],
+                },
+                fit: {
+                  ENERC_KCAL: filters.dinnerCalories,
+                },
+              },
+            },
+          },
+          size: 7,
+        },
+        {
+          headers: {
+            "Edamam-Account-User": EDAMAM_USER_ID,
+          },
+        }
+      );
+      console.log("API Response:", response.data);
+      await fetchRecipeDetails(response.data);
+    } catch (err) {
+      setError("Failed to fetch meal plan. Please try again later.");
+      console.error("Error fetching meal plan:", err);
+      setLoading(false);
+    }
+  };
+
+  const fetchRecipeDetails = async (mealPlanData) => {
+    try {
+      const recipePromises = mealPlanData.selection.flatMap((day) =>
+        Object.values(day.sections).map((meal) =>
+          axios.get(`https://api.edamam.com/api/recipes/v2/by-uri`, {
+            params: {
+              type: "public",
+              app_id: EDAMAM_APP_ID,
+              app_key: EDAMAM_APP_KEY,
+              uri: meal.assigned,
+            },
+          })
+        )
+      );
+      const recipeResponses = await Promise.all(recipePromises);
+      const updatedMealPlan = mealPlanData.selection.map((day, dayIndex) => ({
+        ...day,
+        sections: Object.fromEntries(
+          Object.entries(day.sections).map(([mealType, meal], mealIndex) => {
+            const response = recipeResponses[dayIndex * 3 + mealIndex];
+            let recipeDetails = null;
+            if (
+              response &&
+              response.data &&
+              response.data.hits &&
+              response.data.hits.length > 0
+            ) {
+              recipeDetails = response.data.hits[0].recipe;
+            } else {
+              console.warn(
+                `No recipe details found for ${mealType} on day ${dayIndex + 1}`
+              );
+            }
+            return [
+              mealType,
+              {
+                ...meal,
+                recipeDetails,
+              },
+            ];
+          })
+        ),
+      }));
+      setMealPlan({ ...mealPlanData, selection: updatedMealPlan });
+    } catch (err) {
+      setError("Failed to fetch recipe details. Please try again later.");
+      console.error("Error fetching recipe details:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFilterChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        [name]: checked
+          ? [...prevFilters[name], value]
+          : prevFilters[name].filter((item) => item !== value),
+      }));
+    } else {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleClearFilters = () => {
+    setFilters(initialFilters);
+  };
+
+  const renderMealPlan = () => {
+    if (!mealPlan) return null;
+    console.log("Meal Plan Data:", mealPlan);
+
+    const daysOfWeek = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+
+    return (
+      <>
+        {mealPlan.status === "INCOMPLETE" && (
+          <p className="warning">
+            Note: The meal plan is incomplete. Some days may not have assigned
+            meals. Consider adjusting your dietary preferences or regenerating
+            the plan.
+          </p>
+        )}
+        <div className="meal-plan">
+          {daysOfWeek.map((day, index) => (
+            <div key={index} className="meal-day">
+              <h4>{day}</h4>
+              <div className="meal-list">
+                {["Breakfast", "Lunch", "Dinner"].map((mealType) => (
+                  <div key={mealType} className="meal">
+                    <h5>{mealType}</h5>
+                    {mealPlan.selection[index] &&
+                    mealPlan.selection[index].sections[mealType] &&
+                    mealPlan.selection[index].sections[mealType]
+                      .recipeDetails ? (
+                      <RecipeCard
+                        recipe={
+                          mealPlan.selection[index].sections[mealType]
+                            .recipeDetails
+                        }
+                        isLiked={false}
+                        onLikeToggle={() => {}}
+                      />
+                    ) : (
+                      <p>
+                        No meal assigned or recipe details not available.
+                        Consider planning manually.
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  };
+
+  return (
+    <div className="meal-planner">
+      <h3>Weekly Meal Plan</h3>
+      <form className="filters-form">
+        <h4>Customize Your Meal Plan</h4>
+        <div className="filter-group">
+          <h5>Health Labels</h5>
+          <div className="filter-options">
+            {[
+              "CELERY_FREE",
+              "CRUSTACEAN_FREE",
+              "DAIRY_FREE",
+              "EGG_FREE",
+              "FISH_FREE",
+              "GLUTEN_FREE",
+              "PEANUT_FREE",
+              "MUSTARD_FREE",
+              "SESAME_FREE",
+              "LUPINE_FREE",
+              "SHELLFISH_FREE",
+              "SOY_FREE",
+              "FODMAP_FREE",
+              "WHEAT_FREE",
+              "TREE_NUT_FREE",
+              "IMMUNO_SUPPORTIVE",
+              "ALCOHOL_FREE",
+              "KIDNEY_FRIENDLY",
+              "MEDITERRANEAN",
+              "PALEO",
+              "RED_MEAT_FREE",
+              "KOSHER",
+              "LOW_POTASSIUM",
+              "NO_OIL_ADDED",
+              "PESCATARIAN",
+              "SUGAR_CONSCIOUS",
+              "MOLLUSK_FREE",
+              "VEGETARIAN",
+              "SULFITE_FREE",
+              "VEGAN",
+              "PORK_FREE",
+              "LOW_SUGAR",
+              "KETO_FRIENDLY",
+              "DASH",
+            ].map((label) => (
+              <label key={label}>
+                <input
+                  type="checkbox"
+                  name="health"
+                  value={label}
+                  checked={filters.health.includes(label)}
+                  onChange={handleFilterChange}
+                />
+                {label}
+              </label>
+            ))}
+          </div>
+        </div>
+        <div className="filter-group">
+          <h5>Diet Labels</h5>
+          <div className="filter-options">
+            {[
+              "HIGH_FIBER",
+              "LOW_FAT",
+              "BALANCED",
+              "HIGH_PROTEIN",
+              "LOW_SODIUM",
+              "LOW_CARB",
+            ].map((label) => (
+              <label key={label}>
+                <input
+                  type="checkbox"
+                  name="diet"
+                  value={label}
+                  checked={filters.diet.includes(label)}
+                  onChange={handleFilterChange}
+                />
+                {label}
+              </label>
+            ))}
+          </div>
+        </div>
+        <div className="filter-group">
+          <h5>Calories</h5>
+          <div className="filter-options">
+            <label>
+              Min:
+              <input
+                type="number"
+                name="calories.min"
+                value={filters.calories.min}
+                onChange={handleFilterChange}
+              />
+            </label>
+            <label>
+              Max:
+              <input
+                type="number"
+                name="calories.max"
+                value={filters.calories.max}
+                onChange={handleFilterChange}
+              />
+            </label>
+          </div>
+        </div>
+        <div className="filter-group">
+          <h5>Breakfast Calories</h5>
+          <div className="filter-options">
+            <label>
+              Min:
+              <input
+                type="number"
+                name="breakfastCalories.min"
+                value={filters.breakfastCalories.min}
+                onChange={handleFilterChange}
+              />
+            </label>
+            <label>
+              Max:
+              <input
+                type="number"
+                name="breakfastCalories.max"
+                value={filters.breakfastCalories.max}
+                onChange={handleFilterChange}
+              />
+            </label>
+          </div>
+        </div>
+        <div className="filter-group">
+          <h5>Lunch Calories</h5>
+          <div className="filter-options">
+            <label>
+              Min:
+              <input
+                type="number"
+                name="lunchCalories.min"
+                value={filters.lunchCalories.min}
+                onChange={handleFilterChange}
+              />
+            </label>
+            <label>
+              Max:
+              <input
+                type="number"
+                name="lunchCalories.max"
+                value={filters.lunchCalories.max}
+                onChange={handleFilterChange}
+              />
+            </label>
+          </div>
+        </div>
+        <div className="filter-group">
+          <h5>Dinner Calories</h5>
+          <div className="filter-options">
+            <label>
+              Min:
+              <input
+                type="number"
+                name="dinnerCalories.min"
+                value={filters.dinnerCalories.min}
+                onChange={handleFilterChange}
+              />
+            </label>
+            <label>
+              Max:
+              <input
+                type="number"
+                name="dinnerCalories.max"
+                value={filters.dinnerCalories.max}
+                onChange={handleFilterChange}
+              />
+            </label>
+          </div>
+        </div>
+        <button type="button" onClick={fetchMealPlan}>
+          Customize Meal Plan
+        </button>
+        <button type="button" onClick={handleClearFilters}>
+          Clear Filters
+        </button>
+      </form>
+      {loading && <p>Loading meal plan...</p>}
+      {error && <p className="error">{error}</p>}
+      {!loading && !error && renderMealPlan()}
+    </div>
+  );
+}
+
+export default MealPlanner;

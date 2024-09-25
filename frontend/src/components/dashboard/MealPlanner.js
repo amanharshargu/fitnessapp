@@ -8,7 +8,6 @@ const MEALPLAN_APP_KEY = process.env.REACT_APP_MEALPLAN_APP_KEY;
 const EDAMAM_APP_ID = process.env.REACT_APP_EDAMAM_APP_ID;
 const EDAMAM_APP_KEY = process.env.REACT_APP_EDAMAM_APP_KEY;
 const EDAMAM_USER_ID = process.env.REACT_APP_EDAMAM_USER_ID;
-console.log(`User ID: ${EDAMAM_USER_ID}`);
 
 
 const initialFilters = {

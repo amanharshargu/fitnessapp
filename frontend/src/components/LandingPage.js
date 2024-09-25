@@ -10,27 +10,20 @@ function LandingPage() {
   const [randomRecipes, setRandomRecipes] = useState([]);
   const [fetchError, setFetchError] = useState(null);
 
+  const fetchRandomRecipes = async () => {
+    try {
+      const recipes = await getRandomRecipes(3);
+      setRandomRecipes(recipes);
+      setFetchError(null);
+    } catch (error) {
+      console.error("Error fetching random recipes:", error);
+      setFetchError("Failed to load recipes. Please try again later.");
+    }
+  };
+
   useEffect(() => {
-    let isMounted = true;
-    const fetchRandomRecipes = async () => {
-      try {
-        const recipes = await getRandomRecipes(3);
-        if (isMounted) {
-          setRandomRecipes(recipes);
-          setFetchError(null);
-        }
-      } catch (error) {
-        if (isMounted) {
-          console.error("Error fetching random recipes:", error);
-          setFetchError("Failed to load recipes. Please try again later.");
-        }
-      }
-    };
     fetchRandomRecipes();
-    return () => {
-      isMounted = false;
-    };
-  }, [getRandomRecipes]);
+  }, []);
 
   const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine);
@@ -133,7 +126,16 @@ function LandingPage() {
           </div>
         </div>
         <div className="row">
-          <h3 className="mb-4">Featured Recipes</h3>
+          <div className="d-flex align-items-center mb-4">
+            <h3 className="me-3 mb-0">Featured Recipes</h3>
+            <button 
+              className="btn btn-outline-light" 
+              onClick={fetchRandomRecipes}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Refreshing...' : 'Refresh Recipes'}
+            </button>
+          </div>
           {isLoading ? (
             <p>Loading recipes...</p>
           ) : fetchError ? (

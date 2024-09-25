@@ -18,9 +18,9 @@ const calculateTDEE = (bmr, activityLevel) => {
   return bmr * activityMultipliers[activityLevel];
 };
 
-exports.calculateDailyCalorieGoal = (weight, height, age, gender, goal) => {
+exports.calculateDailyCalorieGoal = (weight, height, age, gender, goal, activityLevel) => {
   const bmr = calculateBMR(weight, height, age, gender);
-  const tdee = calculateTDEE(bmr, 'moderatelyActive');
+  const tdee = calculateTDEE(bmr, activityLevel);
 
   console.log('BMR:', bmr);
   console.log('TDEE:', tdee);

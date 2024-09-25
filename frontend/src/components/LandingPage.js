@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import RecipeCard from "./recipes/RecipeCard";
+import RecipeCard from "./recipes/StyledRecipeCard";
 import { useRecipes } from "../contexts/RecipeContext";
 import "../styles/landingpage.css";
 import Particles from "react-particles";
@@ -113,7 +113,7 @@ function LandingPage() {
       <div className="container content-wrapper">
         <div className="row">
           <div className="col-12 d-flex justify-content-center">
-            <div className="card mb-5 bg-dark text-white" style={{ width: '70%' }}>
+            <div className="card my-4 bg-dark text-white" style={{ width: '70%' }}>
               <div className="card-body">
                 <h2 className="card-title">
                   Welcome to Health & Fitness Tracker
@@ -136,11 +136,11 @@ function LandingPage() {
           ) : fetchError ? (
             <p>{fetchError}</p>
           ) : (
-            randomRecipes.map((recipe) => (
-              <div key={recipe.uri} className="col-md-4 mb-4">
-                <RecipeCard recipe={recipe} />
-              </div>
-            ))
+            <div className="styled-recipe-card-container">
+              {randomRecipes.map((recipe) => (
+                <RecipeCard key={recipe.uri} recipe={recipe} />
+              ))}
+            </div>
           )}
         </div>
       </div>

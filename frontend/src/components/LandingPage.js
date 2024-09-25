@@ -133,7 +133,10 @@ function LandingPage() {
               onClick={fetchRandomRecipes}
               disabled={isLoading}
             >
-              {isLoading ? 'Refreshing...' : 'Refresh Recipes'}
+              {isLoading ? (
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              ) : null}
+              Refresh Recipes
             </button>
           </div>
           {isLoading ? (

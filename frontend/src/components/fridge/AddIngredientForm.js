@@ -1,11 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useIngredientForm } from "../../hooks/useIngredientForm";
 import "../../styles/AddIngredientForm.css";
-
 
 function AddIngredientForm({ editingIngredient, onCancel }) {
   const { ingredient, handleInputChange, handleSubmit } = useIngredientForm(editingIngredient);
   const [error, setError] = useState(null);
+  const dateInputRef = useRef(null);
+  const [minDate, setMinDate] = useState('');
+
+  const unitCategories = {
+    General: ["count", "pieces"],
+    Weight: ["grams", "kg", "ounces", "pounds"],
+    Liquid: ["ml", "liters", "cups", "tablespoons", "teaspoons"],
+  };
+
+  useEffect(() => {
+    const today = new Date();
+    setMinDate(today.toISOString().split('T')[0]);
+  }, []);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -16,6 +28,10 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
     } else {
       setError("Failed to add ingredient. Please try again.");
     }
+  };
+
+  const handleDateClick = () => {
+    dateInputRef.current.showPicker();
   };
 
   return (
@@ -44,31 +60,37 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
         />
       </div>
       <div className="mb-3">
-        <input
-          type="text"
+        <select
           className="form-control"
-          placeholder="Unit"
           name="unit"
           value={ingredient.unit}
           onChange={handleInputChange}
           required
-        />
+        >
+          <option value="">Select unit</option>
+          {Object.entries(unitCategories).map(([category, units]) => (
+            <optgroup key={category} label={category}>
+              {units.map((unit) => (
+                <option key={unit} value={unit}>
+                  {unit}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
       </div>
       <div className="mb-3">
         <input
+          ref={dateInputRef}
           type="date"
           className="form-control"
           name="expirationDate"
           value={ingredient.expirationDate}
           onChange={handleInputChange}
+          onClick={handleDateClick}
           required
           placeholder="Expiration date"
-          onFocus={(e) => {
-            e.target.type = 'date';
-          }}
-          onBlur={(e) => {
-            if (!e.target.value) e.target.type = 'text';
-          }}
+          min={minDate}
         />
       </div>
       <button type="submit" className="btn btn-success me-2">

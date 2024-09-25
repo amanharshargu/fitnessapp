@@ -78,7 +78,6 @@ function Recipes() {
   return (
     <ContentWrapper>
       <div className="container mt-5 recipes-container">
-        <h2 className="mb-4">Recipes</h2>
         <div className="search-and-filter">
           <form onSubmit={handleSearch} className="search-form mb-4">
             <div className="input-group">

@@ -41,7 +41,6 @@ function Dashboard({ onSetUserDetails }) {
     <ContentWrapper>
       <div className="dashboard-container">
         <div className="dashboard-wrapper">
-          <h2 className="dashboard-title">Dashboard</h2>
           <div className="dashboard-grid">
             {user ? (
               <>

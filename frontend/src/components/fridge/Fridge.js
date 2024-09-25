@@ -28,7 +28,6 @@ function Fridge() {
   return (
     <ContentWrapper>
       <div className="fridge-container">
-        <h2 className="fridge-title">Fridge</h2>
         <div className="fridge-content">
           <div className="fridge-left">
             <div className="ingredients-header">

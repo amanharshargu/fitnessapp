@@ -10,22 +10,29 @@ function LandingPage() {
   const [randomRecipes, setRandomRecipes] = useState([]);
   const [fetchError, setFetchError] = useState(null);
 
-  const fetchRandomRecipes = async () => {
-    try {
-      const recipes = await getRandomRecipes(3);
-      setRandomRecipes(recipes);
-      setFetchError(null);
-    } catch (error) {
-      console.error("Error fetching random recipes:", error);
-      setFetchError("Failed to load recipes. Please try again later.");
-    }
-  };
-
   useEffect(() => {
+    let isMounted = true;
+    const fetchRandomRecipes = async () => {
+      try {
+        const recipes = await getRandomRecipes(3);
+        if (isMounted) {
+          setRandomRecipes(recipes);
+          setFetchError(null);
+        }
+      } catch (error) {
+        if (isMounted) {
+          console.error("Error fetching random recipes:", error);
+          setFetchError("Failed to load recipes. Please try again later.");
+        }
+      }
+    };
     fetchRandomRecipes();
-  }, []);
+    return () => {
+      isMounted = false;
+    };
+  }, [getRandomRecipes]);
 
-  const particlesInit = useCallback(async engine => {
+  const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine);
   }, []);
 
@@ -106,7 +113,10 @@ function LandingPage() {
       <div className="container content-wrapper">
         <div className="row">
           <div className="col-12 d-flex justify-content-center">
-            <div className="card my-4 bg-dark text-white" style={{ width: '70%' }}>
+            <div
+              className="card my-4 bg-dark text-white"
+              style={{ width: "70%" }}
+            >
               <div className="card-body">
                 <h2 className="card-title">
                   Welcome to Health & Fitness Tracker
@@ -123,12 +133,7 @@ function LandingPage() {
           </div>
         </div>
         <div className="row">
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h3>Featured Recipes</h3>
-            <button className="btn btn-primary" onClick={fetchRandomRecipes} disabled={isLoading}>
-              {isLoading ? 'Refreshing...' : 'Refresh Recipes'}
-            </button>
-          </div>
+          <h3 className="mb-4">Featured Recipes</h3>
           {isLoading ? (
             <p>Loading recipes...</p>
           ) : fetchError ? (

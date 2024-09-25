@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import RecipeCard from "./recipes/RecipeCard";
-import bgImage from "../assets/bg.jpg";
 import { useRecipes } from "../contexts/RecipeContext";
 import "../styles/landingpage.css";
+import Particles from "react-particles";
+import { loadSlim } from "tsparticles-slim";
 
 function LandingPage() {
   const { getRandomRecipes, isLoading } = useRecipes();
@@ -31,20 +32,85 @@ function LandingPage() {
     };
   }, [getRandomRecipes]);
 
+  const particlesInit = useCallback(async engine => {
+    await loadSlim(engine);
+  }, []);
+
+  const particlesOptions = {
+    background: {
+      color: {
+        value: "#1a472a",
+      },
+    },
+    particles: {
+      number: {
+        value: 80,
+        density: {
+          enable: true,
+          value_area: 800,
+        },
+      },
+      color: {
+        value: "#ffffff",
+      },
+      opacity: {
+        value: 0.5,
+        random: false,
+      },
+      size: {
+        value: 3,
+        random: true,
+      },
+      move: {
+        enable: true,
+        speed: 2,
+        direction: "none",
+        random: false,
+        straight: false,
+        out_mode: "out",
+        bounce: false,
+      },
+      links: {
+        enable: true,
+        distance: 150,
+        color: "#ffffff",
+        opacity: 0.4,
+        width: 1,
+      },
+    },
+    interactivity: {
+      detectsOn: "window",
+      events: {
+        onHover: {
+          enable: true,
+          mode: "repulse",
+        },
+        onClick: {
+          enable: true,
+          mode: "push",
+        },
+        resize: true,
+      },
+      modes: {
+        repulse: {
+          distance: 100,
+          duration: 0.4,
+        },
+        push: {
+          particles_nb: 4,
+        },
+      },
+    },
+  };
+
   return (
-    <div
-      className="landing-page"
-      style={{
-        backgroundImage: `url(${bgImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        minHeight: "100vh",
-        color: "white",
-        position: "relative",
-      }}
-    >
-      <div className="container" style={{ paddingTop: "120px" }}>
+    <div className="landing-page">
+      <Particles
+        id="tsparticles"
+        init={particlesInit}
+        options={particlesOptions}
+      />
+      <div className="container content-wrapper">
         <div className="row">
           <div className="col-12 d-flex justify-content-center">
             <div className="card mb-5 bg-dark text-white" style={{ width: '70%' }}>

@@ -20,7 +20,13 @@ function ExpiringIngredients({ ingredients }) {
               key={ingredient.id}
               className="list-group-item d-flex justify-content-between align-items-center"
             >
-              <span>{ingredient.name}</span>
+              <div>
+                <span>{ingredient.name}</span>
+                <br />
+                <small className="text-muted">
+                  {ingredient.quantity} {ingredient.unit}
+                </small>
+              </div>
               <div>
                 <span className="badge bg-warning text-dark me-2">
                   {formatExpirationDate(ingredient.expirationDate)}

@@ -6,17 +6,17 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
   const { ingredient, handleInputChange, handleSubmit } = useIngredientForm(editingIngredient);
   const [error, setError] = useState(null);
   const dateInputRef = useRef(null);
-  const [minDate, setMinDate] = useState('');
+  const [minDate, setMinDate] = useState("");
+  const [unitSuggestions, setUnitSuggestions] = useState([]);
 
-  const unitCategories = {
-    General: ["count", "pieces"],
-    Weight: ["grams", "kg", "ounces", "pounds"],
-    Liquid: ["ml", "liters", "cups", "tablespoons", "teaspoons"],
-  };
+  const allUnits = [
+    "count", "pieces", "mg", "grams", "kg", "ounces", "pounds",
+    "ml", "liters", "cups", "tablespoons", "teaspoons"
+  ];
 
   useEffect(() => {
     const today = new Date();
-    setMinDate(today.toISOString().split('T')[0]);
+    setMinDate(today.toISOString().split("T")[0]);
   }, []);
 
   const onSubmit = async (e) => {
@@ -32,6 +32,24 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
 
   const handleDateClick = () => {
     dateInputRef.current.showPicker();
+  };
+
+  const handleUnitChange = (e) => {
+    const value = e.target.value;
+    handleInputChange(e);
+    if (value) {
+      const suggestions = allUnits.filter(unit => 
+        unit.toLowerCase().includes(value.toLowerCase())
+      );
+      setUnitSuggestions(suggestions);
+    } else {
+      setUnitSuggestions([]);
+    }
+  };
+
+  const selectSuggestion = (unit) => {
+    handleInputChange({ target: { name: "unit", value: unit } });
+    setUnitSuggestions([]);
   };
 
   return (
@@ -54,30 +72,30 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
           className="form-control"
           placeholder="Quantity"
           name="quantity"
-          value={ingredient.quantity}
+          value={ingredient.quantity === 0 ? "" : ingredient.quantity}
           onChange={handleInputChange}
           required
         />
       </div>
-      <div className="mb-3">
-        <select
+      <div className="mb-3 unit-input-container">
+        <input
+          type="text"
           className="form-control"
+          placeholder="Unit"
           name="unit"
           value={ingredient.unit}
-          onChange={handleInputChange}
+          onChange={handleUnitChange}
           required
-        >
-          <option value="">Select unit</option>
-          {Object.entries(unitCategories).map(([category, units]) => (
-            <optgroup key={category} label={category}>
-              {units.map((unit) => (
-                <option key={unit} value={unit}>
-                  {unit}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
+        />
+        {unitSuggestions.length > 0 && (
+          <ul className="unit-suggestions">
+            {unitSuggestions.map((unit, index) => (
+              <li key={index} onClick={() => selectSuggestion(unit)}>
+                {unit}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       <div className="mb-3">
         <input

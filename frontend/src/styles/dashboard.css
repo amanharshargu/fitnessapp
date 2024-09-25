@@ -8,7 +8,7 @@
 
 .dashboard-wrapper {
   max-width: 1600px;
-  margin: 0 50px 0 195px;
+  margin: 0 50px 0 0;
   flex-grow: 2;
   display: flex;
   flex-direction: column;

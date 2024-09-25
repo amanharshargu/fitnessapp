@@ -5,6 +5,7 @@ import UserProfileCard from "./UserProfileCard";
 import WeeklyCalorieTracker from "./WeeklyCalorieTracker";
 import WeeklyCalorieGoal from "./WeeklyCalorieGoal";
 import MealPlanner from "./MealPlanner";
+import ContentWrapper from "../layout/ContentWrapper";
 import "../../styles/dashboard.css";
 
 function Dashboard({ onSetUserDetails }) {
@@ -37,27 +38,33 @@ function Dashboard({ onSetUserDetails }) {
   }
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-wrapper">
-        <h2 className="dashboard-title">Dashboard</h2>
-        <div className="dashboard-grid">
-          {user ? (
-            <>
-              <div className="dashboard-row">
-                <UserProfileCard userDetails={userDetails} user={user} onSetUserDetails={onSetUserDetails} />
-                <WeeklyCalorieGoal userDetails={userDetails} />
-                <WeeklyCalorieTracker userDetails={userDetails} />
-              </div>
-              <div className="dashboard-row">
-                <MealPlanner />
-              </div>
-            </>
-          ) : (
-            <p>User data not available.</p>
-          )}
+    <ContentWrapper>
+      <div className="dashboard-container">
+        <div className="dashboard-wrapper">
+          <h2 className="dashboard-title">Dashboard</h2>
+          <div className="dashboard-grid">
+            {user ? (
+              <>
+                <div className="dashboard-row">
+                  <UserProfileCard
+                    userDetails={userDetails}
+                    user={user}
+                    onSetUserDetails={onSetUserDetails}
+                  />
+                  <WeeklyCalorieGoal userDetails={userDetails} />
+                  <WeeklyCalorieTracker userDetails={userDetails} />
+                </div>
+                <div className="dashboard-row">
+                  <MealPlanner />
+                </div>
+              </>
+            ) : (
+              <p>User data not available.</p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </ContentWrapper>
   );
 }
 

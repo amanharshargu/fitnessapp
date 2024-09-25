@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import LoginModal from "../auth/LoginModal";
@@ -13,8 +13,28 @@ function Header() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
   const [showUserDetailsModal, setShowUserDetailsModal] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const isLandingPage = location.pathname === "/";
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > lastScrollY) {
+        setIsHeaderVisible(false);
+      } else {
+        setIsHeaderVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   const handleLogout = async () => {
     try {
@@ -42,15 +62,9 @@ function Header() {
 
   return (
     <header
-      style={{
-        position: isLandingPage ? "absolute" : "relative",
-        top: 0,
-        left: 0,
-        width: "100%",
-        zIndex: 1000,
-        padding: "20px 0",
-        backgroundColor: isLandingPage ? "transparent" : "rgba(0, 0, 0, 0.8)",
-      }}
+      className={`header ${isHeaderVisible ? "" : "header--hidden"} ${
+        isLandingPage ? "header--transparent" : "header--solid"
+      }`}
     >
       <div className="container d-flex justify-content-between align-items-center">
         <Link to="/" className="text-decoration-none">

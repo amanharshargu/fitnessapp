@@ -221,7 +221,6 @@ function MealPlanner() {
 
   return (
     <div className="meal-planner">
-      <h3>Weekly Meal Plan</h3>
       <form className="filters-form">
         <h4>Customize Your Meal Plan</h4>
         <div className="filter-group">

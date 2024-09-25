@@ -2,11 +2,11 @@ import React from 'react';
 import '../../styles/WeeklyCalorieGoal.css';
 
 function WeeklyCalorieGoal({ userDetails }) {
-  const dailyCalorieGoal = userDetails.dailyCalorieGoal || 2000; // Default to 2000 if not set
+  const dailyCalorieGoal = userDetails.dailyCalorieGoal || 2000;
   const weeklyCalorieGoal = dailyCalorieGoal * 7;
 
-  // This is a placeholder. In a real application, you'd fetch this data from your backend
-  const totalWeeklyCalories = 15100; // Example value
+
+  const totalWeeklyCalories = 15100;
 
   const percentage = weeklyCalorieGoal > 0 ? Math.min((totalWeeklyCalories / weeklyCalorieGoal) * 100, 100) : 0;
   const isOverGoal = totalWeeklyCalories > weeklyCalorieGoal;

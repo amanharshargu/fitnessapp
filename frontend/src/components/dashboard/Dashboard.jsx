@@ -40,27 +40,25 @@ function Dashboard({ onSetUserDetails }) {
   return (
     <ContentWrapper>
       <div className="dashboard-container">
-        <div className="dashboard-wrapper">
-          <div className="dashboard-grid">
-            {user ? (
-              <>
-                <div className="dashboard-row">
-                  <UserProfileCard
-                    userDetails={userDetails}
-                    user={user}
-                    onSetUserDetails={onSetUserDetails}
-                  />
-                  <WeeklyCalorieGoal userDetails={userDetails} />
-                  <WeeklyCalorieTracker userDetails={userDetails} />
-                </div>
-                <div className="dashboard-row">
-                  <MealPlanner />
-                </div>
-              </>
-            ) : (
-              <p>User data not available.</p>
-            )}
-          </div>
+        <div className="dashboard-grid">
+          {user ? (
+            <>
+              <div className="dashboard-row">
+                <UserProfileCard
+                  userDetails={userDetails}
+                  user={user}
+                  onSetUserDetails={onSetUserDetails}
+                />
+                <WeeklyCalorieGoal userDetails={userDetails} />
+                <WeeklyCalorieTracker userDetails={userDetails} />
+              </div>
+              <div className="dashboard-row">
+                <MealPlanner />
+              </div>
+            </>
+          ) : (
+            <p>User data not available.</p>
+          )}
         </div>
       </div>
     </ContentWrapper>

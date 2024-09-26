@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
+const passport = require("passport");
 const { sequelize } = require("./models");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
@@ -9,16 +10,20 @@ const recipeRoutes = require("./routes/recipe");
 const dashboardRoutes = require("./routes/dashboard");
 const { PORT } = require("./config");
 
+// Import passport configuration
+require("./config/passport-setup");
+
 const app = express();
 
 app.use(
   cors({
-    origin: '*',
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );
 app.use(helmet());
 app.use(express.json());
+app.use(passport.initialize());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
@@ -32,6 +37,7 @@ app.use((err, req, res, next) => {
     .status(500)
     .json({ message: "Something went wrong!", error: err.message });
 });
+
 
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);

@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true, // Changed from false to true
       },
       weight: {
         type: DataTypes.FLOAT,
@@ -48,6 +48,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true,
         defaultValue: 2000,
+      },
+      googleId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: true,
+      },
+      isNewUser: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {

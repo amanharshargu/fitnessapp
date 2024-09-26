@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "../../styles/LoginModal.css";
+import { FcGoogle } from 'react-icons/fc';
 
 function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
   const navigate = useNavigate();
@@ -80,6 +81,10 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
     setFocusedInput(null);
     const error = validateField(name, value);
     setErrors((prev) => ({ ...prev, [name]: error }));
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.REACT_APP_API_BASE_URL}/auth/google`;
   };
 
   if (!show) return null;
@@ -175,6 +180,17 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
               </button>
             </div>
           </form>
+
+          <div className="mt-4">
+            <button
+              className="google-login-btn"
+              onClick={handleGoogleLogin}
+              aria-label="Sign in with Google"
+            >
+              <FcGoogle size={20} />
+              <span>Login with Google</span>
+            </button>
+          </div>
 
           <div className="mt-4 text-center">
             <p className="mb-0">Don't have an account?</p>

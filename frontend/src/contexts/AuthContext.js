@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       setIsLoggedIn(true);
+      checkAuth();
     } else {
       delete api.defaults.headers.common["Authorization"];
       setIsLoggedIn(false);
@@ -136,6 +137,13 @@ export const AuthProvider = ({ children }) => {
     return <div>Loading...</div>; //change later
   }
 
+  const handleOAuthCallback = async (token) => {
+    setStoredToken(token);
+    setToken(token);
+    setIsLoggedIn(true);
+    await checkAuth();
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -146,6 +154,7 @@ export const AuthProvider = ({ children }) => {
         signup,
         logout,
         updateUserDetails,
+        handleOAuthCallback,
       }}
     >
       {children}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import RecipeCard from "../recipes/RecipeCard";
+import CalorieSlider from "./CalorieSlider";
 import "../../styles/MealPlanner.css";
 
 const MEALPLAN_APP_ID = process.env.REACT_APP_MEALPLAN_APP_ID;
@@ -8,7 +9,6 @@ const MEALPLAN_APP_KEY = process.env.REACT_APP_MEALPLAN_APP_KEY;
 const EDAMAM_APP_ID = process.env.REACT_APP_EDAMAM_APP_ID;
 const EDAMAM_APP_KEY = process.env.REACT_APP_EDAMAM_APP_KEY;
 const EDAMAM_USER_ID = process.env.REACT_APP_EDAMAM_USER_ID;
-
 
 const initialFilters = {
   health: [],
@@ -138,21 +138,11 @@ function MealPlanner() {
     }
   };
 
-  const handleFilterChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [name]: checked
-          ? [...prevFilters[name], value]
-          : prevFilters[name].filter((item) => item !== value),
-      }));
-    } else {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [name]: value,
-      }));
-    }
+  const handleFilterChange = (name, value) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
   };
 
   const handleClearFilters = () => {
@@ -267,9 +257,9 @@ function MealPlanner() {
                   name="health"
                   value={label}
                   checked={filters.health.includes(label)}
-                  onChange={handleFilterChange}
+                  onChange={(e) => handleFilterChange("health", e.target.checked ? [...filters.health, label] : filters.health.filter((item) => item !== label))}
                 />
-                {label}
+                {label.replace(/_/g, " ")}
               </label>
             ))}
           </div>
@@ -291,105 +281,42 @@ function MealPlanner() {
                   name="diet"
                   value={label}
                   checked={filters.diet.includes(label)}
-                  onChange={handleFilterChange}
+                  onChange={(e) => handleFilterChange("diet", e.target.checked ? [...filters.diet, label] : filters.diet.filter((item) => item !== label))}
                 />
-                {label}
+                {label.replace(/_/g, " ")}
               </label>
             ))}
           </div>
         </div>
-        <div className="filter-group">
-          <h5>Calories</h5>
-          <div className="filter-options">
-            <label>
-              Min:
-              <input
-                type="number"
-                name="calories.min"
-                value={filters.calories.min}
-                onChange={handleFilterChange}
-              />
-            </label>
-            <label>
-              Max:
-              <input
-                type="number"
-                name="calories.max"
-                value={filters.calories.max}
-                onChange={handleFilterChange}
-              />
-            </label>
-          </div>
-        </div>
-        <div className="filter-group">
-          <h5>Breakfast Calories</h5>
-          <div className="filter-options">
-            <label>
-              Min:
-              <input
-                type="number"
-                name="breakfastCalories.min"
-                value={filters.breakfastCalories.min}
-                onChange={handleFilterChange}
-              />
-            </label>
-            <label>
-              Max:
-              <input
-                type="number"
-                name="breakfastCalories.max"
-                value={filters.breakfastCalories.max}
-                onChange={handleFilterChange}
-              />
-            </label>
-          </div>
-        </div>
-        <div className="filter-group">
-          <h5>Lunch Calories</h5>
-          <div className="filter-options">
-            <label>
-              Min:
-              <input
-                type="number"
-                name="lunchCalories.min"
-                value={filters.lunchCalories.min}
-                onChange={handleFilterChange}
-              />
-            </label>
-            <label>
-              Max:
-              <input
-                type="number"
-                name="lunchCalories.max"
-                value={filters.lunchCalories.max}
-                onChange={handleFilterChange}
-              />
-            </label>
-          </div>
-        </div>
-        <div className="filter-group">
-          <h5>Dinner Calories</h5>
-          <div className="filter-options">
-            <label>
-              Min:
-              <input
-                type="number"
-                name="dinnerCalories.min"
-                value={filters.dinnerCalories.min}
-                onChange={handleFilterChange}
-              />
-            </label>
-            <label>
-              Max:
-              <input
-                type="number"
-                name="dinnerCalories.max"
-                value={filters.dinnerCalories.max}
-                onChange={handleFilterChange}
-              />
-            </label>
-          </div>
-        </div>
+        <CalorieSlider
+          label="Total Daily Calories"
+          min={500}
+          max={5000}
+          value={filters.calories}
+          onChange={(value) => handleFilterChange("calories", value)}
+        />
+        <CalorieSlider
+          label="Breakfast Calories"
+          min={0}
+          max={2000}
+          value={filters.breakfastCalories}
+          onChange={(value) => handleFilterChange("breakfastCalories", value)}
+        />
+        <CalorieSlider
+          label="Lunch Calories"
+          min={0}
+          max={2000}
+          value={filters.lunchCalories}
+          onChange={(value) => handleFilterChange("lunchCalories", value)}
+        />
+        <CalorieSlider
+          label="Dinner Calories"
+          min={0}
+          max={2000}
+          value={filters.dinnerCalories}
+          onChange={(value) => handleFilterChange("dinnerCalories", value)}
+        />
+        
         <button type="button" onClick={fetchMealPlan}>
           Customize Meal Plan
         </button>

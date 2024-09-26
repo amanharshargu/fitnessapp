@@ -1,0 +1,72 @@
+.calorie-slider {
+  margin-bottom: 30px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.calorie-slider h5 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.slider {
+  width: 50%;
+  height: 6px;
+  border-radius: 3px;
+  margin: 20px 0;
+}
+
+.thumb {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  background: #007bff;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  top: -9px;
+}
+
+.thumb:hover {
+  box-shadow: 0 0 0 8px rgba(0, 123, 255, 0.1);
+}
+
+.thumb:active {
+  box-shadow: 0 0 0 12px rgba(0, 123, 255, 0.2);
+}
+
+.track {
+  height: 6px;
+  background: #e0e0e0;  /* Grey color for unselected regions */
+}
+
+.track.track-1 {
+  background: #007bff;  /* Blue color for selected region */
+}
+
+.calorie-inputs {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.calorie-inputs div {
+  display: flex;
+  align-items: center;
+}
+
+.calorie-inputs input {
+  width: 80px;
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.calorie-inputs label {
+  font-size: 14px;
+  color: #495057;
+}

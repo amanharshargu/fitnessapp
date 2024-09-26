@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 const { calculateDailyCalorieGoal } = require("../utils/calorieCalculator");
 
-exports.register = async (req, res) => {
+const register = async (req, res) => {
   try {
     const { username, email, password, weight, height, age, gender, goal } =
       req.body;
@@ -56,7 +56,7 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
+const login = async (req, res) => {
   try {
     console.log("Login attempt:", req.body);
     const { email, password } = req.body;
@@ -88,7 +88,8 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: "Error logging in", error: error.message });
   }
 };
-exports.logout = async (req, res) => {
+
+const logout = async (req, res) => {
   try {
     req.user = null;
     res.status(200).json({ message: "Logged out successfully" });
@@ -99,7 +100,7 @@ exports.logout = async (req, res) => {
   }
 };
 
-exports.checkAuth = async (req, res) => {
+const checkAuth = async (req, res) => {
   try {
     res.status(200).json({
       isAuthenticated: true,
@@ -115,4 +116,22 @@ exports.checkAuth = async (req, res) => {
       .status(500)
       .json({ message: "Error checking authentication", error: error.message });
   }
+};
+
+const googleAuthCallback = async (req, res) => {
+  try {
+    const { user, isNewUser, token } = req.user;
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard?token=${token}&isNewUser=${isNewUser}`);
+  } catch (error) {
+    console.error("Google auth callback error:", error);
+    res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
+  }
+};
+
+module.exports = {
+  register,
+  login,
+  logout,
+  checkAuth,
+  googleAuthCallback,
 };

@@ -59,7 +59,7 @@ const filterOptions = {
 };
 
 function Recipes() {
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
   const { likedRecipes, toggleLikedRecipe } = useRecipes();
   const {
     recipes,

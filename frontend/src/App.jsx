@@ -1,9 +1,11 @@
-import React, { useState, useCallback, lazy, Suspense } from "react";
+import React, { useState, useCallback, lazy, Suspense, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
+  useLocation,
+  useNavigate,
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { IngredientProvider } from "./contexts/IngredientContext";
@@ -19,6 +21,10 @@ const LikedRecipes = lazy(() => import("./components/recipes/LikedRecipes"));
 const SignupModal = lazy(() => import("./components/auth/SignupModal"));
 const UserDetailsModal = lazy(() => import("./components/auth/UserDetailsModal"));
 const LoginModal = lazy(() => import("./components/auth/LoginModal"));
+const OAuthCallback = lazy(() => import("./components/auth/OAuthCallback"));
+
+// Remove this line:
+// const UserDetailsForm = lazy(() => import("./components/auth/UserDetailsForm"));
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useAuth();
@@ -47,6 +53,24 @@ function AppRoutes() {
     setShowLogin(false);
     setShowSignup(true);
   }, []);
+
+  const { handleOAuthCallback } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token = params.get("token");
+    const isNewUser = params.get("isNewUser") === "true";
+    if (token) {
+      handleOAuthCallback(token);
+      if (isNewUser) {
+        setShowUserDetails(true);
+      } else {
+        navigate("/dashboard", { replace: true });
+      }
+    }
+  }, [location, handleOAuthCallback, navigate]);
 
   return (
     <Layout>
@@ -85,6 +109,17 @@ function AppRoutes() {
               </ProtectedRoute>
             }
           />
+          <Route path="/oauth-callback" element={<OAuthCallback />} />
+          {/* Remove this route:
+          <Route
+            path="/user-details"
+            element={
+              <ProtectedRoute>
+                <UserDetailsForm />
+              </ProtectedRoute>
+            }
+          />
+          */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <SignupModal

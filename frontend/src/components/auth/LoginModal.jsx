@@ -160,8 +160,7 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
                 <div className="invalid-feedback">{errors.password}</div>
               )}
             </div>
-
-            <p className="small mb-3 pb-lg-2">
+            <p className="" style={{ marginTop: '-20px', marginBottom: '20px' }}>
               <a
                 className="text-white-50"
                 href="#"
@@ -188,7 +187,7 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
               aria-label="Sign in with Google"
             >
               <FcGoogle size={20} />
-              <span>Login with Google</span>
+              <span style={{ paddingLeft: '4px' }}>Sign in with Google</span>
             </button>
           </div>
 

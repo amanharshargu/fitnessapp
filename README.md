@@ -46,7 +46,7 @@ These instructions will help you set up and run the project on your local machin
    npm run start
    ```
 
-3. Open your browser and navigate to `http://localhost:3001`
+3. Open your browser and navigate to `http://localhost:3001` or the chosen frontend url.
 
 ## Scripts
 
@@ -54,11 +54,3 @@ These instructions will help you set up and run the project on your local machin
 - `npm run deploy`: Deploy the application (customize this based on your deployment process)
 - `npm run lint`: Run ESLint to check for code style issues
 - `npm run test`: Run the test suite
-
-## Contributing
-
-Instructions for how to contribute to the project.
-
-## License
-
-This project is licensed under the [LICENSE NAME] - see the [LICENSE.md](LICENSE.md) file for details.

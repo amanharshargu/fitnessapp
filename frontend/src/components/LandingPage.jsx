@@ -32,7 +32,7 @@ function LandingPage() {
   const particlesOptions = {
     background: {
       color: {
-        value: "#1a472a",
+        value: "#007a4d",
       },
     },
     particles: {
@@ -110,7 +110,7 @@ function LandingPage() {
               className="card my-4 bg-dark text-white"
               style={{ width: "70%" }}
             >
-              <div className="card-body">
+              <div className="card-body-lp">
                 <h2 className="card-title">
                   Welcome to Health & Fitness Tracker
                 </h2>

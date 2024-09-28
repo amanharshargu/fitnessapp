@@ -16,23 +16,20 @@
   gap: 40px;
 }
 
-.fridge-left,
-.fridge-right {
+.fridge-left {
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
-}
-
-.fridge-left {
   flex: 3;
   max-width: 65%;
 }
 
 .fridge-right {
+  background-color: #ffffff;
+  padding: 20px;
   flex: 2;
   max-width: 35%;
-  /* margin-left: 20px; */
+  margin-left: -20px;
 }
 
 .ingredients-header {

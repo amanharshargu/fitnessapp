@@ -1,6 +1,7 @@
 import React from "react";
 import { useExpiringIngredients } from "../../hooks/useIngredientForm";
 import { useIngredients } from "../../contexts/IngredientContext";
+import "../../styles/ExpiringIngredients.css";
 
 function ExpiringIngredients({ ingredients }) {
   const { expiringIngredients, formatExpirationDate } = useExpiringIngredients(ingredients);
@@ -11,28 +12,24 @@ function ExpiringIngredients({ ingredients }) {
   };
 
   return (
-    <div>
+    <div className="expiring-ingredients">
       <h3>Expiring Soon...</h3>
       {expiringIngredients.length > 0 ? (
-        <ul className="list-group">
+        <ul className="expiring-list list-unstyled">
           {expiringIngredients.map((ingredient) => (
-            <li
-              key={ingredient.id}
-              className="list-group-item d-flex justify-content-between align-items-center"
-            >
-              <div>
-                <span>{ingredient.name}</span>
-                <br />
-                <small className="text-muted">
+            <li key={ingredient.id} className="expiring-item">
+              <div className="ingredient-details">
+                <span className="ingredient-name">{ingredient.name}</span>
+                <small className="ingredient-quantity">
                   {ingredient.quantity} {ingredient.unit}
                 </small>
               </div>
-              <div>
-                <span className="badge bg-warning text-dark me-2">
+              <div className="expiration-info">
+                <span className="expiration-badge">
                   {formatExpirationDate(ingredient.expirationDate)}
                 </span>
                 <button
-                  className="btn btn-danger btn-sm"
+                  className="delete-button"
                   onClick={() => handleDelete(ingredient.id)}
                 >
                   Delete

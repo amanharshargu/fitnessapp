@@ -22,7 +22,6 @@ passport.use(
             googleId: profile.id,
             email: profile.emails[0].value,
             username: profile.displayName,
-            // Note: We're not setting a password for OAuth users
           });
           isNewUser = true;
         }

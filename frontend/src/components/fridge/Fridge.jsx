@@ -31,7 +31,7 @@ function Fridge() {
         <div className="fridge-content">
           <div className="fridge-left">
             <div className="ingredients-header">
-              <h3>Ingredients List</h3>
+              <h3>Your Ingredients</h3>
               <button
                 className="add-ingredient-btn"
                 onClick={() => setShowAddForm(!showAddForm)}

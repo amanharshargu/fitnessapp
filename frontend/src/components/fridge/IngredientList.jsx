@@ -1,30 +1,28 @@
 import React from "react";
 import { useIngredients } from "../../contexts/IngredientContext";
 import { useExpiringIngredients } from "../../hooks/useIngredientForm";
+import "../../styles/IngredientList.css";
 
 function IngredientList() {
   const { ingredients, deleteIngredient } = useIngredients();
   const { formatExpirationDate } = useExpiringIngredients(ingredients);
 
   return (
-    <ul className="list-group">
+    <ul className="ingredient-list list-unstyled">
       {ingredients.map((ingredient) => (
-        <li
-          key={ingredient.id}
-          className="list-group-item d-flex justify-content-between align-items-center flex-column"
-        >
-          <div className="d-flex w-100 justify-content-between">
-            <span>
+        <li key={ingredient.id} className="ingredient-item">
+          <div className="ingredient-info">
+            <span className="ingredient-name">
               {ingredient.name} - {ingredient.quantity} {ingredient.unit}
             </span>
             <button
-              className="btn btn-danger btn-sm"
+              className="delete-button"
               onClick={() => deleteIngredient(ingredient.id)}
             >
               Delete
             </button>
           </div>
-          <small className="text-muted w-100 text-start">
+          <small className="expiration-date">
             {formatExpirationDate(ingredient.expirationDate)}
           </small>
         </li>

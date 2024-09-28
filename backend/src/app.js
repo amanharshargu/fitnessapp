@@ -9,16 +9,22 @@ const ingredientRoutes = require("./routes/ingredient");
 const recipeRoutes = require("./routes/recipe");
 const dashboardRoutes = require("./routes/dashboard");
 const { PORT } = require("./config");
-
-// Import passport configuration
 require("./config/passport-setup");
 
 const app = express();
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: true,
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+    ],
   })
 );
 app.use(helmet());
@@ -37,7 +43,6 @@ app.use((err, req, res, next) => {
     .status(500)
     .json({ message: "Something went wrong!", error: err.message });
 });
-
 
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);

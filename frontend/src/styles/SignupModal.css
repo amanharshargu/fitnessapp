@@ -24,7 +24,8 @@
 
 .form-outline {
   position: relative;
-  margin-bottom: 3rem !important; /* Increase space between input fields and use !important */
+  margin-bottom: 3rem !important;
+  z-index: 1; /* Add this line */
 }
 
 .signup-modal .form-control {
@@ -40,6 +41,9 @@
   padding-top: 0.25rem; /* Add a small top padding to the input */
   padding-bottom: 0.25rem; /* Add a small bottom padding to the input */
   font-size: 0.9rem; /* Reduce font size */
+  opacity: 1; /* Add this line to ensure text is always fully opaque */
+  position: relative; /* Add this line */
+  z-index: 2; /* Add this line */
 }
 
 .form-control:focus {
@@ -47,6 +51,7 @@
   border-color: white;
   background-color: transparent;
   color: white;
+  opacity: 1; /* Add this line to ensure text is always fully opaque when focused */
 }
 
 .form-label {
@@ -54,9 +59,10 @@
   top: 0.25rem;
   left: 0;
   transition: all 0.2s ease-out;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.8); /* Increase opacity for better visibility */
   pointer-events: none;
   font-size: 1rem; /* Increase font size */
+  z-index: 1; /* Add this line */
 }
 
 .form-outline.focused .form-label,
@@ -64,6 +70,7 @@
   top: -1.2rem; /* Adjust top position to accommodate larger font */
   font-size: 0.85rem; /* Increase font size when label is above input */
   color: white;
+  z-index: 3; /* Add this line */
 }
 
 .btn-outline-light {
@@ -98,6 +105,7 @@
   left: 0;
   font-size: 0.75rem;
   color: #dc3545;
+  z-index: 3; /* Add this line */
 }
 
 /* Remove or comment out this rule if it exists */
@@ -117,4 +125,17 @@
   transform: translateY(-50%);
   color: #dc3545;
   font-size: 1.2rem;
+  z-index: 3; /* Add this line */
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6); /* Add this rule to style the placeholder text */
+}
+
+.form-control:not(:focus)::placeholder {
+  opacity: 0; /* Hide placeholder when not focused */
+}
+
+.form-control-lg {
+  color: white !important;
 }

@@ -39,7 +39,8 @@
   color: #333;
 }
 
-.loading-message, .error-message {
+.loading-message,
+.error-message {
   text-align: center;
   padding: 20px;
   font-size: 18px;

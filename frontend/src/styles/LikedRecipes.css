@@ -45,7 +45,9 @@
   gap: 20px;
 }
 
-.loading, .error, .no-recipes {
+.loading,
+.error,
+.no-recipes {
   text-align: center;
   font-size: 1.2rem;
   margin-top: 50px;

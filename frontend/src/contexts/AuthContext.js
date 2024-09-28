@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useEffect,
-} from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import api from "../services/api";
 
 const AuthContext = createContext(null);
@@ -53,7 +48,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await api.post("/auth/login", { email, password });
+      const response = await api.post(
+        "/auth/login",
+        { email, password },
+        {
+          withCredentials: true,
+        }
+      );
       const { token: newToken, user: newUser } = response.data;
       setStoredToken(newToken);
       setToken(newToken);
@@ -102,6 +103,7 @@ export const AuthProvider = ({ children }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        withCredentials: true,
       });
 
       if (response.data && response.data.user) {
@@ -161,7 +163,6 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

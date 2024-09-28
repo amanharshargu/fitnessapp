@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import "../../styles/SignupModal.css";
 
@@ -69,6 +69,18 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
     const error = validateField(name, value);
     setErrors(prev => ({ ...prev, [name]: error }));
   };
+
+  useEffect(() => {
+    if (show) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [show]);
 
   if (!show) return null;
 

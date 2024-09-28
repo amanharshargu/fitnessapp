@@ -1,3 +1,7 @@
+body.modal-open {
+  overflow: hidden;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -9,17 +13,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
+  overflow-y: auto;
 }
 
 .card {
-  max-height: 90vh;
-  overflow-y: auto;
+  max-width: 90%;
+  max-height: none;
+  border-radius: 1rem;
+  margin: 2rem 0;
 }
 
 .card-body {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  padding: 2rem;
 }
 
 .form-outline {

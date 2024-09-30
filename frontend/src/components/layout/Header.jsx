@@ -4,7 +4,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import LoginModal from "../auth/LoginModal";
 import SignupModal from "../auth/SignupModal";
 import UserDetailsModal from "../auth/UserDetailsModal";
-import "../../styles/header.css";
+import "../../styles/Header.css";
 
 function Header() {
   const { isLoggedIn, logout, user } = useAuth();

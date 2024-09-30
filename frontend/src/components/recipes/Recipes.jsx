@@ -4,7 +4,7 @@ import SkeletonRecipeCard from "./SkeletonRecipeCard";
 import { useRecipeSearch } from "../../hooks/useRecipeSearch";
 import { useRecipes } from "../../contexts/RecipeContext";
 import ContentWrapper from "../layout/ContentWrapper";
-import "../../styles/recipe.css";
+import "../../styles/Recipes.css";
 
 const filterOptions = {
   diet: [

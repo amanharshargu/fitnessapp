@@ -1,9 +1,9 @@
 .recipe-card {
   background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -11,29 +11,47 @@
 
 .recipe-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.recipe-card__image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 75%; /* 4:3 Aspect Ratio */
+  overflow: hidden;
 }
 
 .recipe-card__image {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 150px;
+  height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.recipe-card:hover .recipe-card__image {
+  transform: scale(1.05);
 }
 
 .recipe-card__content {
-  padding: 12px;
+  padding: 16px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
 
 .recipe-card__title {
-  font-size: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
   margin-bottom: 8px;
   color: #333;
+  line-height: 1.3;
 }
 
 .recipe-card__info {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: #666;
   margin-bottom: 4px;
 }
@@ -48,13 +66,15 @@
   background-color: #5cb85c;
   color: white;
   border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
+  padding: 8px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.1s ease;
   flex: 1;
   margin: 0 5px;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
 }
 
 .recipe-card__button:first-child {
@@ -67,6 +87,11 @@
 
 .recipe-card__button:hover {
   background-color: #4cae4c;
+  transform: translateY(-1px);
+}
+
+.recipe-card__button:active {
+  transform: translateY(1px);
 }
 
 .recipe-card__details {
@@ -108,13 +133,13 @@
 
 .skeleton-card {
   background-color: #f0f0f0;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
 }
 
 .skeleton-image {
   width: 100%;
-  height: 150px;
+  padding-top: 75%; /* 4:3 Aspect Ratio */
   background-color: #e0e0e0;
 }
 

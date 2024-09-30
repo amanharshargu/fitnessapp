@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import RecipeCard from "./recipes/StyledRecipeCard";
 import { useRecipes } from "../contexts/RecipeContext";
-import "../styles/landingpage.css";
+import "../styles/LandingPage.css";
 import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 

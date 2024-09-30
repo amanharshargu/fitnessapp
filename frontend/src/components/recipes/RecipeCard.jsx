@@ -10,7 +10,9 @@ function RecipeCard({ recipe, isLiked, onLikeToggle }) {
 
   return (
     <div className="recipe-card">
-      <img className="recipe-card__image" src={recipe.image} alt={recipe.label} />
+      <div className="recipe-card__image-container">
+        <img className="recipe-card__image" src={recipe.image} alt={recipe.label} />
+      </div>
       <div className="recipe-card__content">
         <h3 className="recipe-card__title">{recipe.label}</h3>
         <p className="recipe-card__info">Calories: {Math.round(recipe.calories)}</p>
@@ -20,7 +22,7 @@ function RecipeCard({ recipe, isLiked, onLikeToggle }) {
             {isLiked ? 'Unlike' : 'Like'}
           </button>
           <button className="recipe-card__button recipe-card__button--details" onClick={toggleDetails}>
-            {showDetails ? 'Hide Details' : 'Show Details'}
+            {showDetails ? 'Hide' : 'Details'}
           </button>
         </div>
         {showDetails && (

@@ -151,10 +151,6 @@ function MealPlanner() {
   };
 
   const handleViewRecipe = (recipe) => {
-    // You can implement the logic to view the recipe here
-    // For example, you could open a modal with recipe details or navigate to a recipe page
-    console.log("View recipe:", recipe);
-    // For now, we'll just open the recipe URL in a new tab
     if (recipe.url) {
       window.open(recipe.url, '_blank');
     }

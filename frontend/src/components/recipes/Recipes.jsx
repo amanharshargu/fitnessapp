@@ -89,6 +89,12 @@ function Recipes() {
     setCurrentPage(pageNumber);
   };
 
+  const handleSearchWrapper = (e) => {
+    e.preventDefault();
+    setCurrentPage(1);
+    handleSearch(e);
+  };
+
   const PaginationControls = ({ isBottom }) => {
     const pageNumbers = [];
     const maxVisiblePages = 5;
@@ -159,7 +165,7 @@ function Recipes() {
     <ContentWrapper>
       <div className="container mt-5 recipes-container">
         <div className="search-and-filter">
-          <form onSubmit={handleSearch} className="search-form mb-4">
+          <form onSubmit={handleSearchWrapper} className="search-form mb-4">
             <div className="input-group">
               <input
                 type="text"
@@ -210,7 +216,7 @@ function Recipes() {
               >
                 Clear Filters
               </button>
-              <button className="btn btn-success" onClick={applyFilters}>
+              <button className="btn btn-success" onClick={() => { setCurrentPage(1); applyFilters(); }}>
                 Apply Filters
               </button>
             </div>

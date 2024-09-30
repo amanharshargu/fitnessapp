@@ -10,8 +10,8 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
   const [unitSuggestions, setUnitSuggestions] = useState([]);
 
   const allUnits = [
-    "count", "pieces", "mg", "grams", "kg", "ounces", "pounds",
-    "ml", "liters", "cups", "tablespoons", "teaspoons"
+    "count", "pieces", "mg", "g", "kg", "ounces", "pounds",
+    "ml", "l", "cups", "tablespoons", "teaspoons"
   ];
 
   useEffect(() => {

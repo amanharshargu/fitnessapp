@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useIngredients } from "../contexts/IngredientContext";
 import { useAuth } from "../contexts/AuthContext";
 import api from "../services/api";
@@ -76,4 +76,71 @@ export function useExpiringIngredients(ingredients) {
   };
 
   return { expiringIngredients, formatExpirationDate };
+}
+
+export function useIngredientList(ingredients) {
+  const [expandedItems, setExpandedItems] = useState({});
+
+  const toggleExpand = (name) => {
+    setExpandedItems(prev => ({ ...prev, [name]: !prev[name] }));
+  };
+
+  const isCountBasedUnit = (unit) => {
+    return ['count', 'piece', 'pcs', ''].includes(unit.toLowerCase());
+  };
+
+  const convertToBaseUnit = (quantity, unit) => {
+    if (isCountBasedUnit(unit)) return quantity;
+    const conversionFactors = {
+      ml: 1,
+      l: 1000,
+      g: 1,
+      kg: 1000,
+    };
+    return quantity * (conversionFactors[unit.toLowerCase()] || 1);
+  };
+
+  const formatQuantity = (quantity, unit) => {
+    if (isCountBasedUnit(unit)) return `${quantity} ${unit === '' ? 'count' : unit}`;
+    if (unit.toLowerCase() === 'l' && quantity < 1) {
+      return `${quantity * 1000} ml`;
+    }
+    if (unit.toLowerCase() === 'kg' && quantity < 1) {
+      return `${quantity * 1000} g`;
+    }
+    return `${quantity} ${unit}`;
+  };
+
+  const groupedIngredients = useMemo(() => {
+    return ingredients.reduce((acc, ingredient) => {
+      if (!acc[ingredient.name]) {
+        acc[ingredient.name] = [];
+      }
+      acc[ingredient.name].push(ingredient);
+      return acc;
+    }, {});
+  }, [ingredients]);
+
+  const processedIngredients = useMemo(() => {
+    return Object.entries(groupedIngredients).map(([name, items]) => {
+      const totalQuantity = items.reduce((sum, item) => sum + convertToBaseUnit(item.quantity, item.unit), 0);
+      const baseUnit = isCountBasedUnit(items[0].unit) ? items[0].unit : 
+                       (items[0].unit.toLowerCase() === 'l' || items[0].unit.toLowerCase() === 'ml' ? 'l' : 'kg');
+      const displayQuantity = isCountBasedUnit(baseUnit) ? totalQuantity : 
+                              (baseUnit === 'l' ? totalQuantity / 1000 : totalQuantity / 1000);
+
+      return {
+        name,
+        items,
+        totalQuantity: formatQuantity(displayQuantity, baseUnit),
+        isExpanded: expandedItems[name] || false
+      };
+    });
+  }, [groupedIngredients, expandedItems]);
+
+  return {
+    processedIngredients,
+    toggleExpand,
+    formatQuantity
+  };
 }

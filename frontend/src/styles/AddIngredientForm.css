@@ -11,6 +11,16 @@
   border-color: #000000;
 }
 
+.add-ingredient-form .form-control::placeholder {
+  color: #6c757d;
+  opacity: 1;
+}
+
+.add-ingredient-form .form-control:focus::placeholder {
+  color: #6c757d;
+  opacity: 0.5;
+}
+
 .unit-input-container {
   position: relative;
 }
@@ -81,6 +91,21 @@ input[type="date"]::after {
     no-repeat;
   background-size: contain;
   pointer-events: none;
+}
+
+.add-ingredient-form input[type="date"]::before {
+  content: attr(placeholder);
+  color: #6c757d;
+  position: absolute;
+  top: 50%;
+  left: 0.5rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.add-ingredient-form input[type="date"]:focus::before,
+.add-ingredient-form input[type="date"]:valid::before {
+  display: none;
 }
 
 select.form-control optgroup {

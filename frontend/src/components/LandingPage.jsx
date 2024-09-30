@@ -32,7 +32,7 @@ function LandingPage() {
   const particlesOptions = {
     background: {
       color: {
-        value: "#007a4d",
+        value: "#198754",
       },
     },
     particles: {

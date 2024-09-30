@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import RecipeCard from "./RecipeCard";
+import SkeletonRecipeCard from "./SkeletonRecipeCard";
 import { useRecipeSearch } from "../../hooks/useRecipeSearch";
 import { useRecipes } from "../../contexts/RecipeContext";
 import ContentWrapper from "../layout/ContentWrapper";
@@ -76,7 +77,7 @@ function Recipes() {
   } = useRecipeSearch();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const recipesPerPage = 9;
+  const recipesPerPage = 12;
 
   const indexOfLastRecipe = currentPage * recipesPerPage;
   const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
@@ -143,6 +144,16 @@ function Recipes() {
       </div>
     );
   };
+
+  const SkeletonLoader = () => (
+    <div className="row">
+      {[...Array(12)].map((_, index) => (
+        <div key={index} className="col-md-3 col-sm-6 mb-4">
+          <SkeletonRecipeCard />
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <ContentWrapper>
@@ -234,16 +245,16 @@ function Recipes() {
 
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h4>Recipes</h4>
-          <PaginationControls />
+          {!isLoading && <PaginationControls />}
         </div>
 
         {isLoading ? (
-          <p>Loading recipes...</p>
+          <SkeletonLoader />
         ) : (
           <>
             <div className="row">
               {currentRecipes.map((recipe, index) => (
-                <div key={index} className="col-md-4 mb-4">
+                <div key={index} className="col-md-3 col-sm-6 mb-4">
                   <RecipeCard
                     recipe={recipe}
                     isLiked={likedRecipes.includes(recipe.uri)}

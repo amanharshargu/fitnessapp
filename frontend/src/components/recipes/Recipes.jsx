@@ -75,6 +75,75 @@ function Recipes() {
     applyFilters,
   } = useRecipeSearch();
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const recipesPerPage = 9;
+
+  const indexOfLastRecipe = currentPage * recipesPerPage;
+  const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
+  const currentRecipes = recipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
+
+  const totalPages = Math.ceil(recipes.length / recipesPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const PaginationControls = ({ isBottom }) => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+
+    return (
+      <div className={`pagination-container d-flex justify-content-center ${isBottom ? 'pagination-bottom' : ''}`}>
+        <ul className="pagination">
+          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>
+              &laquo;
+            </button>
+          </li>
+          {startPage > 1 && (
+            <>
+              <li className="page-item">
+                <button className="page-link" onClick={() => handlePageChange(1)}>1</button>
+              </li>
+              {startPage > 2 && <li className="page-item disabled"><span className="page-link">...</span></li>}
+            </>
+          )}
+          {pageNumbers.map(number => (
+            <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
+              <button className="page-link" onClick={() => handlePageChange(number)}>
+                {number}
+              </button>
+            </li>
+          ))}
+          {endPage < totalPages && (
+            <>
+              {endPage < totalPages - 1 && <li className="page-item disabled"><span className="page-link">...</span></li>}
+              <li className="page-item">
+                <button className="page-link" onClick={() => handlePageChange(totalPages)}>{totalPages}</button>
+              </li>
+            </>
+          )}
+          <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>
+              &raquo;
+            </button>
+          </li>
+        </ul>
+      </div>
+    );
+  };
+
   return (
     <ContentWrapper>
       <div className="container mt-5 recipes-container">
@@ -163,20 +232,28 @@ function Recipes() {
           </div>
         )}
 
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h4>Recipes</h4>
+          <PaginationControls />
+        </div>
+
         {isLoading ? (
           <p>Loading recipes...</p>
         ) : (
-          <div className="row">
-            {recipes.map((recipe, index) => (
-              <div key={index} className="col-md-4 mb-4">
-                <RecipeCard
-                  recipe={recipe}
-                  isLiked={likedRecipes.includes(recipe.uri)}
-                  onLikeToggle={() => toggleLikedRecipe(recipe.uri)}
-                />
-              </div>
-            ))}
-          </div>
+          <>
+            <div className="row">
+              {currentRecipes.map((recipe, index) => (
+                <div key={index} className="col-md-4 mb-4">
+                  <RecipeCard
+                    recipe={recipe}
+                    isLiked={likedRecipes.includes(recipe.uri)}
+                    onLikeToggle={() => toggleLikedRecipe(recipe.uri)}
+                  />
+                </div>
+              ))}
+            </div>
+            <PaginationControls isBottom={true} />
+          </>
         )}
       </div>
     </ContentWrapper>

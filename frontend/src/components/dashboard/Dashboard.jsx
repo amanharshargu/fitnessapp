@@ -4,9 +4,8 @@ import { useUserDetails } from "../../contexts/UserDetailsContext";
 import UserProfileCard from "./UserProfileCard";
 import WeeklyCalorieTracker from "./WeeklyCalorieTracker";
 import WeeklyCalorieGoal from "./WeeklyCalorieGoal";
-import MealPlanner from "./MealPlanner";
 import ContentWrapper from "../layout/ContentWrapper";
-import "../../styles/dashboard.css";
+import "../../styles/Dashboard.css";
 
 function Dashboard({ onSetUserDetails }) {
   const { user } = useAuth();
@@ -51,9 +50,6 @@ function Dashboard({ onSetUserDetails }) {
                 />
                 <WeeklyCalorieGoal userDetails={userDetails} />
                 <WeeklyCalorieTracker userDetails={userDetails} />
-              </div>
-              <div className="dashboard-row">
-                <MealPlanner />
               </div>
             </>
           ) : (

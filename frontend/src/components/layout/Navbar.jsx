@@ -28,6 +28,11 @@ function Navbar() {
             <span>Liked Recipes</span>
           </Link>
         </li>
+        <li className="nav-item">
+          <Link to="/meal-planner" className={`nav-link ${location.pathname === "/meal-planner" ? "active" : ""}`}>
+            <span>Meal Planner</span>
+          </Link>
+        </li>
       </ul>
     </nav>
   );

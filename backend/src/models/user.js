@@ -58,6 +58,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      activityLevel: {
+        type: DataTypes.ENUM("sedentary", "lightlyActive", "moderatelyActive", "veryActive", "extraActive"),
+        allowNull: true,
+      },
     },
     {
       tableName: "Users",

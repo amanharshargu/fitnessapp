@@ -3,7 +3,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useUserDetails } from "../../contexts/UserDetailsContext";
 import UserProfileCard from "./UserProfileCard";
 import WeeklyCalorieTracker from "./WeeklyCalorieTracker";
-import WeeklyCalorieGoal from "./WeeklyCalorieGoal";
+import DailyCalorieGoal from "./DailyCalorieGoal";
 import ContentWrapper from "../layout/ContentWrapper";
 import "../../styles/Dashboard.css";
 
@@ -12,10 +12,12 @@ function Dashboard({ onSetUserDetails }) {
   const { fetchUserDetails, userDetails } = useUserDetails();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [key, setKey] = useState(0);
 
   const loadUserDetails = useCallback(async () => {
     try {
       await fetchUserDetails();
+      setKey(prevKey => prevKey + 1);
     } catch (err) {
       console.error("Failed to fetch user details:", err);
       setError("Failed to load user details. Please try again.");
@@ -27,6 +29,10 @@ function Dashboard({ onSetUserDetails }) {
   useEffect(() => {
     loadUserDetails();
   }, [loadUserDetails]);
+
+  useEffect(() => {
+    setKey(prevKey => prevKey + 1);
+  }, [userDetails]);
 
   if (loading) {
     return <div className="loading-message">Loading user details...</div>;
@@ -44,12 +50,13 @@ function Dashboard({ onSetUserDetails }) {
             <>
               <div className="dashboard-row">
                 <UserProfileCard
+                  key={`profile-${key}`}
                   userDetails={userDetails}
                   user={user}
                   onSetUserDetails={onSetUserDetails}
                 />
-                <WeeklyCalorieGoal userDetails={userDetails} />
-                <WeeklyCalorieTracker userDetails={userDetails} />
+                <DailyCalorieGoal key={`calorie-goal-${key}`} userDetails={userDetails} />
+                <WeeklyCalorieTracker key={`calorie-tracker-${key}`} userDetails={userDetails} />
               </div>
             </>
           ) : (

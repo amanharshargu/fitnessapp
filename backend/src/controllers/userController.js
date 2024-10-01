@@ -1,5 +1,5 @@
 const { User } = require("../models");
-const { calculateDailyCalorieGoal } = require("../utils/calorieCalculator");
+const { calculateCalories } = require("../utils/calorieCalculator");
 const { Op } = require("sequelize");
 
 exports.getProfile = async (req, res) => {
@@ -32,13 +32,15 @@ exports.updateProfile = async (req, res) => {
     user.age = age || user.age;
     user.gender = gender || user.gender;
     user.goal = goal || user.goal;
+    user.activityLevel = activityLevel || user.activityLevel;
 
-    user.dailyCalorieGoal = calculateDailyCalorieGoal(
+    user.dailyCalorieGoal = calculateCalories(
       user.weight,
       user.height,
       user.age,
       user.gender,
-      user.goal
+      user.goal,
+      user.activityLevel
     );
 
     await user.save();
@@ -54,7 +56,7 @@ exports.updateProfile = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { height, weight, age, gender, goal } = req.body;
+    const { height, weight, age, gender, goal, activityLevel } = req.body;
 
     const user = await User.findByPk(userId);
 
@@ -68,6 +70,7 @@ exports.updateUser = async (req, res) => {
       age,
       gender,
       goal,
+      activityLevel,
     });
 
     res.json({ message: "User updated successfully", user });

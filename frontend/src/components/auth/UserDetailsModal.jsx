@@ -18,6 +18,7 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
         age: user.age || "",
         gender: user.gender || "",
         goal: user.goal || "",
+        activityLevel: user.activityLevel || "",
       });
     }
   }, [user, updateUserDetails]);
@@ -112,6 +113,23 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
               <option value="lose_weight">Lose Weight</option>
               <option value="gain_weight">Gain Weight</option>
               <option value="maintain_weight">Maintain Weight</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="activityLevel">Activity Level</label>
+            <select
+              id="activityLevel"
+              name="activityLevel"
+              value={userDetails.activityLevel}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Select activity level</option>
+              <option value="sedentary">Sedentary</option>
+              <option value="lightlyActive">Lightly Active</option>
+              <option value="moderatelyActive">Moderately Active</option>
+              <option value="veryActive">Very Active</option>
+              <option value="extraActive">Extra Active</option>
             </select>
           </div>
           <button type="submit" className="submit-btn">

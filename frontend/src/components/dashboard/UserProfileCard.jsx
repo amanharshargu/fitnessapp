@@ -42,6 +42,14 @@ function UserProfileCard({ userDetails, user, onSetUserDetails }) {
                 .replace(/\b\w/g, (l) => l.toUpperCase())
             : "Not set"}
         </p>
+        <p>
+          <strong>Activity Level:</strong>{" "}
+          {userDetails.activityLevel
+            ? userDetails.activityLevel
+                .replace(/([A-Z])/g, ' $1')
+                .replace(/^./, str => str.toUpperCase())
+            : "Not set"}
+        </p>
       </div>
       <button className="set-details-btn" onClick={handleSetUserDetails}>
         Set User Details

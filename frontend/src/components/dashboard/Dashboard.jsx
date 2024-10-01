@@ -28,7 +28,7 @@ function Dashboard({ onSetUserDetails }) {
 
   useEffect(() => {
     loadUserDetails();
-  }, [loadUserDetails]);
+  }, []);
 
   useEffect(() => {
     setKey(prevKey => prevKey + 1);

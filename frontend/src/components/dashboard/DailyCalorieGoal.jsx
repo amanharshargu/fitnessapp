@@ -4,7 +4,7 @@ import api from "../../services/api";
 
 function DailyCalorieGoal(){
   const [dailyCalorieGoal, setDailyCalorieGoal] = useState(0);
-  const [totalDailyCalories, setTotalDailyCalories] = useState(0);
+  const [totalDailyCalories, setTotalDailyCalories] = useState(1388);
 
   useEffect(() => {
     const fetchCalorieGoal = async () => {

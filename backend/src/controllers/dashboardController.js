@@ -45,15 +45,6 @@ exports.getCalorieGoal = async (req, res) => {
 
     const { height, weight, age, gender, goal, activityLevel } = user;
     const dailyCalories = calculateCalories(weight, height, age, gender, goal, activityLevel);
-    console.log('User details:', {
-      height,
-      weight,
-      age,
-      gender,
-      goal,
-      activityLevel
-    });
-    console.log('Daily calorie goal:', dailyCalories);
 
     res.json({ dailyCalories });
   } catch (error) {

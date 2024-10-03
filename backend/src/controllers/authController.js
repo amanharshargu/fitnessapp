@@ -2,57 +2,32 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 const { calculateDailyCalorieGoal } = require("../utils/calorieCalculator");
+const { JWT_SECRET } = require("../config");
 
 const register = async (req, res) => {
   try {
-    const { username, email, password, weight, height, age, gender, goal } =
-      req.body;
+    const { username, email, password } = req.body;
 
+    // Check if user already exists
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "User already exists", error: "Email is already registered" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Create new user
+    const user = await User.create({ username, email, password });
 
-    const userFields = {
-      username,
-      email,
-      password: hashedPassword,
-    };
+    // Generate JWT token
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1d" });
 
-    if (weight) userFields.weight = weight;
-    if (height) userFields.height = height;
-    if (age) userFields.age = age;
-    if (gender) userFields.gender = gender;
-    if (goal) userFields.goal = goal;
-
-    if (weight && height && age && gender && goal) {
-      userFields.dailyCalorieGoal = calculateDailyCalorieGoal(
-        weight,
-        height,
-        age,
-        gender,
-        goal
-      );
-    }
-
-    const user = await User.create(userFields);
-
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
-
-    res
-      .status(201)
-      .json({
-        token,
-        user: { id: user.id, username: user.username, email: user.email },
-      });
+    res.status(201).json({ message: "User registered successfully", user, token });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error registering user", error: error.message });
+    console.error("Registration error:", error);
+    res.status(500).json({ 
+      message: "Error registering user", 
+      error: error.message,
+      details: error.errors ? error.errors.map(e => e.message) : undefined
+    });
   }
 };
 

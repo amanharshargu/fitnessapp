@@ -22,9 +22,6 @@ exports.calculateCalories = (weight, height, age, gender, goal, activityLevel) =
   const bmr = calculateBMR(weight, height, age, gender);
   const tdee = calculateTDEE(bmr, activityLevel);
 
-  console.log('BMR:', bmr);
-  console.log('TDEE:', tdee);
-
   switch (goal) {
     case 'lose_weight':
       return Math.round(tdee * 0.85);

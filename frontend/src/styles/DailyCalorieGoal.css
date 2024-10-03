@@ -1,61 +1,262 @@
-.daily-calorie-goal {
+.dcg-daily-calorie-goal {
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
   display: flex;
   flex-direction: column;
-  height: 100%;
   transition: box-shadow 0.3s ease;
+  overflow-y: auto;
+  max-height: 100%;
 }
 
-.daily-calorie-goal:hover {
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+.dcg-goal-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
 }
 
-.goal-chart {
+.dcg-goal-chart-container {
+  flex: 0 0 auto;
   width: 180px;
-  height: 180px;
-  margin: 0 auto;
 }
 
-.circular-chart {
-  display: block;
-  margin: 10px auto;
-  max-width: 90%;
-  max-height: 180px;
+.dcg-goal-chart {
+  width: 100%;
+  height: auto;
 }
 
-.circle-bg {
-  fill: none;
-  stroke: #f0f0f0;
-  stroke-width: 3.5;
+.dcg-goal-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.circle {
-  fill: none;
-  stroke-width: 3;
-  stroke-linecap: round;
-  animation: progress 1s ease-out forwards;
+.dcg-dishes-list-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 300px;
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 8px;
 }
 
-@keyframes progress {
-  0% {
-    stroke-dasharray: 0 100;
-  }
+.dcg-dishes-list {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
-.percentage {
-  fill: #333;
-  font-family: Arial, sans-serif;
-  font-size: 0.55em;
+.dcg-dishes-list li {
+  flex-basis: calc(50% - 7.5px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Increased shadow */
+  transition: all 0.3s ease;
+  height: 140px;
+  overflow: hidden;
+}
+
+.dcg-dishes-list li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
+}
+
+.dcg-dish-info {
+  font-size: 1.1em; /* Increased from 0.95em */
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.dcg-dish-calories {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 4px;
+}
+
+.dcg-dish-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 35px;
+}
+
+.dcg-dish-actions button {
+  background-color: transparent;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9em; /* Increased from 0.85em */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dcg-dish-actions button:first-child {
+  color: #3498db;
+}
+
+.dcg-dish-actions button:last-child {
+  color: #e74c3c;
+}
+
+.dcg-dish-actions button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dcg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.dcg-form-inputs {
+  display: flex;
+  gap: 10px;
+}
+
+.dcg-form-inputs input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.dcg-form-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.dcg-form button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
   font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  font-size: 0.9em;
+}
+
+.dcg-form button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: all 0.5s;
+}
+
+.dcg-form button:hover {
+  background-color: #2980b9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.dcg-form button:hover::before {
+  left: 100%;
+}
+
+.dcg-form button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.dcg-circular-chart {
+  width: 100%;
+  height: auto;
+}
+
+.dcg-circle-bg {
+  fill: none;
+  stroke: #eee;
+  stroke-width: 2;
+}
+
+.dcg-circle {
+  fill: none;
+  stroke-width: 2;
+  transition: stroke-dasharray 0.3s ease;
+}
+
+.dcg-percentage {
+  fill: #666;
+  font-family: sans-serif;
+  font-size: 0.5em;
   text-anchor: middle;
 }
 
-.calorie-info {
-  margin-top: 15px;
-  font-size: 16px;
+.dcg-calorie-info {
   text-align: center;
-  color: #444;
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.dcg-editing-dish {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.dcg-editing-dish input {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  margin-bottom: 8px;
+}
+
+.dcg-editing-dish-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: auto; /* Push buttons to the bottom */
+}
+
+.dcg-editing-dish-actions button {
+  padding: 6px 10px;
+  font-size: 0.9em;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dcg-editing-dish-actions button:hover {
+  background-color: #2980b9;
+}
+
+.dcg-editing-dish-actions button:last-child {
+  background-color: #e74c3c;
+}
+
+.dcg-editing-dish-actions button:last-child:hover {
+  background-color: #c0392b;
 }

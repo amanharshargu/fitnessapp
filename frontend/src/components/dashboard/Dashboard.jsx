@@ -49,14 +49,20 @@ function Dashboard({ onSetUserDetails }) {
           {user ? (
             <>
               <div className="dashboard-row">
-                <UserProfileCard
-                  key={`profile-${key}`}
-                  userDetails={userDetails}
-                  user={user}
-                  onSetUserDetails={onSetUserDetails}
-                />
-                <DailyCalorieGoal key={`calorie-goal-${key}`} userDetails={userDetails} />
-                <WeeklyCalorieTracker key={`calorie-tracker-${key}`} userDetails={userDetails} />
+                <div className="dashboard-column">
+                  <UserProfileCard
+                    key={`profile-${key}`}
+                    userDetails={userDetails}
+                    user={user}
+                    onSetUserDetails={onSetUserDetails}
+                  />
+                </div>
+                <div className="dashboard-column">
+                  <DailyCalorieGoal key={`calorie-goal-${key}`} userDetails={userDetails} />
+                </div>
+                <div className="dashboard-column">
+                  <WeeklyCalorieTracker key={`calorie-tracker-${key}`} userDetails={userDetails} />
+                </div>
               </div>
             </>
           ) : (

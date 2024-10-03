@@ -78,7 +78,6 @@ function MealPlanner() {
           },
         }
       );
-      console.log("API Response:", response.data);
       await fetchRecipeDetails(response.data);
     } catch (err) {
       setError("Failed to fetch meal plan. Please try again later.");
@@ -158,8 +157,7 @@ function MealPlanner() {
 
   const renderMealPlan = () => {
     if (!mealPlan) return null;
-    console.log("Meal Plan Data:", mealPlan);
-
+    
     const daysOfWeek = [
       "Monday",
       "Tuesday",

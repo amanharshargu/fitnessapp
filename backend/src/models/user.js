@@ -59,7 +59,13 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false,
       },
       activityLevel: {
-        type: DataTypes.ENUM("sedentary", "lightlyActive", "moderatelyActive", "veryActive", "extraActive"),
+        type: DataTypes.ENUM(
+          "sedentary",
+          "lightlyActive",
+          "moderatelyActive",
+          "veryActive",
+          "extraActive"
+        ),
         allowNull: true,
       },
     },

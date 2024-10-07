@@ -8,25 +8,37 @@ function RecipeCard({ recipe, isLiked, onLikeToggle }) {
     setShowDetails(!showDetails);
   };
 
+  const caloriesPerServing = Math.round(recipe.calories / recipe.yield);
+
   return (
     <div className={`recipe-card ${showDetails ? 'show-details' : ''}`}>
       <div className="recipe-card__main">
         <div className="recipe-card__image-container">
           <img className="recipe-card__image" src={recipe.image} alt={recipe.label} />
+          <button 
+            className={`recipe-card__like-button ${isLiked ? 'recipe-card__like-button--liked' : ''}`} 
+            onClick={() => onLikeToggle(recipe.uri)}
+          >
+            {isLiked ? '❤️' : '🤍'}
+          </button>
         </div>
         <div className="recipe-card__content">
           <h3 className="recipe-card__title">{recipe.label}</h3>
           <div className="recipe-card__info-container">
-            <p className="recipe-card__info">Calories: {Math.round(recipe.calories)}</p>
-            <p className="recipe-card__info">Ingredients: {recipe.ingredientLines.length}</p>
+            <div className="recipe-card__info-item">
+              <span className="recipe-card__info-number">{caloriesPerServing}</span>
+              <small className="recipe-card__info-label">cal/serving</small>
+            </div>
+            <div className="recipe-card__info-item">
+              <span className="recipe-card__info-number">{recipe.yield}</span>
+              <small className="recipe-card__info-label">servings</small>
+            </div>
+            <div className="recipe-card__info-item">
+              <span className="recipe-card__info-number">{recipe.ingredientLines.length}</span>
+              <small className="recipe-card__info-label">ingredients</small>
+            </div>
           </div>
           <div className="recipe-card__button-group">
-            <button 
-              className={`recipe-card__button recipe-card__button--like ${isLiked ? 'recipe-card__button--liked' : ''}`} 
-              onClick={() => onLikeToggle(recipe.uri)}
-            >
-              {isLiked ? 'Unlike' : 'Like'}
-            </button>
             <button 
               className="recipe-card__button recipe-card__button--details" 
               onClick={toggleDetails}

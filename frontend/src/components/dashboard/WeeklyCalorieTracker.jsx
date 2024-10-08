@@ -13,6 +13,13 @@ function WeeklyCalorieTracker({ userDetails }) {
     { day: 'Sun', calories: 2500 },
   ];
 
+  // Placeholder data for previous weeks
+  const previousWeeksData = [
+    { week: 'Last Week', avgCalories: 2250 },
+    { week: '2 Weeks Ago', avgCalories: 2180 },
+    { week: '3 Weeks Ago', avgCalories: 2300 },
+  ];
+
   return (
     <div className="weekly-calorie-tracker">
       <h3>Weekly Calorie Tracker</h3>
@@ -23,6 +30,16 @@ function WeeklyCalorieTracker({ userDetails }) {
             <span className="day">{day.day}</span>
           </div>
         ))}
+      </div>
+      <div className="previous-weeks-tracker">
+        <h4>Previous Weeks Average Daily Calories</h4>
+        <ul>
+          {previousWeeksData.map((week) => (
+            <li key={week.week}>
+              <span>{week.week}:</span> {week.avgCalories} calories/day
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

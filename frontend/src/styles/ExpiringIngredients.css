@@ -1,39 +1,27 @@
 .expiring-ingredients {
-  margin: auto auto;
-  
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .expiring-ingredients h3 {
-  margin-bottom: 1rem;
-  color: #343a40;
+  color: #FF9800;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
 }
 
 .expiring-list {
-  padding-left: 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 0.25rem;
-  overflow: hidden;
+  list-style-type: none;
+  padding: 0;
 }
 
 .expiring-item {
-  padding: 0.5rem;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.expiring-item:nth-child(odd) {
-  background-color: #f8f9fa;
-}
-
-.expiring-item:nth-child(even) {
-  background-color: #ffffff;
-}
-
-.expiring-item:hover {
-  background-color: #e9ecef;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
 }
 
 .ingredient-details {
@@ -42,12 +30,13 @@
 }
 
 .ingredient-name {
-  font-weight: 500;
+  font-weight: bold;
+  color: #333;
 }
 
 .ingredient-quantity {
-  font-size: 0.875rem;
-  color: #6c757d;
+  color: #666;
+  font-size: 0.9rem;
 }
 
 .expiration-info {
@@ -56,28 +45,22 @@
 }
 
 .expiration-badge {
-  background-color: #ffc107;
-  color: #212529;
-  padding: 0.25em 0.5em;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
-  margin-right: 0.5rem;
-  box-shadow: 0 2px 4px rgba(255, 193, 7, 0.4);
+  background-color: #FFD600;
+  color: #333;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  margin-right: 10px;
 }
 
 .delete-button {
   background-color: transparent;
-  color: #dc3545;
-  border: 1px solid #dc3545;
-  border-radius: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
-  transition: all 0.2s ease;
+  border: none;
+  color: #FF9800;
   cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .delete-button:hover {
-  background-color: #dc3545;
-  color: white;
-  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.4);
+  color: #F57C00;
 }

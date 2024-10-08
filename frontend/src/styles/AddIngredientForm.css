@@ -1,71 +1,92 @@
 .add-ingredient-form {
+  background-color: #fff;
+  border-radius: 10px;
   padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
+  margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-ingredient-form input[type="text"],
+.add-ingredient-form input[type="number"],
+.add-ingredient-form input[type="date"] {
+  width: 100%;
+  padding: 10px;
   margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: border-color 0.3s ease, color 0.3s ease;
 }
 
-.add-ingredient-form .form-control:focus {
-  color: #000000;
-  border-color: #000000;
+.add-ingredient-form input[type="text"]:focus,
+.add-ingredient-form input[type="number"]:focus,
+.add-ingredient-form input[type="date"]:focus {
+  border-color: #FF7800;
+  color: #FF7800; /* Yellowish text color on focus */
+  outline: none;
 }
 
-.add-ingredient-form .form-control::placeholder {
-  color: #6c757d;
-  opacity: 1;
+.add-ingredient-form button {
+  background-color: #FFD600;
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.add-ingredient-form .form-control:focus::placeholder {
-  color: #6c757d;
-  opacity: 0.5;
+.add-ingredient-form button:hover {
+  background-color: #FFC107;
+  transform: translateY(-2px);
 }
 
-.unit-input-container {
+.add-ingredient-form .unit-input-container {
   position: relative;
 }
 
-.unit-suggestions {
+.add-ingredient-form .unit-suggestions {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  background-color: white;
-  border: 1px solid #ced4da;
+  background-color: #fff;
+  border: 1px solid #ddd;
   border-top: none;
-  border-radius: 0 0 4px 4px;
+  border-radius: 0 0 5px 5px;
   list-style-type: none;
   padding: 0;
   margin: 0;
-  max-height: 200px;
+  max-height: 150px;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 10;
 }
 
-.unit-suggestions li {
-  padding: 8px 12px;
+.add-ingredient-form .unit-suggestions li {
+  padding: 8px 10px;
   cursor: pointer;
 }
 
-.unit-suggestions li:hover {
-  background-color: #f8f9fa;
+.add-ingredient-form .unit-suggestions li:hover {
+  background-color: #f0f0f0;
 }
 
-input[type="date"] {
+.add-ingredient-form input[type="date"] {
   position: relative;
   appearance: none;
   -webkit-appearance: none;
   color: #444;
   font-family: inherit;
   font-size: 14px;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
   background: #fff;
   cursor: pointer;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
+.add-ingredient-form input[type="date"]::-webkit-calendar-picker-indicator {
   position: absolute;
   top: 0;
   left: 0;
@@ -75,45 +96,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   height: auto;
   color: transparent;
   background: transparent;
-  z-index: 1;
-}
-
-input[type="date"]::after {
-  content: "";
-  display: block;
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z'/%3E%3C/svg%3E")
-    no-repeat;
-  background-size: contain;
-  pointer-events: none;
 }
 
 .add-ingredient-form input[type="date"]::before {
   content: attr(placeholder);
-  color: #6c757d;
   position: absolute;
   top: 50%;
-  left: 0.5rem;
+  left: 10px;
   transform: translateY(-50%);
+  color: #6c757d;
   pointer-events: none;
 }
 
 .add-ingredient-form input[type="date"]:focus::before,
 .add-ingredient-form input[type="date"]:valid::before {
   display: none;
-}
-
-select.form-control optgroup {
-  font-weight: bold;
-  color: #555;
-}
-
-select.form-control option {
-  font-weight: normal;
-  padding-left: 15px;
 }

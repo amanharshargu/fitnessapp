@@ -1,83 +1,66 @@
 .weekly-calorie-tracker {
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 22px; /* Increased from 20px to 22px */
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.weekly-calorie-tracker h3 {
+  color: #FF9800;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
 }
 
 .calorie-chart {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  height: 165px; /* Increased from 150px to 165px */
-  margin-top: 22px; /* Increased from 20px to 22px */
+  height: 200px;
 }
 
 .calorie-bar {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 30px;
+  width: 12%;
 }
 
 .bar {
   width: 100%;
-  background-color: #007bff;
+  background-color: #FFD600;
   transition: height 0.3s ease;
 }
 
 .day {
   margin-top: 5px;
-  font-size: 12px;
+  font-size: 0.8rem;
+  color: #333;
 }
 
-.weekly-calorie-goal {
-  text-align: center;
+.previous-weeks-tracker {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0;
 }
 
-.goal-chart {
-  width: 165px; 
-  height: 165px; 
-  margin: 0 auto;
+.previous-weeks-tracker h4 {
+  color: #FF9800;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
 }
 
-.circular-chart {
-  display: block;
-  margin: 11px auto; /* Increased from 10px to 11px */
-  max-width: 88%; /* Increased from 80% to 88% */
-  max-height: 165px; /* Increased from 150px to 165px */
+.previous-weeks-tracker ul {
+  list-style-type: none;
+  padding: 0;
 }
 
-.circle-bg {
-  fill: none;
-  stroke: #eee;
-  stroke-width: 3.8;
+.previous-weeks-tracker li {
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #333;
 }
 
-.circle {
-  fill: none;
-  stroke-width: 2.8;
-  stroke-linecap: round;
-  animation: progress 1s ease-out forwards;
-}
-
-@keyframes progress {
-  0% {
-    stroke-dasharray: 0 100;
-  }
-}
-
-.percentage {
-  fill: #666;
-  font-family: sans-serif;
-  font-size: 0.5em;
-  text-anchor: middle;
-}
-
-.calorie-info {
-  margin-top: 10px;
-  font-size: 14px;
+.previous-weeks-tracker li span {
+  font-weight: bold;
+  margin-right: 5px;
 }

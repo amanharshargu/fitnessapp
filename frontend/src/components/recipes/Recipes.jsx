@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import RecipeCard from "./RecipeCard";
-import SkeletonRecipeCard from "./SkeletonRecipeCard";
 import { useRecipeSearch } from "../../hooks/useRecipeSearch";
 import { useRecipes } from "../../contexts/RecipeContext";
 import "../../styles/Recipes.css";
@@ -150,13 +149,35 @@ function Recipes() {
     );
   };
 
-  const SkeletonLoader = () => (
-    <div className="row">
-      {[...Array(12)].map((_, index) => (
-        <div key={index} className="col-md-3 col-sm-6 mb-4">
-          <SkeletonRecipeCard />
-        </div>
-      ))}
+  const LoadingAnimation = () => (
+    <div className="loading-animation" style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      width: '100%',
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      zIndex: 1000
+    }}>
+      <div className="spinner" style={{
+        width: '50px',
+        height: '50px',
+        border: '5px solid #f3f3f3',
+        borderTop: '5px solid #ff9800',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite'
+      }}></div>
+      <style>
+        {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}
+      </style>
     </div>
   );
 
@@ -190,14 +211,13 @@ function Recipes() {
 
         {showFilters && (
           <div className="filters-section mb-1">
-            <h4>Filters</h4>
-            <div className="d-flex justify-content-start mb-3">
+            <div className="d-flex justify-content-start">
               {Object.keys(filterOptions).map((filterType) => (
                 <button
                   key={filterType}
                   className={`btn ${
                     activeFilter === filterType
-                      ? "btn-primary"
+                      ? "btn-primary active-filter"
                       : "btn-outline-primary"
                   } me-2`}
                   onClick={() =>
@@ -221,26 +241,17 @@ function Recipes() {
             </div>
             {activeFilter && (
               <div className="mb-3">
-                <h5>
-                  {activeFilter.charAt(0).toUpperCase() + activeFilter.slice(1)}
-                </h5>
-                <div className="d-flex flex-wrap">
+                <div className="filter-options">
                   {filterOptions[activeFilter].map((option) => (
-                    <div key={option} className="form-check me-3">
+                    <label key={option} className="custom-checkbox">
                       <input
-                        className="form-check-input"
                         type="checkbox"
-                        id={`${activeFilter}-${option}`}
                         checked={filters[activeFilter].includes(option)}
                         onChange={() => handleFilterChange(activeFilter, option)}
                       />
-                      <label
-                        className="form-check-label"
-                        htmlFor={`${activeFilter}-${option}`}
-                      >
-                        {option}
-                      </label>
-                    </div>
+                      <span className="checkmark"></span>
+                      <span className="label-text">{option}</span>
+                    </label>
                   ))}
                 </div>
               </div>
@@ -256,7 +267,7 @@ function Recipes() {
         )}
 
         {isLoading ? (
-          <SkeletonLoader />
+          <LoadingAnimation />
         ) : recipes.length > 0 ? (
           <>
             <div className="row">

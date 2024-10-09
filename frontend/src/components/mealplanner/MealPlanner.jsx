@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import CalorieSlider from "./CalorieSlider";
+import CalorieSlider from "../dashboard/CalorieSlider";
 import ContentWrapper from "../layout/ContentWrapper";
 import MealPlanDisplay from "./MealPlanDisplay";
 import "../../styles/MealPlanner.css";

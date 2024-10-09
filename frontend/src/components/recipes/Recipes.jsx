@@ -164,7 +164,7 @@ function Recipes() {
     <div className="recipes-container">
       <div className="recipes-content">
         <div className="search-and-filter">
-          <form onSubmit={handleSearchWrapper} className="search-form mb-4">
+          <form onSubmit={handleSearchWrapper} className="search-form">
             <div className="input-group">
               <input
                 type="text"
@@ -189,7 +189,7 @@ function Recipes() {
         </div>
 
         {showFilters && (
-          <div className="filters-section mb-4">
+          <div className="filters-section mb-1">
             <h4>Filters</h4>
             <div className="d-flex justify-content-start mb-3">
               {Object.keys(filterOptions).map((filterType) => (

@@ -15,6 +15,7 @@ function RecipeCard({ recipe, isLiked, onLikeToggle }) {
       <div className="recipe-card__main">
         <div className="recipe-card__image-container">
           <img className="recipe-card__image" src={recipe.image} alt={recipe.label} />
+          <div className="recipe-card__image-overlay"></div>
           <button 
             className={`recipe-card__like-button ${isLiked ? 'recipe-card__like-button--liked' : ''}`} 
             onClick={() => onLikeToggle(recipe.uri)}

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-// import RecipeCard from "../recipes/RecipeCard";
 import CalorieSlider from "./CalorieSlider";
 import ContentWrapper from "../layout/ContentWrapper";
+import MealPlanDisplay from "./MealPlanDisplay";
 import "../../styles/MealPlanner.css";
 
 const MEALPLAN_APP_ID = process.env.REACT_APP_MEALPLAN_APP_ID;
@@ -25,10 +25,12 @@ function MealPlanner() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState(initialFilters);
+  const [showFilters, setShowFilters] = useState(true);
 
   const fetchMealPlan = async () => {
     setLoading(true);
     setError(null);
+    setShowFilters(false);
     try {
       const response = await axios.post(
         `https://api.edamam.com/api/meal-planner/v1/${MEALPLAN_APP_ID}/select?app_id=${MEALPLAN_APP_ID}&app_key=${MEALPLAN_APP_KEY}`,
@@ -82,6 +84,7 @@ function MealPlanner() {
     } catch (err) {
       setError("Failed to fetch meal plan. Please try again later.");
       console.error("Error fetching meal plan:", err);
+      setShowFilters(true);
       setLoading(false);
     }
   };
@@ -155,191 +158,115 @@ function MealPlanner() {
     }
   };
 
-  const renderMealPlan = () => {
-    if (!mealPlan) return null;
-    
-    const daysOfWeek = [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ];
-
-    return (
-      <>
-        {mealPlan.status === "INCOMPLETE" && (
-          <p className="warning text-warning">
-            Note: The meal plan is incomplete. Some days may not have assigned
-            meals. Consider adjusting your dietary preferences or regenerating
-            the plan.
-          </p>
-        )}
-        <div className="meal-plan">
-          {daysOfWeek.map((day, index) => (
-            <div key={index} className="meal-day-row">
-              <div className="day-label text-primary">{day}</div>
-              <div className="meal-columns">
-                {["Breakfast", "Lunch", "Dinner"].map((mealType) => (
-                  <div key={mealType} className="meal-column">
-                    <h5 className="text-secondary">{mealType}</h5>
-                    {mealPlan.selection[index] &&
-                    mealPlan.selection[index].sections[mealType] &&
-                    mealPlan.selection[index].sections[mealType]
-                      .recipeDetails ? (
-                      <div className="recipe-card-compact">
-                        <img src={mealPlan.selection[index].sections[mealType].recipeDetails.image} alt={mealPlan.selection[index].sections[mealType].recipeDetails.label} />
-                        <div className="recipe-info">
-                          <h6 className="text-primary">{mealPlan.selection[index].sections[mealType].recipeDetails.label}</h6>
-                          <p className="calories-servings small-text text-secondary">
-                            {Math.round(mealPlan.selection[index].sections[mealType].recipeDetails.calories / mealPlan.selection[index].sections[mealType].recipeDetails.yield)} cal
-                            <span className="servings"> • {mealPlan.selection[index].sections[mealType].recipeDetails.yield} servings</span>
-                          </p>
-                          <p className="macros text-dark">
-                            Protein: {Math.round(mealPlan.selection[index].sections[mealType].recipeDetails.totalNutrients.PROCNT.quantity / mealPlan.selection[index].sections[mealType].recipeDetails.yield)}g | 
-                            Carbs: {Math.round(mealPlan.selection[index].sections[mealType].recipeDetails.totalNutrients.CHOCDF.quantity / mealPlan.selection[index].sections[mealType].recipeDetails.yield)}g | 
-                            Fat: {Math.round(mealPlan.selection[index].sections[mealType].recipeDetails.totalNutrients.FAT.quantity / mealPlan.selection[index].sections[mealType].recipeDetails.yield)}g
-                          </p>
-                        </div>
-                        <button className="view-recipe-btn btn btn-primary" onClick={() => handleViewRecipe(mealPlan.selection[index].sections[mealType].recipeDetails)}>
-                          View
-                        </button>
-                      </div>
-                    ) : (
-                      <p className="no-meal text-muted">No meal assigned</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </>
-    );
+  const handleBackToFilters = () => {
+    setShowFilters(true);
+    setMealPlan(null);
+    setError(null);
   };
 
   return (
     <ContentWrapper>
       <div className="meal-planner">
-        <form className="filters-form">
-          <h4>Customize Your Meal Plan</h4>
-          <div className="filter-group">
-            <h5 className="text-secondary">Health Labels</h5>
-            <div className="filter-options">
-              {[
-                "CELERY_FREE",
-                "CRUSTACEAN_FREE",
-                "DAIRY_FREE",
-                "EGG_FREE",
-                "FISH_FREE",
-                "GLUTEN_FREE",
-                "PEANUT_FREE",
-                "MUSTARD_FREE",
-                "SESAME_FREE",
-                "LUPINE_FREE",
-                "SHELLFISH_FREE",
-                "SOY_FREE",
-                "FODMAP_FREE",
-                "WHEAT_FREE",
-                "TREE_NUT_FREE",
-                "IMMUNO_SUPPORTIVE",
-                "ALCOHOL_FREE",
-                "KIDNEY_FRIENDLY",
-                "MEDITERRANEAN",
-                "PALEO",
-                "RED_MEAT_FREE",
-                "KOSHER",
-                "LOW_POTASSIUM",
-                "NO_OIL_ADDED",
-                "PESCATARIAN",
-                "SUGAR_CONSCIOUS",
-                "MOLLUSK_FREE",
-                "VEGETARIAN",
-                "SULFITE_FREE",
-                "VEGAN",
-                "PORK_FREE",
-                "LOW_SUGAR",
-                "KETO_FRIENDLY",
-                "DASH",
-              ].map((label) => (
-                <label key={label} className="text-dark">
-                  <input
-                    type="checkbox"
-                    name="health"
-                    value={label}
-                    checked={filters.health.includes(label)}
-                    onChange={(e) => handleFilterChange("health", e.target.checked ? [...filters.health, label] : filters.health.filter((item) => item !== label))}
-                  />
-                  {label.replace(/_/g, " ")}
-                </label>
-              ))}
+        {showFilters ? (
+          <div className="filters-container">
+            {/* <h4>Customize Your Meal Plan</h4> */}
+            <div className="filters-grid">
+              <div className="filter-group">
+                <h5>Health Labels</h5>
+                <div className="filter-options compact">
+                  {[
+                    "DAIRY_FREE", "EGG_FREE", "GLUTEN_FREE", "PEANUT_FREE",
+                    "VEGETARIAN", "VEGAN", "KETO_FRIENDLY", "LOW_CARB"
+                  ].map((label) => (
+                    <label key={label} className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="health"
+                        value={label}
+                        checked={filters.health.includes(label)}
+                        onChange={(e) => handleFilterChange("health", e.target.checked ? [...filters.health, label] : filters.health.filter((item) => item !== label))}
+                      />
+                      <span>{label.replace(/_/g, " ")}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div className="filter-group">
+                <h5>Diet Labels</h5>
+                <div className="filter-options compact">
+                  {[
+                    "BALANCED", "HIGH_PROTEIN", "LOW_FAT", "LOW_CARB"
+                  ].map((label) => (
+                    <label key={label} className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="diet"
+                        value={label}
+                        checked={filters.diet.includes(label)}
+                        onChange={(e) => handleFilterChange("diet", e.target.checked ? [...filters.diet, label] : filters.diet.filter((item) => item !== label))}
+                      />
+                      <span>{label.replace(/_/g, " ")}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div className="filter-group">
+                <h5>Calorie Ranges</h5>
+                <CalorieSlider
+                  label="Daily Total"
+                  min={1000}
+                  max={3000}
+                  value={filters.calories}
+                  onChange={(value) => handleFilterChange("calories", value)}
+                />
+                <CalorieSlider
+                  label="Breakfast"
+                  min={200}
+                  max={800}
+                  value={filters.breakfastCalories}
+                  onChange={(value) => handleFilterChange("breakfastCalories", value)}
+                />
+                <CalorieSlider
+                  label="Lunch"
+                  min={300}
+                  max={1000}
+                  value={filters.lunchCalories}
+                  onChange={(value) => handleFilterChange("lunchCalories", value)}
+                />
+                <CalorieSlider
+                  label="Dinner"
+                  min={300}
+                  max={1000}
+                  value={filters.dinnerCalories}
+                  onChange={(value) => handleFilterChange("dinnerCalories", value)}
+                />
+              </div>
             </div>
-          </div>
-          <div className="filter-group">
-            <h5 className="text-secondary">Diet Labels</h5>
-            <div className="filter-options">
-              {[
-                "HIGH_FIBER",
-                "LOW_FAT",
-                "BALANCED",
-                "HIGH_PROTEIN",
-                "LOW_SODIUM",
-                "LOW_CARB",
-              ].map((label) => (
-                <label key={label} className="text-dark">
-                  <input
-                    type="checkbox"
-                    name="diet"
-                    value={label}
-                    checked={filters.diet.includes(label)}
-                    onChange={(e) => handleFilterChange("diet", e.target.checked ? [...filters.diet, label] : filters.diet.filter((item) => item !== label))}
-                  />
-                  {label.replace(/_/g, " ")}
-                </label>
-              ))}
+            <div className="button-group">
+              <button type="button" onClick={fetchMealPlan} className="btn btn-primary">
+                Generate Meal Plan
+              </button>
+              <button type="button" onClick={handleClearFilters} className="btn btn-secondary">
+                Reset Filters
+              </button>
             </div>
+            {error && <p className="text-danger">{error}</p>}
           </div>
-          <CalorieSlider
-            label="Total Daily Calories"
-            min={500}
-            max={5000}
-            value={filters.calories}
-            onChange={(value) => handleFilterChange("calories", value)}
-          />
-          <CalorieSlider
-            label="Breakfast Calories"
-            min={0}
-            max={2000}
-            value={filters.breakfastCalories}
-            onChange={(value) => handleFilterChange("breakfastCalories", value)}
-          />
-          <CalorieSlider
-            label="Lunch Calories"
-            min={0}
-            max={2000}
-            value={filters.lunchCalories}
-            onChange={(value) => handleFilterChange("lunchCalories", value)}
-          />
-          <CalorieSlider
-            label="Dinner Calories"
-            min={0}
-            max={2000}
-            value={filters.dinnerCalories}
-            onChange={(value) => handleFilterChange("dinnerCalories", value)}
-          />
-          
-          <button type="button" onClick={fetchMealPlan} className="btn btn-primary">
-            Customize Meal Plan
-          </button>
-          <button type="button" onClick={handleClearFilters} className="btn btn-secondary">
-            Reset Filters
-          </button>
-        </form>
-        {loading && <p className="text-primary">Loading meal plan...</p>}
-        {error && <p className="text-danger">{error}</p>}
-        {!loading && !error && renderMealPlan()}
+        ) : (
+          <>
+            {loading && <p className="text-primary">Loading meal plan...</p>}
+            {!loading && mealPlan && (
+              <>
+                <button onClick={handleBackToFilters} className="btn btn-link back-button">
+                  <i className="fas fa-arrow-left"></i> Back
+                </button>
+                <div className="meal-plan-display-container">
+                  <MealPlanDisplay mealPlan={mealPlan} handleViewRecipe={handleViewRecipe} />
+                </div>
+              </>
+            )}
+          </>
+        )}
       </div>
     </ContentWrapper>
   );

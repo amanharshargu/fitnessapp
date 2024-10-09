@@ -6,7 +6,7 @@
 }
 
 .user-profile-card h3 {
-  color: #FF9800;
+  color: #ff9800;
   font-size: 1.5rem;
   margin-bottom: 15px;
 }
@@ -28,7 +28,7 @@
 }
 
 .set-details-btn {
-  background-color: #FFD600;
+  background-color: #ffd600;
   color: #333;
   border: none;
   padding: 10px 20px;
@@ -43,7 +43,7 @@
 }
 
 .set-details-btn:hover {
-  background-color: #FFC107;
+  background-color: #ffc107;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

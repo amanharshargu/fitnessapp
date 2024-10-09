@@ -38,7 +38,7 @@ function Header() {
                 setIsSignup(false);
               }}
             >
-              Sign In / Login
+            Sign Up / Log In
             </button>
           )}
         </div>

@@ -1,0 +1,75 @@
+.meal-plan {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 50px; /* Add this line to create space below the back button */
+}
+
+.meal-day-row {
+  display: flex;
+  gap: 10px;
+}
+
+.day-label {
+  width: 100px;
+  font-weight: bold;
+}
+
+.meal-columns {
+  display: flex;
+  flex-grow: 1;
+  gap: 10px;
+}
+
+.meal-column {
+  flex: 1;
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.recipe-card-compact {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-card-compact img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.recipe-info {
+  padding: 10px;
+}
+
+.calories-servings {
+  font-size: 0.9em;
+  margin-bottom: 5px;
+}
+
+.macros {
+  font-size: 0.8em;
+  margin-bottom: 10px;
+}
+
+.view-recipe-btn {
+  align-self: center;
+  margin-bottom: 10px;
+}
+
+.warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.no-meal {
+  font-style: italic;
+}

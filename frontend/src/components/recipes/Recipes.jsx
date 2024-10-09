@@ -162,114 +162,122 @@ function Recipes() {
 
   return (
     <div className="recipes-container">
-      <div className="search-and-filter">
-        <form onSubmit={handleSearchWrapper} className="search-form mb-4">
-          <div className="input-group">
-            <input
-              type="text"
-              className="form-control search-input"
-              placeholder="Search recipes"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button type="submit" className="btn btn-primary">
-              Search
-            </button>
-          </div>
-        </form>
-        <button
-          className={`btn ${
-            showFilters ? "btn-secondary" : "btn-outline-secondary"
-          } show-filters-btn`}
-          onClick={() => setShowFilters(!showFilters)}
-        >
-          {showFilters ? "Hide Filters" : "Show Filters"}
-        </button>
-      </div>
-
-      {showFilters && (
-        <div className="filters-section mb-4">
-          <h4>Filters</h4>
-          <div className="d-flex justify-content-start mb-3">
-            {Object.keys(filterOptions).map((filterType) => (
-              <button
-                key={filterType}
-                className={`btn ${
-                  activeFilter === filterType
-                    ? "btn-primary"
-                    : "btn-outline-primary"
-                } me-2`}
-                onClick={() =>
-                  setActiveFilter(
-                    activeFilter === filterType ? null : filterType
-                  )
-                }
-              >
-                {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
+      <div className="recipes-content">
+        <div className="search-and-filter">
+          <form onSubmit={handleSearchWrapper} className="search-form mb-4">
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control search-input"
+                placeholder="Search recipes"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button type="submit" className="btn btn-primary search-button">
+                Search
               </button>
-            ))}
-            <button
-              className="btn btn-outline-secondary me-2"
-              onClick={clearFilters}
-            >
-              Clear Filters
-            </button>
-            <button className="btn btn-success" onClick={() => { setCurrentPage(1); applyFilters(); }}>
-              Apply Filters
-            </button>
-          </div>
-          {activeFilter && (
-            <div className="mb-3">
-              <h5>
-                {activeFilter.charAt(0).toUpperCase() + activeFilter.slice(1)}
-              </h5>
-              <div className="d-flex flex-wrap">
-                {filterOptions[activeFilter].map((option) => (
-                  <div key={option} className="form-check me-3">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      id={`${activeFilter}-${option}`}
-                      checked={filters[activeFilter].includes(option)}
-                      onChange={() => handleFilterChange(activeFilter, option)}
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor={`${activeFilter}-${option}`}
-                    >
-                      {option}
-                    </label>
-                  </div>
-                ))}
-              </div>
             </div>
-          )}
+          </form>
+          <button
+            className={`btn ${
+              showFilters ? "btn-secondary" : "btn-outline-secondary"
+            } show-filters-btn`}
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            {showFilters ? "Hide Filters" : "Show Filters"}
+          </button>
         </div>
-      )}
 
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Recipes</h4>
-        {!isLoading && <PaginationControls />}
-      </div>
-
-      {isLoading ? (
-        <SkeletonLoader />
-      ) : (
-        <>
-          <div className="row">
-            {currentRecipes.map((recipe, index) => (
-              <div key={index} className="col-md-3 col-sm-6 mb-4">
-                <RecipeCard
-                  recipe={recipe}
-                  isLiked={likedRecipes.includes(recipe.uri)}
-                  onLikeToggle={() => toggleLikedRecipe(recipe.uri)}
-                />
+        {showFilters && (
+          <div className="filters-section mb-4">
+            <h4>Filters</h4>
+            <div className="d-flex justify-content-start mb-3">
+              {Object.keys(filterOptions).map((filterType) => (
+                <button
+                  key={filterType}
+                  className={`btn ${
+                    activeFilter === filterType
+                      ? "btn-primary"
+                      : "btn-outline-primary"
+                  } me-2`}
+                  onClick={() =>
+                    setActiveFilter(
+                      activeFilter === filterType ? null : filterType
+                    )
+                  }
+                >
+                  {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
+                </button>
+              ))}
+              <button
+                className="btn btn-outline-secondary me-2"
+                onClick={clearFilters}
+              >
+                Clear Filters
+              </button>
+              <button className="btn btn-success" onClick={() => { setCurrentPage(1); applyFilters(); }}>
+                Apply Filters
+              </button>
+            </div>
+            {activeFilter && (
+              <div className="mb-3">
+                <h5>
+                  {activeFilter.charAt(0).toUpperCase() + activeFilter.slice(1)}
+                </h5>
+                <div className="d-flex flex-wrap">
+                  {filterOptions[activeFilter].map((option) => (
+                    <div key={option} className="form-check me-3">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id={`${activeFilter}-${option}`}
+                        checked={filters[activeFilter].includes(option)}
+                        onChange={() => handleFilterChange(activeFilter, option)}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor={`${activeFilter}-${option}`}
+                      >
+                        {option}
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+            )}
           </div>
-          <PaginationControls isBottom={true} />
-        </>
-      )}
+        )}
+
+        {recipes.length > 0 && (
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h4>Recipes</h4>
+            {!isLoading && <PaginationControls />}
+          </div>
+        )}
+
+        {isLoading ? (
+          <SkeletonLoader />
+        ) : recipes.length > 0 ? (
+          <>
+            <div className="row">
+              {currentRecipes.map((recipe, index) => (
+                <div key={index} className="col-md-3 col-sm-6 mb-4">
+                  <RecipeCard
+                    recipe={recipe}
+                    isLiked={likedRecipes.includes(recipe.uri)}
+                    onLikeToggle={() => toggleLikedRecipe(recipe.uri)}
+                  />
+                </div>
+              ))}
+            </div>
+            <PaginationControls isBottom={true} />
+          </>
+        ) : (
+          <div className="no-recipes-message">
+            <p>No recipes found. Try searching for a recipe or adjusting your filters.</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,49 +1,102 @@
-.recipes-container {
-  padding: 80px 20px 20px 240px; /* Increased top padding for header, left padding for navbar */
-  min-height: calc(100vh - 80px);
+.recipes-container, .liked-recipes-container {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #FFF5E6;
+  background-color: #fff5e6;
   position: relative;
+  background-image: radial-gradient(circle, #ff9800 1px, transparent 1px),
+  radial-gradient(circle, #ff9800 1px, transparent 1px);
+background-size: 40px 40px;
+background-position: 0 0, 20px 20px;
+}
+
+.recipes-container {
+  padding: 100px 20px 20px 250px;
 }
 
 .recipes-container::before {
-  content: '';
+  content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle, #FF9800 1px, transparent 1px),
-    radial-gradient(circle, #FF9800 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-position: 0 0, 20px 20px;
-  opacity: 0.1;
-  z-index: 0;
 }
 
-.recipes-container .recipes-content {
+.liked-recipes-container {
+  padding: 40px 20px 20px 20px;
+}
+
+.liked-recipes-content {
   position: relative;
   z-index: 1;
-  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.recipes-container .recipes-title {
-  font-size: 2.5rem;
-  margin-bottom: 30px;
-  color: #FF7800;
+.liked-recipes-content .recipes-title {
   text-align: center;
-  font-weight: bold;
-  padding: 0 20px;
+  margin-bottom: 30px;
+}
+
+.liked-recipes-content .search-and-filter {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 30px;
+}
+
+.liked-recipes-content .search-form {
+  width: 100%;
+}
+
+.liked-recipes-content .search-input {
+  border: 1px solid #ff9800;
+  border-right: none;
+  transition: border-color 0.3s, color 0.3s;
+}
+
+.liked-recipes-content .search-input:focus {
+  border-color: #ff7800;
+  color: #ff7800;
+}
+
+.liked-recipes-content .search-button {
+  background-color: #ff9800;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+.liked-recipes-content .search-button:hover {
+  background-color: #ff7800;
+}
+
+.liked-recipes-content .no-recipes-message {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: #666;
+  border-radius: 10px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.liked-recipes-content .row {
+  width: 100%;
+  justify-content: center;
+}
+
+.recipes-content, .liked-recipes-content {
+  position: relative;
+  z-index: 1;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .recipes-container .search-and-filter {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   margin-bottom: 30px;
-  padding: 0 20px;
+  width: 100%; 
+  max-width: 500px; 
 }
 
 .recipes-container .search-form {
@@ -52,52 +105,35 @@
   margin-bottom: 20px;
 }
 
-.recipes-container .search-input-group {
-  display: flex;
-}
-
 .recipes-container .search-input {
-  flex-grow: 1;
   border: 1px solid #ddd;
   border-right: none;
-  padding: 12px 15px;
-  border-radius: 5px 0 0 5px;
   transition: border-color 0.3s, color 0.3s;
 }
 
 .recipes-container .search-input:focus {
-  border-color: #FF7800;
-  color: #FF7800;
-  outline: none;
+  border-color: #ff7800;
+  color: #ff7800;
 }
 
 .recipes-container .search-button {
-  background-color: #FFD600;
+  background-color: #ffd600;
   color: #333;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 0 5px 5px 0;
-  cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .recipes-container .search-button:hover {
-  background-color: #FFC107;
+  background-color: #ffc107;
 }
 
 .recipes-container .show-filters-btn {
-  background-color: #FFD600;
+  background-color: #ffd600;
   color: #333;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 5px;
-  cursor: pointer;
   transition: background-color 0.3s;
-  margin-top: 10px;
 }
 
 .recipes-container .show-filters-btn:hover {
-  background-color: #FFC107;
+  background-color: #ffc107;
 }
 
 .recipes-container .filters-section {
@@ -107,80 +143,43 @@
   margin-bottom: 30px;
 }
 
-.recipes-container .filter-types {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.recipes-container .filter-options {
-  margin-top: 20px;
-}
-
-.recipes-container .options-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.recipes-container .filter-actions {
-  margin-top: 20px;
-}
-
 .recipes-container .pagination-container {
   margin-top: 30px;
   margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-}
-
-.recipes-container .pagination {
-  display: flex;
-  list-style-type: none;
-  padding: 0;
-}
-
-.recipes-container .page-item {
-  margin: 0 5px;
 }
 
 .recipes-container .page-link {
-  padding: 8px 12px;
-  background-color: #FFD600;
+  background-color: #ffd600;
   color: #333;
-  border-radius: 5px;
-  text-decoration: none;
   transition: background-color 0.3s;
 }
 
 .recipes-container .page-link:hover {
-  background-color: #FFC107;
+  background-color: #ffc107;
 }
 
 .recipes-container .page-item.active .page-link {
-  background-color: #FF7800;
+  background-color: #ff7800;
   color: #fff;
 }
 
-.recipes-container .page-item.disabled .page-link {
-  background-color: #f0f0f0;
-  color: #999;
-  cursor: not-allowed;
-}
-
 .recipes-container .row {
-  display: flex;
-  flex-wrap: wrap;
   margin: -15px;
   padding: 0 20px;
 }
 
 .recipes-container .col-md-3 {
-  width: 25%;
   padding: 15px;
 }
 
+.recipes-container .no-recipes-message {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: #666;
+  border-radius: 10px;
+  margin-top: 20px;
+}
 @media (max-width: 992px) {
   .recipes-container .col-md-3 {
     width: 33.33%;
@@ -189,9 +188,17 @@
 
 @media (max-width: 768px) {
   .recipes-container {
-    padding: 80px 20px 20px 20px; /* Adjust padding for mobile view */
+    padding: 60px 20px 20px 20px; 
   }
-  
+
+  .recipes-content {
+    align-items: center; 
+  }
+
+  .recipes-title {
+    align-self: center; 
+  }
+
   .recipes-container .col-md-3 {
     width: 50%;
   }

@@ -18,16 +18,29 @@
   transition: border-color 0.3s ease, color 0.3s ease;
 }
 
+.add-ingredient-form input[type="text"]::placeholder,
+.add-ingredient-form input[type="number"]::placeholder,
+.add-ingredient-form input[type="date"]::placeholder {
+  color: #6c757d;
+  opacity: 1;
+}
+
 .add-ingredient-form input[type="text"]:focus,
 .add-ingredient-form input[type="number"]:focus,
 .add-ingredient-form input[type="date"]:focus {
-  border-color: #FF7800;
-  color: #FF7800; /* Yellowish text color on focus */
+  border-color: #ff7800;
+  color: #333;
   outline: none;
 }
 
+.add-ingredient-form input[type="text"]:focus::placeholder,
+.add-ingredient-form input[type="number"]:focus::placeholder,
+.add-ingredient-form input[type="date"]:focus::placeholder {
+  color: #999;
+}
+
 .add-ingredient-form button {
-  background-color: #FFD600;
+  background-color: #ffd600;
   color: #333;
   border: none;
   padding: 10px 20px;
@@ -38,7 +51,7 @@
 }
 
 .add-ingredient-form button:hover {
-  background-color: #FFC107;
+  background-color: #ffc107;
   transform: translateY(-2px);
 }
 
@@ -76,7 +89,7 @@
   position: relative;
   appearance: none;
   -webkit-appearance: none;
-  color: #444;
+  color: #333;
   font-family: inherit;
   font-size: 14px;
   padding: 10px;

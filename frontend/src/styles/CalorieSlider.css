@@ -1,7 +1,7 @@
 .calorie-slider {
   margin-bottom: 30px;
   padding: 15px;
-  background-color: #f8f9fa;
+  background-color: rgba(255, 243, 224, 0.56);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -22,7 +22,7 @@
   width: 24px;
   height: 24px;
   cursor: pointer;
-  background: #007bff;
+  background: #FF9800;
   border-radius: 50%;
   border: 2px solid #fff;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
@@ -30,11 +30,11 @@
 }
 
 .thumb:hover {
-  box-shadow: 0 0 0 8px rgba(0, 123, 255, 0.1);
+  box-shadow: 0 0 0 8px rgba(255, 152, 0, 0.1);
 }
 
 .thumb:active {
-  box-shadow: 0 0 0 12px rgba(0, 123, 255, 0.2);
+  box-shadow: 0 0 0 12px rgba(255, 152, 0, 0.2);
 }
 
 .track {
@@ -43,7 +43,7 @@
 }
 
 .track.track-1 {
-  background: #007bff;  /* Blue color for selected region */
+  background: #FF9800;  /* Orange color for selected region */
 }
 
 .calorie-inputs {

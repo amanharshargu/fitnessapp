@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import RecipeCard from "../recipes/RecipeCard";
+// import RecipeCard from "../recipes/RecipeCard";
 import CalorieSlider from "./CalorieSlider";
 import ContentWrapper from "../layout/ContentWrapper";
 import "../../styles/MealPlanner.css";
@@ -171,7 +171,7 @@ function MealPlanner() {
     return (
       <>
         {mealPlan.status === "INCOMPLETE" && (
-          <p className="warning">
+          <p className="warning text-warning">
             Note: The meal plan is incomplete. Some days may not have assigned
             meals. Consider adjusting your dietary preferences or regenerating
             the plan.
@@ -180,11 +180,11 @@ function MealPlanner() {
         <div className="meal-plan">
           {daysOfWeek.map((day, index) => (
             <div key={index} className="meal-day-row">
-              <div className="day-label">{day}</div>
+              <div className="day-label text-primary">{day}</div>
               <div className="meal-columns">
                 {["Breakfast", "Lunch", "Dinner"].map((mealType) => (
                   <div key={mealType} className="meal-column">
-                    <h5>{mealType}</h5>
+                    <h5 className="text-secondary">{mealType}</h5>
                     {mealPlan.selection[index] &&
                     mealPlan.selection[index].sections[mealType] &&
                     mealPlan.selection[index].sections[mealType]
@@ -192,23 +192,23 @@ function MealPlanner() {
                       <div className="recipe-card-compact">
                         <img src={mealPlan.selection[index].sections[mealType].recipeDetails.image} alt={mealPlan.selection[index].sections[mealType].recipeDetails.label} />
                         <div className="recipe-info">
-                          <h6>{mealPlan.selection[index].sections[mealType].recipeDetails.label}</h6>
-                          <p className="calories-servings small-text">
+                          <h6 className="text-primary">{mealPlan.selection[index].sections[mealType].recipeDetails.label}</h6>
+                          <p className="calories-servings small-text text-secondary">
                             {Math.round(mealPlan.selection[index].sections[mealType].recipeDetails.calories / mealPlan.selection[index].sections[mealType].recipeDetails.yield)} cal
                             <span className="servings"> • {mealPlan.selection[index].sections[mealType].recipeDetails.yield} servings</span>
                           </p>
-                          <p className="macros">
+                          <p className="macros text-dark">
                             Protein: {Math.round(mealPlan.selection[index].sections[mealType].recipeDetails.totalNutrients.PROCNT.quantity / mealPlan.selection[index].sections[mealType].recipeDetails.yield)}g | 
                             Carbs: {Math.round(mealPlan.selection[index].sections[mealType].recipeDetails.totalNutrients.CHOCDF.quantity / mealPlan.selection[index].sections[mealType].recipeDetails.yield)}g | 
                             Fat: {Math.round(mealPlan.selection[index].sections[mealType].recipeDetails.totalNutrients.FAT.quantity / mealPlan.selection[index].sections[mealType].recipeDetails.yield)}g
                           </p>
                         </div>
-                        <button className="view-recipe-btn" onClick={() => handleViewRecipe(mealPlan.selection[index].sections[mealType].recipeDetails)}>
+                        <button className="view-recipe-btn btn btn-primary" onClick={() => handleViewRecipe(mealPlan.selection[index].sections[mealType].recipeDetails)}>
                           View
                         </button>
                       </div>
                     ) : (
-                      <p className="no-meal">No meal assigned</p>
+                      <p className="no-meal text-muted">No meal assigned</p>
                     )}
                   </div>
                 ))}
@@ -226,7 +226,7 @@ function MealPlanner() {
         <form className="filters-form">
           <h4>Customize Your Meal Plan</h4>
           <div className="filter-group">
-            <h5>Health Labels</h5>
+            <h5 className="text-secondary">Health Labels</h5>
             <div className="filter-options">
               {[
                 "CELERY_FREE",
@@ -264,7 +264,7 @@ function MealPlanner() {
                 "KETO_FRIENDLY",
                 "DASH",
               ].map((label) => (
-                <label key={label}>
+                <label key={label} className="text-dark">
                   <input
                     type="checkbox"
                     name="health"
@@ -278,7 +278,7 @@ function MealPlanner() {
             </div>
           </div>
           <div className="filter-group">
-            <h5>Diet Labels</h5>
+            <h5 className="text-secondary">Diet Labels</h5>
             <div className="filter-options">
               {[
                 "HIGH_FIBER",
@@ -288,7 +288,7 @@ function MealPlanner() {
                 "LOW_SODIUM",
                 "LOW_CARB",
               ].map((label) => (
-                <label key={label}>
+                <label key={label} className="text-dark">
                   <input
                     type="checkbox"
                     name="diet"
@@ -330,15 +330,15 @@ function MealPlanner() {
             onChange={(value) => handleFilterChange("dinnerCalories", value)}
           />
           
-          <button type="button" onClick={fetchMealPlan}>
+          <button type="button" onClick={fetchMealPlan} className="btn btn-primary">
             Customize Meal Plan
           </button>
-          <button type="button" onClick={handleClearFilters}>
-            Clear Filters
+          <button type="button" onClick={handleClearFilters} className="btn btn-secondary">
+            Reset Filters
           </button>
         </form>
-        {loading && <p>Loading meal plan...</p>}
-        {error && <p className="error">{error}</p>}
+        {loading && <p className="text-primary">Loading meal plan...</p>}
+        {error && <p className="text-danger">{error}</p>}
         {!loading && !error && renderMealPlan()}
       </div>
     </ContentWrapper>

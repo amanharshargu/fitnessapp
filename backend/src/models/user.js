@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: true, // Changed from false to true
+        allowNull: true, // Changed from false to true for oauth purposes
       },
       weight: {
         type: DataTypes.FLOAT,
@@ -70,19 +70,20 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: "Users",
+      tableName: "User",
     }
   );
 
   User.associate = (models) => {
-    User.belongsToMany(models.Recipe, {
-      through: models.UserRecipe,
+    User.belongsToMany(models.recipe, {
+      through: models.userRecipe,
       as: "savedRecipes",
       foreignKey: "UserId",
       otherKey: "RecipeId",
     });
-    User.hasMany(models.Ingredient, { as: "ingredients" });
-    User.hasMany(models.UserRecipe, { foreignKey: "UserId" });
+    User.hasMany(models.ingredient, { as: "ingredient" });
+    User.hasMany(models.userRecipe, { foreignKey: "UserId" });
+    User.hasMany(models.eatenDish, { as: 'eatenDish', foreignKey: 'userId' });
   };
 
   return User;

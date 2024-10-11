@@ -34,6 +34,11 @@
   max-width: 800px;
   margin: 0 auto;
 }
+.recipes-content,
+.input-group {
+  flex-wrap: nowrap;
+}
+
 
 .liked-recipes-content .recipes-title {
   text-align: center;
@@ -47,18 +52,20 @@
 }
 
 .liked-recipes-content .search-form {
-  width: 100%;
+  width: 70%;
 }
 
 .liked-recipes-content .search-input {
   border: 1px solid #ff9800;
   border-right: none;
-  transition: border-color 0.3s, color 0.3s;
+  transition: border-color 0.3s, color 0.3s, width 0.3s;
+  width: 10%;
 }
 
 .liked-recipes-content .search-input:focus {
   border-color: #ff7800;
   color: #ff7800;
+  width: 85%;
 }
 
 .liked-recipes-content .search-button {
@@ -105,17 +112,21 @@
   width: 100%;
   max-width: 500px;
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
 }
 
 .recipes-container .search-input {
   border: 1px solid #ddd;
   border-right: none;
-  transition: border-color 0.3s, color 0.3s;
+  transition: border-color 0.3s, color 0.3s, width 0.3s;
+  width: 70%;
 }
 
 .recipes-container .search-input:focus {
   border-color: #ff7800;
   color: #ff7800;
+  width: 100%;
 }
 
 .recipes-container .search-button {
@@ -296,10 +307,17 @@
 .search-form {
   flex-grow: 1;
   margin-right: 15px;
+  display: flex;
+  align-items: center;
 }
 
 .search-input {
-  width: 100%;
+  width: 70%;
+  transition: width 0.3s ease-in-out;
+}
+
+.search-input:focus {
+  width: 85%;
 }
 
 .show-filters-btn {

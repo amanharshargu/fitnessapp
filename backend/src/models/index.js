@@ -3,14 +3,18 @@ const path = require("path");
 const Sequelize = require("sequelize");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
-const config = require(path.join(__dirname, "..", "config", "database.js"))[
-  env
-];
+const { DB_URL } = require("../config");
 const db = {};
 
-let sequelize = config.use_env_variable
-  ? new Sequelize(process.env[config.use_env_variable], config)
-  : new Sequelize(config.database, config.username, config.password, config);
+const sequelize = new Sequelize(DB_URL, {
+  dialect: 'postgres',
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  }
+});
 
 fs.readdirSync(__dirname)
   .filter(

@@ -160,16 +160,24 @@ function Recipes() {
       position: 'fixed',
       top: 0,
       left: 0,
+      backgroundColor: 'rgba(255, 255, 255, 0)',
       zIndex: 1000
     }}>
       <div className="spinner" style={{
-        width: '50px',
-        height: '50px',
-        border: '5px solid #f3f3f3',
-        borderTop: '5px solid #ff9800',
+        width: '60px',
+        height: '60px',
+        border: '6px solid #ffe290',
+        borderTop: '6px solid #ff9800',
         borderRadius: '50%',
-        animation: 'spin 1s linear infinite'
+        animation: 'spin 1s linear infinite',
+        boxShadow: '0 0 10px rgba(255, 152, 0, 0.3)'
       }}></div>
+      <p style={{
+        marginTop: '20px',
+        fontSize: '18px',
+        color: '#ff9800',
+        fontWeight: 'bold'
+      }}>Loading...</p>
       <style>
         {`
           @keyframes spin {
@@ -261,7 +269,6 @@ function Recipes() {
 
         {recipes.length > 0 && (
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h4>Recipes</h4>
             {!isLoading && <PaginationControls />}
           </div>
         )}

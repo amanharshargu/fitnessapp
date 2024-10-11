@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const UserRecipe = sequelize.define('UserRecipe', {
+  const UserRecipe = sequelize.define('userRecipe', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
 
   UserRecipe.associate = (models) => {
     UserRecipe.belongsTo(models.User, { foreignKey: 'UserId' });
-    UserRecipe.belongsTo(models.Recipe, { foreignKey: 'RecipeId' });
+    UserRecipe.belongsTo(models.recipe, { foreignKey: 'RecipeId' });
   };
 
   return UserRecipe;

@@ -9,10 +9,10 @@ module.exports = (sequelize) => {
 
   EatenDish.init({
     userId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'Users',
+        model: 'User',
         key: 'id'
       }
     },
@@ -26,7 +26,7 @@ module.exports = (sequelize) => {
     }
   }, {
     sequelize,
-    modelName: 'EatenDish',
+    modelName: 'eatenDish',
   });
 
   return EatenDish;

@@ -40,7 +40,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #FFD600;
+  background-color: var(--nav-color);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -52,6 +52,7 @@
 
 .nav-icon {
   margin-right: 12px; /* Add padding between icon and text */
+  color: var(--nav-color);
 }
 
 .nav-link span {
@@ -61,9 +62,9 @@
 
 .nav-link.active {
   font-weight: bold;
-  color: #FF9800;
+  color: var(--nav-color);
 }
 
 .nav-link:hover {
-  color: #FF9800;
+  color: var(--nav-color);
 }

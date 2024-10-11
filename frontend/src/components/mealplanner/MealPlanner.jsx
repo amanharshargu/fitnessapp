@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import CalorieSlider from "../dashboard/CalorieSlider";
 import ContentWrapper from "../layout/ContentWrapper";
 import MealPlanDisplay from "./MealPlanDisplay";
+import { useIngredients } from "../../contexts/IngredientContext";
 import "../../styles/MealPlanner.css";
 
 const MEALPLAN_APP_ID = process.env.REACT_APP_MEALPLAN_APP_ID;
@@ -11,13 +12,45 @@ const EDAMAM_APP_ID = process.env.REACT_APP_EDAMAM_APP_ID;
 const EDAMAM_APP_KEY = process.env.REACT_APP_EDAMAM_APP_KEY;
 const EDAMAM_USER_ID = process.env.REACT_APP_EDAMAM_USER_ID;
 
+const dishTypes = [
+"biscuits and cookies", "bread", "cereals", "desserts", "drinks",
+  "ice cream and custard", "pancake", "pasta", "pizza",  "salad", "sandwiches", "seafood", "soup", "sweets"
+];
+
+const healthLabels = [
+  "DAIRY_FREE", "EGG_FREE", "GLUTEN_FREE", "PEANUT_FREE",
+  "VEGETARIAN", "VEGAN", "KETO_FRIENDLY", "LOW_CARB"
+];
+
+const dietLabels = [
+  "BALANCED", "HIGH_PROTEIN", "LOW_FAT", "LOW_CARB"
+];
+
 const initialFilters = {
   health: [],
   diet: [],
+  dishType: [],
+  ingredients: [],
   calories: { min: 1500, max: 2500 },
   breakfastCalories: { min: 300, max: 500 },
   lunchCalories: { min: 400, max: 700 },
   dinnerCalories: { min: 500, max: 800 },
+};
+
+const capitalizeWords = (str) => {
+  const articles = ['and', 'or', 'the', 'a', 'an'];
+  const specialCases = {
+    'ice cream and custard': 'Ice Cream',
+    'biscuits and cookies': 'Cookies'
+  };
+
+  if (specialCases[str.toLowerCase()]) {
+    return specialCases[str.toLowerCase()];
+  }
+
+  return str.split('_').map(word => 
+    articles.includes(word.toLowerCase()) ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  ).join(' ');
 };
 
 function MealPlanner() {
@@ -26,6 +59,47 @@ function MealPlanner() {
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState(initialFilters);
   const [showFilters, setShowFilters] = useState(true);
+  const { ingredients } = useIngredients();
+
+  const LoadingAnimation = () => (
+    <div className="loading-animation" style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      width: '100%',
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      backgroundColor: 'rgba(255, 255, 255, 0)',
+      zIndex: 1000
+    }}>
+      <div className="spinner" style={{
+        width: '60px',
+        height: '60px',
+        border: '6px solid #ffe290',
+        borderTop: '6px solid #ff9800',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite',
+        boxShadow: '0 0 10px rgba(255, 152, 0, 0.3)'
+      }}></div>
+      <p style={{
+        marginTop: '20px',
+        fontSize: '18px',
+        color: '#ff9800',
+        fontWeight: 'bold'
+      }}>Loading...</p>
+      <style>
+        {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}
+      </style>
+    </div>
+  );
 
   const fetchMealPlan = async () => {
     setLoading(true);
@@ -48,7 +122,10 @@ function MealPlanner() {
             sections: {
               Breakfast: {
                 accept: {
-                  all: [{ meal: ["breakfast"] }],
+                  all: [
+                    { meal: ["breakfast"] },
+                    { dish: filters.dishType.filter(type => ["cereals", "egg", "pancake", "pastry", "bread", "sandwiches"].includes(type)) }
+                  ],
                 },
                 fit: {
                   ENERC_KCAL: filters.breakfastCalories,
@@ -56,7 +133,10 @@ function MealPlanner() {
               },
               Lunch: {
                 accept: {
-                  all: [{ meal: ["lunch/dinner"] }],
+                  all: [
+                    { meal: ["lunch/dinner"] },
+                    { dish: filters.dishType.filter(type => ["main course", "salad", "sandwiches", "soup", "pasta", "pizza"].includes(type)) }
+                  ],
                 },
                 fit: {
                   ENERC_KCAL: filters.lunchCalories,
@@ -64,7 +144,10 @@ function MealPlanner() {
               },
               Dinner: {
                 accept: {
-                  all: [{ meal: ["lunch/dinner"] }],
+                  all: [
+                    { meal: ["lunch/dinner"] },
+                    { dish: filters.dishType.filter(type => ["main course", "seafood", "pasta", "pizza", "soup", "salad"].includes(type)) }
+                  ],
                 },
                 fit: {
                   ENERC_KCAL: filters.dinnerCalories,
@@ -169,77 +252,113 @@ function MealPlanner() {
       <div className="meal-planner">
         {showFilters ? (
           <div className="filters-container">
-            {/* <h4>Customize Your Meal Plan</h4> */}
-            <div className="filters-grid">
-              <div className="filter-group">
-                <h5>Health Labels</h5>
-                <div className="filter-options compact">
-                  {[
-                    "DAIRY_FREE", "EGG_FREE", "GLUTEN_FREE", "PEANUT_FREE",
-                    "VEGETARIAN", "VEGAN", "KETO_FRIENDLY", "LOW_CARB"
-                  ].map((label) => (
-                    <label key={label} className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        name="health"
-                        value={label}
-                        checked={filters.health.includes(label)}
-                        onChange={(e) => handleFilterChange("health", e.target.checked ? [...filters.health, label] : filters.health.filter((item) => item !== label))}
-                      />
-                      <span>{label.replace(/_/g, " ")}</span>
-                    </label>
-                  ))}
+            <div className="filters-layout">
+              <div className="filters-checkboxes">
+                <div className="filters-row">
+                  <div className="filter-group">
+                    <h5>Health Labels</h5>
+                    <div className="filter-options compact">
+                      {healthLabels.map((label) => (
+                        <label key={label} className="checkbox-label">
+                          <input
+                            type="checkbox"
+                            name="health"
+                            value={label}
+                            checked={filters.health.includes(label)}
+                            onChange={(e) => handleFilterChange("health", e.target.checked ? [...filters.health, label] : filters.health.filter((item) => item !== label))}
+                          />
+                          <span>{capitalizeWords(label)}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="filter-group">
+                    <h5>Diet Labels</h5>
+                    <div className="filter-options compact">
+                      {dietLabels.map((label) => (
+                        <label key={label} className="checkbox-label">
+                          <input
+                            type="checkbox"
+                            name="diet"
+                            value={label}
+                            checked={filters.diet.includes(label)}
+                            onChange={(e) => handleFilterChange("diet", e.target.checked ? [...filters.diet, label] : filters.diet.filter((item) => item !== label))}
+                          />
+                          <span>{capitalizeWords(label)}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="filters-row">
+                  <div className="filter-group">
+                    <h5>Special Preference</h5>
+                    <div className="filter-options compact scrollable-list">
+                      {dishTypes.map((label) => (
+                        <label key={label} className="checkbox-label">
+                          <input
+                            type="checkbox"
+                            name="dishType"
+                            value={label}
+                            checked={filters.dishType.includes(label)}
+                            onChange={(e) => handleFilterChange("dishType", e.target.checked ? [...filters.dishType, label] : filters.dishType.filter((item) => item !== label))}
+                          />
+                          <span>{capitalizeWords(label)}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="filter-group">
+                    <h5>Ingredients from Fridge</h5>
+                    <div className="filter-options compact scrollable-list">
+                      {ingredients.map((ingredient) => (
+                        <label key={ingredient.id} className="checkbox-label">
+                          <input
+                            type="checkbox"
+                            name="ingredients"
+                            value={ingredient.name}
+                            checked={filters.ingredients.includes(ingredient.name)}
+                            onChange={(e) => handleFilterChange("ingredients", e.target.checked ? [...filters.ingredients, ingredient.name] : filters.ingredients.filter((item) => item !== ingredient.name))}
+                          />
+                          <span>{ingredient.name}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="filter-group">
-                <h5>Diet Labels</h5>
-                <div className="filter-options compact">
-                  {[
-                    "BALANCED", "HIGH_PROTEIN", "LOW_FAT", "LOW_CARB"
-                  ].map((label) => (
-                    <label key={label} className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        name="diet"
-                        value={label}
-                        checked={filters.diet.includes(label)}
-                        onChange={(e) => handleFilterChange("diet", e.target.checked ? [...filters.diet, label] : filters.diet.filter((item) => item !== label))}
-                      />
-                      <span>{label.replace(/_/g, " ")}</span>
-                    </label>
-                  ))}
+              <div className="filters-sliders">
+                <div className="filter-group">
+                  <h5>Calorie Ranges</h5>
+                  <CalorieSlider
+                    label="Daily Total"
+                    min={1000}
+                    max={3000}
+                    value={filters.calories}
+                    onChange={(value) => handleFilterChange("calories", value)}
+                  />
+                  <CalorieSlider
+                    label="Breakfast"
+                    min={200}
+                    max={800}
+                    value={filters.breakfastCalories}
+                    onChange={(value) => handleFilterChange("breakfastCalories", value)}
+                  />
+                  <CalorieSlider
+                    label="Lunch"
+                    min={300}
+                    max={1000}
+                    value={filters.lunchCalories}
+                    onChange={(value) => handleFilterChange("lunchCalories", value)}
+                  />
+                  <CalorieSlider
+                    label="Dinner"
+                    min={300}
+                    max={1000}
+                    value={filters.dinnerCalories}
+                    onChange={(value) => handleFilterChange("dinnerCalories", value)}
+                  />
                 </div>
-              </div>
-              <div className="filter-group">
-                <h5>Calorie Ranges</h5>
-                <CalorieSlider
-                  label="Daily Total"
-                  min={1000}
-                  max={3000}
-                  value={filters.calories}
-                  onChange={(value) => handleFilterChange("calories", value)}
-                />
-                <CalorieSlider
-                  label="Breakfast"
-                  min={200}
-                  max={800}
-                  value={filters.breakfastCalories}
-                  onChange={(value) => handleFilterChange("breakfastCalories", value)}
-                />
-                <CalorieSlider
-                  label="Lunch"
-                  min={300}
-                  max={1000}
-                  value={filters.lunchCalories}
-                  onChange={(value) => handleFilterChange("lunchCalories", value)}
-                />
-                <CalorieSlider
-                  label="Dinner"
-                  min={300}
-                  max={1000}
-                  value={filters.dinnerCalories}
-                  onChange={(value) => handleFilterChange("dinnerCalories", value)}
-                />
               </div>
             </div>
             <div className="button-group">
@@ -254,7 +373,7 @@ function MealPlanner() {
           </div>
         ) : (
           <>
-            {loading && <p className="text-primary">Loading meal plan...</p>}
+            {loading && <LoadingAnimation />}
             {!loading && mealPlan && (
               <>
                 <button onClick={handleBackToFilters} className="btn btn-link back-button">

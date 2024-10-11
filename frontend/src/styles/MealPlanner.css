@@ -1,8 +1,7 @@
 .meal-planner {
   background-color: #f8f9fa;
-  background-image: 
-    radial-gradient(circle, #FF9800 1px, transparent 1px),
-    radial-gradient(circle, #FF9800 1px, transparent 1px);
+  background-image: radial-gradient(circle, #ff9800 1px, transparent 1px),
+    radial-gradient(circle, #ff9800 1px, transparent 1px);
   background-size: 40px 40px;
   background-position: 0 0, 20px 20px;
   position: relative;
@@ -22,7 +21,7 @@
 }
 
 .filters-container h4 {
-  color: #FF9800;
+  color: #ff9800;
   font-weight: 600;
   margin-bottom: 16px;
 }
@@ -82,7 +81,7 @@
 }
 
 .filters-form h4 {
-  color: #FF9800;  /* Change the color to orange */
+  color: #ff9800; /* Change the color to orange */
   font-weight: 600;
   margin-bottom: 16px;
 }
@@ -124,7 +123,7 @@
 .meal-planner button {
   margin: 12px 12px 0 0;
   padding: 10px 16px;
-  background-color: #FF9800;
+  background-color: #ff9800;
   color: white;
   border: none;
   border-radius: 6px;
@@ -133,7 +132,7 @@
 }
 
 .meal-planner button:hover {
-  background-color: #F57C00;
+  background-color: #f57c00;
 }
 
 .meal-plan {
@@ -153,7 +152,7 @@
 }
 
 .day-label {
-  background-color: #FF9800;
+  background-color: #ff9800;
   color: white;
   padding: 12px;
   width: 100px;
@@ -252,7 +251,7 @@
 }
 
 .meal a {
-  color: #FF9800;
+  color: #ff9800;
   text-decoration: none;
   display: inline-block;
   margin-top: 8px;
@@ -260,13 +259,13 @@
 }
 
 .meal a:hover {
-  color: #F57C00;
+  color: #f57c00;
 }
 
 .regenerate-btn {
   margin-top: 24px;
   padding: 12px 20px;
-  background-color: #FF9800;
+  background-color: #ff9800;
   color: white;
   border: none;
   border-radius: 6px;
@@ -275,7 +274,7 @@
 }
 
 .regenerate-btn:hover {
-  background-color: #F57C00;
+  background-color: #f57c00;
 }
 
 .recipe-card-compact {
@@ -333,7 +332,7 @@
 .view-recipe-btn {
   font-size: 0.75em;
   padding: 3px 8px;
-  background-color: #FF9800;
+  background-color: #ff9800;
   color: white;
   border: none;
   border-radius: 12px;
@@ -345,7 +344,7 @@
 }
 
 .view-recipe-btn:hover {
-  background-color: #F57C00;
+  background-color: #f57c00;
   transform: scale(1.05);
 }
 
@@ -398,3 +397,87 @@
 .calorie-slider .MuiTypography-body1 {
   font-size: 0.9em;
 }
+
+.filters-layout {
+  display: flex;
+  gap: 20px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.filters-checkboxes {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filters-row {
+  display: flex;
+  gap: 20px;
+}
+
+.filters-row .filter-group {
+  flex: 1;
+}
+
+.filters-sliders {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group {
+  margin-bottom: 20px;
+}
+
+.filter-group h5 {
+  margin-bottom: 10px;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.filter-options.compact {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+/* ... (rest of the styles remain unchanged) */
+
+.filter-options.compact.scrollable-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.filter-options.compact.scrollable-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.filter-options.compact.scrollable-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.filter-options.compact.scrollable-list::-webkit-scrollbar-thumb {
+  background: #ff9800;
+  border-radius: 4px;
+}
+
+.filter-options.compact.scrollable-list::-webkit-scrollbar-thumb:hover {
+  background: #f57c00;
+}
+
+/* ... (rest of the styles remain unchanged) */

@@ -1,10 +1,12 @@
-const { Ingredient } = require('../models');
+const db = require('../models');
+const Ingredient = db.Ingredient;
 
 exports.getIngredients = async (req, res) => {
   try {
     const ingredients = await Ingredient.findAll({ where: { UserId: req.user.id } });
     res.json(ingredients);
   } catch (error) {
+    console.error('Error fetching ingredients:', error);
     res.status(500).json({ message: 'Error fetching ingredients', error: error.message });
   }
 };
@@ -12,7 +14,7 @@ exports.getIngredients = async (req, res) => {
 exports.addIngredient = async (req, res) => {
   try {
     const { name, quantity, unit, calories, protein, carbs, fat, expirationDate } = req.body;
-    const ingredient = await Ingredient.create({
+    const newIngredient = await Ingredient.create({
       name,
       quantity,
       unit,
@@ -23,8 +25,9 @@ exports.addIngredient = async (req, res) => {
       expirationDate,
       UserId: req.user.id,
     });
-    res.status(201).json(ingredient);
+    res.status(201).json(newIngredient);
   } catch (error) {
+    console.error('Error adding ingredient:', error);
     res.status(500).json({ message: 'Error adding ingredient', error: error.message });
   }
 };
@@ -52,6 +55,7 @@ exports.updateIngredient = async (req, res) => {
 
     res.json(ingredient);
   } catch (error) {
+    console.error('Error updating ingredient:', error);
     res.status(500).json({ message: 'Error updating ingredient', error: error.message });
   }
 };
@@ -68,6 +72,7 @@ exports.deleteIngredient = async (req, res) => {
     await ingredient.destroy();
     res.json({ message: 'Ingredient deleted successfully' });
   } catch (error) {
+    console.error('Error deleting ingredient:', error);
     res.status(500).json({ message: 'Error deleting ingredient', error: error.message });
   }
 };

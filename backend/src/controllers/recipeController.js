@@ -1,4 +1,4 @@
-const { Recipe, User, UserRecipe } = require("../models");
+const { Recipe, UserRecipe, User } = require("../models");
 
 exports.getRecipes = async (req, res) => {
   try {
@@ -49,21 +49,35 @@ exports.getSavedRecipes = async (req, res) => {
   try {
     const userId = req.user.id;
 
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is missing" });
+    }
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     const userRecipes = await UserRecipe.findAll({
       where: { UserId: userId },
       include: [
         {
           model: Recipe,
-          attributes: ["uri"],
+          attributes: ['uri'],
         },
       ],
     });
 
-    const savedRecipeUris = userRecipes.map((ur) => ur.Recipe.uri);
+    if (!userRecipes || userRecipes.length === 0) {
+      return res.json([]);
+    }
+
+    const savedRecipeUris = userRecipes.map((ur) => ur.Recipe?.uri).filter(Boolean);
 
     res.json(savedRecipeUris);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching saved recipes" });
+    console.error('Error in getSavedRecipes:', error);
+    res.status(500).json({ message: "Error fetching saved recipes", error: error.message });
   }
 };
 
@@ -74,6 +88,10 @@ exports.saveRecipe = async (req, res) => {
 
     if (!uri || typeof uri !== "string") {
       return res.status(400).json({ message: "Invalid recipe URI" });
+    }
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is missing" });
     }
 
     const [recipe, created] = await Recipe.findOrCreate({
@@ -97,9 +115,17 @@ exports.saveRecipe = async (req, res) => {
         .json({ message: "Failed to save recipe for user" });
     }
 
-    res.status(201).json({ message: "Recipe saved successfully", uri: uri });
+    res.status(201).json({ 
+      message: userRecipeCreated ? "Recipe saved successfully" : "Recipe was already saved",
+      uri: uri,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error saving recipe" });
+    console.error("Error in saveRecipe:", error);
+    res.status(500).json({ 
+      message: "Error saving recipe", 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
 
@@ -107,6 +133,14 @@ exports.deleteRecipe = async (req, res) => {
   try {
     const { uri } = req.params;
     const userId = req.user.id;
+
+    if (!uri || typeof uri !== "string") {
+      return res.status(400).json({ message: "Invalid recipe URI" });
+    }
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is missing" });
+    }
 
     const recipe = await Recipe.findOne({ where: { uri } });
     if (!recipe) {
@@ -126,6 +160,10 @@ exports.deleteRecipe = async (req, res) => {
     res.json({ message: "Recipe deleted successfully" });
   } catch (error) {
     console.error("Error deleting recipe:", error);
-    res.status(500).json({ message: "Error deleting recipe" });
+    res.status(500).json({ 
+      message: "Error deleting recipe", 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };

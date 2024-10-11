@@ -1,10 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Ingredient = sequelize.define('ingredient', {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
+  const Ingredient = sequelize.define('Ingredient', {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -35,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     expirationDate: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
   });
 

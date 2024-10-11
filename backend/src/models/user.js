@@ -75,15 +75,12 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.associate = (models) => {
-    User.belongsToMany(models.recipe, {
-      through: models.userRecipe,
-      as: "savedRecipes",
-      foreignKey: "UserId",
-      otherKey: "RecipeId",
+    User.hasMany(models.Ingredient);
+    User.belongsToMany(models.Recipe, { 
+      through: models.UserRecipe,
+      foreignKey: 'UserId'
     });
-    User.hasMany(models.ingredient, { as: "ingredient" });
-    User.hasMany(models.userRecipe, { foreignKey: "UserId" });
-    User.hasMany(models.eatenDish, { as: 'eatenDish', foreignKey: 'userId' });
+    User.hasMany(models.eatenDish, { as: 'EatenDish', foreignKey: 'userId' });
   };
 
   return User;

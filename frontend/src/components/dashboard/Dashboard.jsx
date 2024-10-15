@@ -5,6 +5,7 @@ import UserProfileCard from "./UserProfileCard";
 import WeeklyCalorieTracker from "./WeeklyCalorieTracker";
 import DailyCalorieGoal from "./DailyCalorieGoal";
 import ContentWrapper from "../layout/ContentWrapper";
+import api from "../../services/api";
 import "../../styles/Dashboard.css";
 
 function Dashboard({ onSetUserDetails }) {
@@ -13,6 +14,7 @@ function Dashboard({ onSetUserDetails }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [key, setKey] = useState(0);
+  const [weeklyData, setWeeklyData] = useState([]);
 
   const loadUserDetails = useCallback(async () => {
     try {
@@ -26,13 +28,28 @@ function Dashboard({ onSetUserDetails }) {
     }
   }, [fetchUserDetails]);
 
+  const fetchWeeklyData = useCallback(async () => {
+    try {
+      const response = await api.get('/dashboard/weekly-calorie-data');
+      setWeeklyData(response.data);
+    } catch (error) {
+      console.error('Error fetching weekly calorie data:', error);
+      setError("Failed to load weekly calorie data. Please try again.");
+    }
+  }, []);
+
   useEffect(() => {
     loadUserDetails();
-  }, []);
+    fetchWeeklyData();
+  }, [loadUserDetails, fetchWeeklyData]);
 
   useEffect(() => {
     setKey(prevKey => prevKey + 1);
   }, [userDetails]);
+
+  const handleDishesChanged = useCallback(() => {
+    fetchWeeklyData();
+  }, [fetchWeeklyData]);
 
   if (loading) {
     return <div className="loading-message">Loading user details...</div>;
@@ -58,10 +75,17 @@ function Dashboard({ onSetUserDetails }) {
                   />
                 </div>
                 <div className="dashboard-column">
-                  <DailyCalorieGoal key={`calorie-goal-${key}`} userDetails={userDetails} />
+                  <DailyCalorieGoal 
+                    key={`calorie-goal-${key}`} 
+                    userDetails={userDetails} 
+                    onDishesChanged={handleDishesChanged}
+                  />
                 </div>
                 <div className="dashboard-column">
-                  <WeeklyCalorieTracker key={`calorie-tracker-${key}`} userDetails={userDetails} />
+                  <WeeklyCalorieTracker 
+                    key={`calorie-tracker-${key}`} 
+                    weeklyData={weeklyData}
+                  />
                 </div>
               </div>
             </>

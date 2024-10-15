@@ -2,11 +2,11 @@
   background-color: #fff;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(255, 120, 0, 0.1);
 }
 
 .weekly-calorie-tracker h3 {
-  color: #FF9800;
+  color: #ff7800;
   font-size: 1.5rem;
   margin-bottom: 15px;
 }
@@ -23,44 +23,81 @@
   flex-direction: column;
   align-items: center;
   width: 12%;
+  position: relative;
+}
+
+.bar-container {
+  width: 100%;
+  height: 150px;
+  position: relative;
 }
 
 .bar {
+  position: absolute;
+  bottom: 0;
   width: 100%;
-  background-color: #FFD600;
   transition: height 0.3s ease;
+}
+
+.bar.actual {
+  background-color: #ff7800;
+  z-index: 2;
+}
+
+.bar.goal {
+  background-color: #ffe290;
+  z-index: 1;
 }
 
 .day {
   margin-top: 5px;
   font-size: 0.8rem;
-  color: #333;
-}
-
-.previous-weeks-tracker {
-  margin-top: 20px;
-  padding-top: 15px;
-  border-top: 1px solid #e0e0e0;
-}
-
-.previous-weeks-tracker h4 {
-  color: #FF9800;
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-}
-
-.previous-weeks-tracker ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.previous-weeks-tracker li {
-  margin-bottom: 8px;
-  font-size: 0.9rem;
-  color: #333;
-}
-
-.previous-weeks-tracker li span {
+  color: #ff7800;
   font-weight: bold;
+}
+
+.calories-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
   margin-right: 5px;
+  border-radius: 4px;
+}
+
+.legend-color.actual {
+  background-color: #ff7800;
+}
+
+.legend-color.goal {
+  background-color: #ffe290;
+}
+
+.legend-item span {
+  font-size: 0.8rem;
+  color: #ff7800;
 }

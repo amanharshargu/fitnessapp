@@ -80,7 +80,7 @@ module.exports = (sequelize, DataTypes) => {
       through: models.UserRecipe,
       foreignKey: 'UserId'
     });
-    User.hasMany(models.eatenDish, { as: 'EatenDish', foreignKey: 'userId' });
+    User.hasMany(models.EatenDish, { foreignKey: 'userId' });
   };
 
   return User;

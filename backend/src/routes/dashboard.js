@@ -9,7 +9,17 @@ router.get("/calorie-goal", authMiddleware, dashboardController.getCalorieGoal);
 // New routes for eaten dishes
 router.post("/eaten-dishes", authMiddleware, dashboardController.addEatenDish);
 router.get("/eaten-dishes", authMiddleware, dashboardController.getEatenDishes);
-router.put("/eaten-dishes/:id", authMiddleware, dashboardController.editEatenDish);
-router.delete("/eaten-dishes/:id", authMiddleware, dashboardController.deleteEatenDish);
+router.put(
+  "/eaten-dishes/:id",
+  authMiddleware,
+  dashboardController.editEatenDish
+);
+router.delete(
+  "/eaten-dishes/:id",
+  authMiddleware,
+  dashboardController.deleteEatenDish
+);
+
+router.get("/weekly-calorie-data", authMiddleware, dashboardController.getWeeklyCalorieData);
 
 module.exports = router;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../../styles/DailyCalorieGoal.css';
 import api from "../../services/api";
 
-function DailyCalorieGoal(){
+function DailyCalorieGoal({ onDishesChanged }){
   const [dailyCalorieGoal, setDailyCalorieGoal] = useState(0);
   const [totalDailyCalories, setTotalDailyCalories] = useState(0);
   const [dishes, setDishes] = useState([]);
@@ -20,7 +20,17 @@ function DailyCalorieGoal(){
       }
     };
 
+    const fetchEatenDishes = async () => {
+      try {
+        const response = await api.get('/dashboard/eaten-dishes');
+        setDishes(response.data);
+      } catch (error) {
+        console.error('Error fetching eaten dishes:', error);
+      }
+    };
+
     fetchCalorieGoal();
+    fetchEatenDishes();
   }, []);
 
   useEffect(() => {
@@ -33,16 +43,26 @@ function DailyCalorieGoal(){
     setNewDish(prev => ({ ...prev, [name]: value }));
   };
 
-  const addDish = (e) => {
+  const addDish = async (e) => {
     e.preventDefault();
     if (newDish.name && newDish.calories) {
-      setDishes(prev => [...prev, { ...newDish, calories: parseInt(newDish.calories) }]);
-      setNewDish({ name: '', calories: '' });
+      try {
+        const response = await api.post('/dashboard/eaten-dishes', {
+          dishName: newDish.name,
+          calories: parseInt(newDish.calories),
+          eatenAt: new Date().toISOString().split('T')[0],
+        });
+        setDishes(prev => [...prev, response.data]);
+        setNewDish({ name: '', calories: '' });
+        onDishesChanged(); // Call this function to update weekly data
+      } catch (error) {
+        console.error('Error adding eaten dish:', error);
+      }
     }
   };
 
-  const startEditing = (index) => {
-    setEditingDish({ index, ...dishes[index] });
+  const startEditing = (dish) => {
+    setEditingDish({ ...dish });
   };
 
   const handleEditChange = (e) => {
@@ -50,18 +70,32 @@ function DailyCalorieGoal(){
     setEditingDish(prev => ({ ...prev, [name]: value }));
   };
 
-  const saveEdit = () => {
-    const updatedDishes = [...dishes];
-    updatedDishes[editingDish.index] = {
-      name: editingDish.name,
-      calories: parseInt(editingDish.calories)
-    };
-    setDishes(updatedDishes);
-    setEditingDish(null);
+  const saveEdit = async () => {
+    try {
+      const response = await api.put(`/dashboard/eaten-dishes/${editingDish.id}`, {
+        dishName: editingDish.dishName,
+        calories: parseInt(editingDish.calories),
+        eatenAt: editingDish.eatenAt,
+      });
+      const updatedDishes = dishes.map(dish => 
+        dish.id === editingDish.id ? response.data : dish
+      );
+      setDishes(updatedDishes);
+      setEditingDish(null);
+      onDishesChanged(); // Call this function to update weekly data
+    } catch (error) {
+      console.error('Error updating eaten dish:', error);
+    }
   };
 
-  const deleteDish = (index) => {
-    setDishes(prev => prev.filter((_, i) => i !== index));
+  const deleteDish = async (id) => {
+    try {
+      await api.delete(`/dashboard/eaten-dishes/${id}`);
+      setDishes(prev => prev.filter(dish => dish.id !== id));
+      onDishesChanged(); // Call this function to update weekly data
+    } catch (error) {
+      console.error('Error deleting eaten dish:', error);
+    }
   };
 
   const percentage = dailyCalorieGoal > 0 ? Math.min((totalDailyCalories / dailyCalorieGoal) * 100, 100) : 0;
@@ -86,7 +120,7 @@ function DailyCalorieGoal(){
                 d="M18 2.0845
                   a 15.9155 15.9155 0 0 1 0 31.831
                   a 15.9155 15.9155 0 0 1 0 -31.831"
-                stroke={isOverGoal ? '#ff4136' : '#4CAF50'}
+                stroke="#ff7800" // Changed to dark orange
               />
               <text x="18" y="20.35" className="dcg-percentage">{Math.round(percentage)}%</text>
             </svg>
@@ -123,15 +157,15 @@ function DailyCalorieGoal(){
 
           <div className="dcg-dishes-list-container">
             <ul className="dcg-dishes-list">
-              {dishes.map((dish, index) => (
-                <li key={index}>
+              {dishes.map((dish) => (
+                <li key={dish.id}>
                   <div className="dcg-dish-content">
-                    {editingDish && editingDish.index === index ? (
+                    {editingDish && editingDish.id === dish.id ? (
                       <div className="dcg-editing-dish">
                         <input
                           type="text"
-                          name="name"
-                          value={editingDish.name}
+                          name="dishName"
+                          value={editingDish.dishName}
                           onChange={handleEditChange}
                           placeholder="Dish name"
                         />
@@ -150,12 +184,12 @@ function DailyCalorieGoal(){
                     ) : (
                       <>
                         <div>
-                          <span className="dcg-dish-info">{dish.name}</span>
+                          <span className="dcg-dish-info">{dish.dishName}</span>
                           <div className="dcg-dish-calories">{dish.calories} calories</div>
                         </div>
                         <div className="dcg-dish-actions">
-                          <button onClick={() => startEditing(index)}>Edit</button>
-                          <button onClick={() => deleteDish(index)}>Delete</button>
+                          <button onClick={() => startEditing(dish)}>Edit</button>
+                          <button onClick={() => deleteDish(dish.id)}>Delete</button>
                         </div>
                       </>
                     )}

@@ -23,4 +23,7 @@ router.get(
 
 router.post("/forgot-password", authController.forgotPassword);
 
+// Add this new route to your existing routes
+router.post("/reset-password", authController.resetPassword);
+
 module.exports = router;

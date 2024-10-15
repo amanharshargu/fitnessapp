@@ -23,6 +23,7 @@ const UserDetailsModal = lazy(() => import("./components/auth/UserDetailsModal")
 const LoginModal = lazy(() => import("./components/auth/LoginModal"));
 const OAuthCallback = lazy(() => import("./components/auth/OAuthCallback"));
 const MealPlanner = lazy(() => import("./components/mealplanner/MealPlanner"));
+const ResetPassword = lazy(() => import("./components/auth/ResetPassword"));
 
 // Remove this line:
 // const UserDetailsForm = lazy(() => import("./components/auth/UserDetailsForm"));
@@ -119,6 +120,7 @@ function AppRoutes() {
             }
           />
           <Route path="/oauth-callback" element={<OAuthCallback />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <SignupModal

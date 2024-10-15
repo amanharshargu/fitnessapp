@@ -2,8 +2,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 const { calculateDailyCalorieGoal } = require("../utils/calorieCalculator");
-const crypto = require('crypto');
-const sendEmail = require('../utils/sendEmail');
+const crypto = require("crypto");
+const sendEmail = require("../utils/sendEmail");
+const { Op } = require("sequelize");
 
 const register = async (req, res) => {
   try {
@@ -19,7 +20,8 @@ const register = async (req, res) => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
-        message: "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter"
+        message:
+          "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter",
       });
     }
 
@@ -53,12 +55,10 @@ const register = async (req, res) => {
       expiresIn: "1d",
     });
 
-    res
-      .status(201)
-      .json({
-        token,
-        user: { id: user.id, username: user.username, email: user.email },
-      });
+    res.status(201).json({
+      token,
+      user: { id: user.id, username: user.username, email: user.email },
+    });
   } catch (error) {
     res
       .status(500)
@@ -131,7 +131,9 @@ const checkAuth = async (req, res) => {
 const googleAuthCallback = async (req, res) => {
   try {
     const { user, isNewUser, token } = req.user;
-    res.redirect(`${process.env.FRONTEND_URL}/dashboard?token=${token}&isNewUser=${isNewUser}`);
+    res.redirect(
+      `${process.env.FRONTEND_URL}/dashboard?token=${token}&isNewUser=${isNewUser}`
+    );
   } catch (error) {
     console.error("Google auth callback error:", error);
     res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
@@ -147,7 +149,7 @@ const forgotPassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const resetToken = crypto.randomBytes(20).toString('hex');
+    const resetToken = crypto.randomBytes(20).toString("hex");
     const resetTokenExpiry = Date.now() + 3600000; // Token expires in 1 hour
 
     user.resetPasswordToken = resetToken;
@@ -155,20 +157,56 @@ const forgotPassword = async (req, res) => {
     await user.save();
 
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-    
+
     await sendEmail({
       email: user.email,
-      subject: 'Password Reset Request',
+      subject: "Password Reset Request",
       message: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
         Please click on the following link, or paste this into your browser to complete the process:\n\n
         ${resetUrl}\n\n
         If you did not request this, please ignore this email and your password will remain unchanged.\n`,
     });
 
-    res.status(200).json({ message: 'Password reset email sent' });
+    res.status(200).json({ message: "Password reset email sent" });
   } catch (error) {
-    console.error('Forgot password error:', error);
-    res.status(500).json({ message: "Error processing request", error: error.message });
+    console.error("Forgot password error:", error);
+    res
+      .status(500)
+      .json({ message: "Error processing request", error: error.message });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    const user = await User.findOne({
+      where: {
+        resetPasswordToken: token,
+        resetPasswordExpires: { [Op.gt]: Date.now() }
+      }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Password reset token is invalid or has expired' });
+    }
+
+    // Password validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({
+        message: "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter"
+      });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+    await user.save();
+
+    res.json({ message: 'Password has been reset successfully' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ message: 'Error resetting password', error: error.message });
   }
 };
 
@@ -179,4 +217,5 @@ module.exports = {
   checkAuth,
   googleAuthCallback,
   forgotPassword,
+  resetPassword,
 };

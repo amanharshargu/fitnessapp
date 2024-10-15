@@ -20,25 +20,25 @@ function Header() {
   };
 
   return (
-    <header className="header">
-      <div className="container">
-        <Link to="/" className="logo">
+    <header className="wisheat-header">
+      <div className="wisheat-header__container">
+        <Link to="/" className="wisheat-header__logo">
           <span>WishEat</span>
         </Link>
-        <div className="header-actions">
+        <div className="wisheat-header__actions">
           {isLoggedIn ? (
-            <button className="btn btn-outline-light" onClick={logout}>
+            <button className="wisheat-header__btn wisheat-header__btn--outline" onClick={logout}>
               Logout
             </button>
           ) : (
             <button
-              className="btn btn-outline-light"
+              className="wisheat-header__btn wisheat-header__btn--outline"
               onClick={() => {
                 setShowAuthModal(true);
                 setIsSignup(false);
               }}
             >
-            Sign Up / Log In
+              Sign Up / Log In
             </button>
           )}
         </div>

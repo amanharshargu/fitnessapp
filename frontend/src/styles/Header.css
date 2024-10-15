@@ -1,4 +1,4 @@
-.header {
+.wisheat-header {
   position: fixed;
   top: 0;
   left: 0;
@@ -9,7 +9,7 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.container {
+.wisheat-header__container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
@@ -18,7 +18,7 @@
   align-items: center;
 }
 
-.logo {
+.wisheat-header__logo {
   text-decoration: none;
   color: #FF9800;
   font-size: 1.8rem;
@@ -26,12 +26,12 @@
   letter-spacing: 1px;
 }
 
-.header-actions {
+.wisheat-header__actions {
   display: flex;
   align-items: center;
 }
 
-.btn {
+.wisheat-header__btn {
   background-color: transparent;
   border: 2px solid #FF9800;
   color: #FF9800;
@@ -44,17 +44,17 @@
   margin-right: 15px;
 }
 
-.btn:hover {
+.wisheat-header__btn--outline:hover {
   background-color: #FF9800;
   color: #FFF;
 }
 
 @media (max-width: 768px) {
-  .header {
+  .wisheat-header {
     padding: 10px 0;
   }
 
-  .btn {
+  .wisheat-header__btn {
     padding: 6px 15px;
     font-size: 0.9rem;
   }

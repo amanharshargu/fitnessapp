@@ -3,6 +3,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "../../styles/LoginModal.css";
 import { FcGoogle } from 'react-icons/fc';
+import axios from 'axios';
 
 function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
   const navigate = useNavigate();
@@ -15,6 +16,9 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
   const [shouldRedirect, setShouldRedirect] = useState(false);
   const [focusedInput, setFocusedInput] = useState(null);
   const [errors, setErrors] = useState({});
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [forgotPasswordMessage, setForgotPasswordMessage] = useState("");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   const validateField = (name, value) => {
     let error = "";
@@ -27,8 +31,8 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
     } else if (name === "password") {
       if (!value) {
         error = "Password is required";
-      } else if (value.length < 4) {
-        error = "Password must be at least 4 characters long";
+      } else if (!validatePassword(value)) {
+        error = "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter";
       }
     }
     return error;
@@ -63,7 +67,8 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
   };
 
   const validatePassword = (password) => {
-    return password.length >= 8;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    return passwordRegex.test(password);
   };
 
   const handleLogin = async (e) => {
@@ -71,7 +76,7 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
     setError("");
 
     if (!validatePassword(loginData.password)) {
-      setError("Password must be more than 7 characters long");
+      setError("Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter");
       return;
     }
 
@@ -99,6 +104,34 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
     window.location.href = `${process.env.REACT_APP_API_BASE_URL}/auth/google`;
   };
 
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setError("");
+    setForgotPasswordMessage("");
+
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/auth/forgot-password`, {
+        email: forgotPasswordEmail,
+      });
+      setForgotPasswordMessage(response.data.message);
+    } catch (error) {
+      console.error("Forgot password failed:", error);
+      setError("Failed to send password reset email. Please try again.");
+    }
+  };
+
+  const handleForgotPasswordClick = (e) => {
+    e.preventDefault();
+    setShowForgotPassword(true);
+  };
+
+  const handleBackToLogin = (e) => {
+    e.preventDefault();
+    setShowForgotPassword(false);
+    setForgotPasswordMessage("");
+    setError("");
+  };
+
   if (!show) return null;
 
   return (
@@ -111,111 +144,152 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="card-body d-flex flex-column align-items-center mx-auto w-100">
-          <h2 className="fw-bold mb-2 text-uppercase">Login</h2>
+          <h2 className="fw-bold mb-2 text-uppercase">
+            {showForgotPassword ? "Forgot Password" : "Login"}
+          </h2>
           <p className="text-white-50 mb-5">
-            Please enter your login and password!
+            {showForgotPassword
+              ? "Enter your email to reset your password"
+              : "Please enter your login and password!"}
           </p>
 
           {error && <div className="alert alert-danger">{error}</div>}
+          {forgotPasswordMessage && <div className="alert alert-success">{forgotPasswordMessage}</div>}
 
-          <form onSubmit={handleLogin} className="w-100">
-            <div
-              className={`form-outline form-white mb-4 ${
-                focusedInput === "email" || loginData.email ? "focused" : ""
-              } ${errors.email ? "is-invalid" : ""}`}
-            >
-              <input
-                type="email"
-                id="loginEmail"
-                className={`form-control form-control-lg ${
-                  errors.email ? "is-invalid" : ""
-                }`}
-                name="email"
-                value={loginData.email}
-                onChange={handleLoginInputChange}
-                onFocus={() => handleInputFocus("email")}
-                onBlur={handleInputBlur}
-                required
-              />
-              <label className="form-label" htmlFor="loginEmail">
-                Email address
-              </label>
-              {errors.email && (
-                <div className="invalid-feedback">{errors.email}</div>
-              )}
-            </div>
-
-            <div
-              className={`form-outline form-white mb-4 ${
-                focusedInput === "password" || loginData.password
-                  ? "focused"
-                  : ""
-              } ${errors.password ? "is-invalid" : ""}`}
-            >
-              <input
-                type="password"
-                id="loginPassword"
-                className={`form-control form-control-lg ${
-                  errors.password ? "is-invalid" : ""
-                }`}
-                name="password"
-                value={loginData.password}
-                onChange={handleLoginInputChange}
-                onFocus={() => handleInputFocus("password")}
-                onBlur={handleInputBlur}
-                required
-              />
-              <label className="form-label" htmlFor="loginPassword">
-                Password
-              </label>
-              {errors.password && (
-                <div className="invalid-feedback">{errors.password}</div>
-              )}
-            </div>
-            <p className="" style={{ marginTop: '-20px', marginBottom: '20px' }}>
-              <a
-                className="text-white-50"
-                href="#"
-                onClick={(e) => e.preventDefault()}
+          {!showForgotPassword ? (
+            <form onSubmit={handleLogin} className="w-100">
+              <div
+                className={`form-outline form-white mb-4 ${
+                  focusedInput === "email" || loginData.email ? "focused" : ""
+                } ${errors.email ? "is-invalid" : ""}`}
               >
-                Forgot password?
-              </a>
-            </p>
+                <input
+                  type="email"
+                  id="loginEmail"
+                  className={`form-control form-control-lg ${
+                    errors.email ? "is-invalid" : ""
+                  }`}
+                  name="email"
+                  value={loginData.email}
+                  onChange={handleLoginInputChange}
+                  onFocus={() => handleInputFocus("email")}
+                  onBlur={handleInputBlur}
+                  required
+                />
+                <label className="form-label" htmlFor="loginEmail">
+                  Email address
+                </label>
+                {errors.email && (
+                  <div className="invalid-feedback">{errors.email}</div>
+                )}
+              </div>
 
-            <div className="text-center">
-              <button
-                className="btn btn-outline-light btn-lg px-5"
-                type="submit"
+              <div
+                className={`form-outline form-white mb-4 ${
+                  focusedInput === "password" || loginData.password
+                    ? "focused"
+                    : ""
+                } ${errors.password ? "is-invalid" : ""}`}
               >
-                Login
-              </button>
-            </div>
-          </form>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  className={`form-control form-control-lg ${
+                    errors.password ? "is-invalid" : ""
+                  }`}
+                  name="password"
+                  value={loginData.password}
+                  onChange={handleLoginInputChange}
+                  onFocus={() => handleInputFocus("password")}
+                  onBlur={handleInputBlur}
+                  required
+                />
+                <label className="form-label" htmlFor="loginPassword">
+                  Password
+                </label>
+                {errors.password && (
+                  <div className="invalid-feedback">{errors.password}</div>
+                )}
+              </div>
+              <p className="" style={{ marginTop: '10px', marginBottom: '20px' }}>
+                <a
+                  className="text-white-50"
+                  href="#"
+                  onClick={handleForgotPasswordClick}
+                >
+                  Forgot password?
+                </a>
+              </p>
 
-          <div className="mt-4">
-            <button
-              className="google-login-btn"
-              onClick={handleGoogleLogin}
-              aria-label="Sign in with Google"
-            >
-              <FcGoogle size={20} />
-              <span style={{ paddingLeft: '4px' }}>Sign in with Google</span>
-            </button>
-          </div>
+              <div className="text-center">
+                <button
+                  className="btn btn-outline-light btn-lg px-5"
+                  type="submit"
+                >
+                  Login
+                </button>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleForgotPassword} className="w-100">
+              <div className="form-outline form-white mb-4">
+                <input
+                  type="email"
+                  id="forgotPasswordEmail"
+                  className="form-control form-control-lg"
+                  value={forgotPasswordEmail}
+                  onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                  required
+                />
+                <label className="form-label" htmlFor="forgotPasswordEmail">
+                  Email address
+                </label>
+              </div>
+              <div className="text-center">
+                <button className="btn btn-outline-light btn-lg px-5" type="submit">
+                  Reset Password
+                </button>
+              </div>
+              <p className="mt-3 text-center">
+                <a
+                  className="text-white-50"
+                  href="#"
+                  onClick={handleBackToLogin}
+                >
+                  Back to Login
+                </a>
+              </p>
+            </form>
+          )}
 
-          <div className="mt-4 text-center">
-            <p className="mb-0">Don't have an account?</p>
-            <a
-              href="#"
-              className="text-white-50 fw-bold"
-              onClick={(e) => {
-                e.preventDefault();
-                onSwitchToSignup();
-              }}
-            >
-              Sign Up
-            </a>
-          </div>
+          {!showForgotPassword && (
+            <>
+              <div className="mt-4">
+                <button
+                  className="google-login-btn"
+                  onClick={handleGoogleLogin}
+                  aria-label="Sign in with Google"
+                >
+                  <FcGoogle size={20} />
+                  <span style={{ paddingLeft: '4px' }}>Sign in with Google</span>
+                </button>
+              </div>
+
+              <div className="mt-4 text-center">
+                <p className="mb-0">Don't have an account?</p>
+                <a
+                  href="#"
+                  className="text-white-50 fw-bold"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onSwitchToSignup();
+                  }}
+                >
+                  Sign Up
+                </a>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

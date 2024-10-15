@@ -21,4 +21,6 @@ router.get(
   authController.googleAuthCallback
 );
 
+router.post("/forgot-password", authController.forgotPassword);
+
 module.exports = router;

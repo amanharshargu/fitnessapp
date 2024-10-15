@@ -2,6 +2,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 const { calculateDailyCalorieGoal } = require("../utils/calorieCalculator");
+const crypto = require('crypto');
+const sendEmail = require('../utils/sendEmail');
 
 const register = async (req, res) => {
   try {
@@ -11,6 +13,14 @@ const register = async (req, res) => {
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
+    }
+
+    // Password validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        message: "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter"
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -128,10 +138,45 @@ const googleAuthCallback = async (req, res) => {
   }
 };
 
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    const resetTokenExpiry = Date.now() + 3600000; // Token expires in 1 hour
+
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = resetTokenExpiry;
+    await user.save();
+
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    
+    await sendEmail({
+      email: user.email,
+      subject: 'Password Reset Request',
+      message: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
+        Please click on the following link, or paste this into your browser to complete the process:\n\n
+        ${resetUrl}\n\n
+        If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+    });
+
+    res.status(200).json({ message: 'Password reset email sent' });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ message: "Error processing request", error: error.message });
+  }
+};
+
 module.exports = {
   register,
   login,
   logout,
   checkAuth,
   googleAuthCallback,
+  forgotPassword,
 };

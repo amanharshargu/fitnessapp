@@ -40,7 +40,12 @@ function DailyCalorieGoal({ onDishesChanged }){
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewDish(prev => ({ ...prev, [name]: value }));
+    if (name === 'calories') {
+      const numericValue = value.replace(/\D/g, '');
+      setNewDish(prev => ({ ...prev, [name]: numericValue }));
+    } else {
+      setNewDish(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const addDish = async (e) => {
@@ -54,7 +59,7 @@ function DailyCalorieGoal({ onDishesChanged }){
         });
         setDishes(prev => [...prev, response.data]);
         setNewDish({ name: '', calories: '' });
-        onDishesChanged(); // Call this function to update weekly data
+        onDishesChanged();
       } catch (error) {
         console.error('Error adding eaten dish:', error);
       }
@@ -67,7 +72,12 @@ function DailyCalorieGoal({ onDishesChanged }){
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    setEditingDish(prev => ({ ...prev, [name]: value }));
+    if (name === 'calories') {
+      const numericValue = value.replace(/\D/g, '');
+      setEditingDish(prev => ({ ...prev, [name]: numericValue }));
+    } else {
+      setEditingDish(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const saveEdit = async () => {
@@ -82,7 +92,7 @@ function DailyCalorieGoal({ onDishesChanged }){
       );
       setDishes(updatedDishes);
       setEditingDish(null);
-      onDishesChanged(); // Call this function to update weekly data
+      onDishesChanged();
     } catch (error) {
       console.error('Error updating eaten dish:', error);
     }
@@ -92,7 +102,7 @@ function DailyCalorieGoal({ onDishesChanged }){
     try {
       await api.delete(`/dashboard/eaten-dishes/${id}`);
       setDishes(prev => prev.filter(dish => dish.id !== id));
-      onDishesChanged(); // Call this function to update weekly data
+      onDishesChanged();
     } catch (error) {
       console.error('Error deleting eaten dish:', error);
     }
@@ -120,7 +130,7 @@ function DailyCalorieGoal({ onDishesChanged }){
                 d="M18 2.0845
                   a 15.9155 15.9155 0 0 1 0 31.831
                   a 15.9155 15.9155 0 0 1 0 -31.831"
-                stroke="#ff7800" // Changed to dark orange
+                stroke="#ff7800"
               />
               <text x="18" y="20.35" className="dcg-percentage">{Math.round(percentage)}%</text>
             </svg>
@@ -142,12 +152,13 @@ function DailyCalorieGoal({ onDishesChanged }){
                 required
               />
               <input
-                type="number"
+                type="text"
                 name="calories"
                 value={newDish.calories}
                 onChange={handleInputChange}
                 placeholder="Calories"
                 required
+                pattern="\d*"
               />
             </div>
             <div className="dcg-form-button-container">
@@ -170,11 +181,12 @@ function DailyCalorieGoal({ onDishesChanged }){
                           placeholder="Dish name"
                         />
                         <input
-                          type="number"
+                          type="text"
                           name="calories"
                           value={editingDish.calories}
                           onChange={handleEditChange}
                           placeholder="Calories"
+                          pattern="\d*"
                         />
                         <div className="dcg-editing-dish-actions">
                           <button onClick={saveEdit}>Save</button>

@@ -13,20 +13,18 @@ import { RecipeProvider } from "./contexts/RecipeContext";
 import { UserDetailsProvider } from "./contexts/UserDetailsContext";
 import Layout from "./components/Layout";
 import LandingPage from "./components/LandingPage";
+import LoadingSpinner from "./components/common/LoadingSpinner";
 
-const Dashboard = lazy(() => import("./components/dashboard/Dashboard"));
-const Fridge = lazy(() => import("./components/fridge/Fridge"));
-const Recipes = lazy(() => import("./components/recipes/Recipes"));
-const LikedRecipes = lazy(() => import("./components/recipes/LikedRecipes"));
-const SignupModal = lazy(() => import("./components/auth/SignupModal"));
-const UserDetailsModal = lazy(() => import("./components/auth/UserDetailsModal"));
-const LoginModal = lazy(() => import("./components/auth/LoginModal"));
-const OAuthCallback = lazy(() => import("./components/auth/OAuthCallback"));
-const MealPlanner = lazy(() => import("./components/mealplanner/MealPlanner"));
-const ResetPassword = lazy(() => import("./components/auth/ResetPassword"));
-
-// Remove this line:
-// const UserDetailsForm = lazy(() => import("./components/auth/UserDetailsForm"));
+const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ "./components/dashboard/Dashboard"));
+const Fridge = lazy(() => import(/* webpackChunkName: "fridge" */ "./components/fridge/Fridge"));
+const Recipes = lazy(() => import(/* webpackChunkName: "recipes" */ "./components/recipes/Recipes"));
+const LikedRecipes = lazy(() => import(/* webpackChunkName: "liked-recipes" */ "./components/recipes/LikedRecipes"));
+const SignupModal = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/SignupModal"));
+const UserDetailsModal = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/UserDetailsModal"));
+const LoginModal = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/LoginModal"));
+const OAuthCallback = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/OAuthCallback"));
+const MealPlanner = lazy(() => import(/* webpackChunkName: "meal-planner" */ "./components/mealplanner/MealPlanner"));
+const ResetPassword = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/ResetPassword"));
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useAuth();
@@ -76,7 +74,7 @@ function AppRoutes() {
 
   return (
     <Layout>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingSpinner />}>
         <Routes>
           <Route path="/" element={<ConditionalLanding />} />
           <Route

@@ -11,6 +11,7 @@ function LandingPage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
   const [randomRecipes, setRandomRecipes] = useState([]);
+  const [loadingImages, setLoadingImages] = useState([true, true, true]);
 
   useEffect(() => {
     const fetchRandomRecipes = async () => {
@@ -39,6 +40,14 @@ function LandingPage() {
     setIsSignup(false);
   };
 
+  const handleImageLoad = (index) => {
+    setLoadingImages(prev => {
+      const newLoadingImages = [...prev];
+      newLoadingImages[index] = false;
+      return newLoadingImages;
+    });
+  };
+
   return (
     <div className="landing-page">
       <div className="hero-section">
@@ -49,12 +58,15 @@ function LandingPage() {
           <button className="get-started-btn" onClick={handleGetStarted}>Get Started</button>
           <div className="food-images">
             {randomRecipes.map((recipe, index) => (
-              <img
-                key={recipe.uri}
-                src={recipe.image}
-                alt={`Food dish ${index + 1}`}
-                className={`dish-image dish-${index + 1}`}
-              />
+              <div key={recipe.uri} className="image-container">
+                {loadingImages[index] && <div className="loading-spinner"></div>}
+                <img
+                  src={recipe.image}
+                  alt={`Food dish ${index + 1}`}
+                  className={`dish-image dish-${index + 1} ${loadingImages[index] ? 'loading' : ''}`}
+                  onLoad={() => handleImageLoad(index)}
+                />
+              </div>
             ))}
           </div>
         </div>

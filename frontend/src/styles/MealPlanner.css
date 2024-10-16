@@ -135,11 +135,13 @@
   background-color: #f57c00;
 }
 
-.meal-plan {
+/* .meal-plan {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
+  margin-top: -50px;
+  overflow-y: hidden;
+} */
 
 .meal-day-row {
   display: flex;
@@ -197,10 +199,10 @@
 }
 
 .meal-day {
-  background-color: white;
+  /* background-color: white; */
   border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 }
 
 .meal-day h4 {
@@ -348,8 +350,6 @@
   transform: scale(1.05);
 }
 
-/* Add any additional styles needed for RecipeCard integration */
-
 .meal-planner {
   position: relative;
 }
@@ -402,6 +402,7 @@
   display: flex;
   gap: 20px;
   overflow-y: auto;
+  overflow-x:hidden;
   padding-right: 10px;
 }
 

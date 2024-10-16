@@ -91,6 +91,12 @@
   border-radius: 5px;
 }
 
+.dcg-form-inputs input:focus {
+  border-color: #ff9800;
+  /* color: #ff9800; */
+  outline: none;
+}
+
 .dcg-form-button-container {
   text-align: right;
 }

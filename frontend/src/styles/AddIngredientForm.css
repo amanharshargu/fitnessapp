@@ -85,7 +85,8 @@
   background-color: #f0f0f0;
 }
 
-.add-ingredient-form input[type="date"] {
+.add-ingredient-form input[type="date"],
+.add-ingredient-form input[type="text"][name="expirationDate"] {
   position: relative;
   appearance: none;
   -webkit-appearance: none;
@@ -111,17 +112,6 @@
   background: transparent;
 }
 
-.add-ingredient-form input[type="date"]::before {
-  content: attr(placeholder);
-  position: absolute;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
+.add-ingredient-form input[type="text"][name="expirationDate"]::placeholder {
   color: #6c757d;
-  pointer-events: none;
-}
-
-.add-ingredient-form input[type="date"]:focus::before,
-.add-ingredient-form input[type="date"]:valid::before {
-  display: none;
 }

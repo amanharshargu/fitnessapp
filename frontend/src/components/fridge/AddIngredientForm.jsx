@@ -8,6 +8,7 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
   const dateInputRef = useRef(null);
   const [minDate, setMinDate] = useState("");
   const [unitSuggestions, setUnitSuggestions] = useState([]);
+  const [dateInputType, setDateInputType] = useState("text");
 
   const allUnits = [
     "count", "pieces", "mg", "g", "kg", "ounces", "pounds",
@@ -31,7 +32,12 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
   };
 
   const handleDateClick = () => {
-    dateInputRef.current.showPicker();
+    if (dateInputType === "text") {
+      setDateInputType("date");
+    }
+    setTimeout(() => {
+      dateInputRef.current.showPicker();
+    }, 0);
   };
 
   const handleUnitChange = (e) => {
@@ -50,6 +56,16 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
   const selectSuggestion = (unit) => {
     handleInputChange({ target: { name: "unit", value: unit } });
     setUnitSuggestions([]);
+  };
+
+  const handleDateFocus = () => {
+    setDateInputType("date");
+  };
+
+  const handleDateBlur = (e) => {
+    if (!e.target.value) {
+      setDateInputType("text");
+    }
   };
 
   return (
@@ -100,15 +116,16 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
       <div className="mb-3">
         <input
           ref={dateInputRef}
-          type="date"
+          type={dateInputType}
           className="form-control"
           name="expirationDate"
           value={ingredient.expirationDate}
           onChange={handleInputChange}
           onClick={handleDateClick}
+          onBlur={handleDateBlur}
           required
-          placeholder="Expiration date"
           min={minDate}
+          placeholder="Expiry date"
         />
       </div>
       <button type="submit" className="btn btn-success me-2">

@@ -3,9 +3,14 @@ import '../../styles/RecipeCard.css';
 
 function RecipeCard({ recipe, isLiked, onLikeToggle }) {
   const [showDetails, setShowDetails] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
   };
 
   const caloriesPerServing = Math.round(recipe.calories / recipe.yield);
@@ -14,7 +19,13 @@ function RecipeCard({ recipe, isLiked, onLikeToggle }) {
     <div className={`recipe-card ${showDetails ? 'show-details' : ''}`}>
       <div className="recipe-card__main">
         <div className="recipe-card__image-container">
-          <img className="recipe-card__image" src={recipe.image} alt={recipe.label} />
+          {imageLoading && <div className="loading-spinner"></div>}
+          <img 
+            className={`recipe-card__image ${imageLoading ? 'loading' : ''}`} 
+            src={recipe.image} 
+            alt={recipe.label} 
+            onLoad={handleImageLoad}
+          />
           <div className="recipe-card__image-overlay"></div>
           <button 
             className={`recipe-card__like-button ${isLiked ? 'recipe-card__like-button--liked' : ''}`} 

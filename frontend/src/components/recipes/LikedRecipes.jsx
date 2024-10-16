@@ -63,26 +63,28 @@ function LikedRecipes() {
             className="search-input"
           />
         </div>
-        {!isContentLoaded ? (
-          <div className="loading">Loading recipes...</div>
-        ) : isLoading ? (
-          <LoadingAnimation />
-        ) : error ? (
-          <div className="error">Error: {error}</div>
-        ) : filteredRecipes.length === 0 ? (
-          <p className="no-recipes">No liked recipes found.</p>
-        ) : (
-          <div className="recipe-grid">
-            {filteredRecipes.map((recipe) => (
-              <RecipeCard
-                key={recipe.uri}
-                recipe={recipe}
-                isLiked={true}
-                onLikeToggle={() => handleLikeToggle(recipe.uri)}
-              />
-            ))}
-          </div>
-        )}
+        <div className="recipes-display-container">
+          {!isContentLoaded ? (
+            <div className="loading">Loading recipes...</div>
+          ) : isLoading ? (
+            <LoadingAnimation />
+          ) : error ? (
+            <div className="error">Error: {error}</div>
+          ) : filteredRecipes.length === 0 ? (
+            <p className="no-recipes">No liked recipes found.</p>
+          ) : (
+            <div className="recipe-grid">
+              {filteredRecipes.map((recipe) => (
+                <RecipeCard
+                  key={recipe.uri}
+                  recipe={recipe}
+                  isLiked={true}
+                  onLikeToggle={() => handleLikeToggle(recipe.uri)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </ContentWrapper>
   );

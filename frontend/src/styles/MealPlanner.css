@@ -406,7 +406,7 @@
 }
 
 .filters-checkboxes {
-  flex: 1;
+  flex: 0 0 60%;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -422,7 +422,7 @@
 }
 
 .filters-sliders {
-  flex: 1;
+  flex: 0 0 40%;
   display: flex;
   flex-direction: column;
 }
@@ -438,8 +438,8 @@
 }
 
 .filter-options.compact {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
@@ -448,6 +448,7 @@
   align-items: center;
   font-size: 0.9em;
   cursor: pointer;
+  flex: 0 0 calc(50% - 4px); /* Adjust the width as needed */
 }
 
 .checkbox-label input[type="checkbox"] {

@@ -4,6 +4,7 @@ import CalorieSlider from "../dashboard/CalorieSlider";
 import ContentWrapper from "../layout/ContentWrapper";
 import MealPlanDisplay from "./MealPlanDisplay";
 import { useIngredients } from "../../contexts/IngredientContext";
+import api from "../../services/api";
 import "../../styles/MealPlanner.css";
 
 const MEALPLAN_APP_ID = process.env.REACT_APP_MEALPLAN_APP_ID;
@@ -26,15 +27,28 @@ const dietLabels = [
   "BALANCED", "HIGH_PROTEIN", "LOW_FAT", "LOW_CARB"
 ];
 
-const initialFilters = {
-  health: [],
-  diet: [],
-  dishType: [],
-  ingredients: [],
-  calories: { min: 1500, max: 2500 },
-  breakfastCalories: { min: 300, max: 500 },
-  lunchCalories: { min: 400, max: 700 },
-  dinnerCalories: { min: 500, max: 800 },
+const getInitialFilters = (dailyCalorieGoal) => {
+  const breakfastPercentage = 0.28;
+  const lunchPercentage = 0.38;
+  const dinnerPercentage = 0.34;
+
+  const calculateRange = (percentage) => {
+    const baseCalories = Math.round(dailyCalorieGoal * percentage);
+    const min = Math.round(baseCalories * 0.9);
+    const max = Math.round(baseCalories * 1.1);
+    return { min, max };
+  };
+
+  return {
+    health: [],
+    diet: [],
+    dishType: [],
+    ingredients: [],
+    calories: { min: Math.max(1000, dailyCalorieGoal - 150), max: Math.min(3000, dailyCalorieGoal + 150) },
+    breakfastCalories: calculateRange(breakfastPercentage),
+    lunchCalories: calculateRange(lunchPercentage),
+    dinnerCalories: calculateRange(dinnerPercentage),
+  };
 };
 
 const capitalizeWords = (str) => {
@@ -54,12 +68,29 @@ const capitalizeWords = (str) => {
 };
 
 function MealPlanner() {
+  const [dailyCalorieGoal, setDailyCalorieGoal] = useState(2000); // Default value
+  const [filters, setFilters] = useState(getInitialFilters(dailyCalorieGoal));
   const [mealPlan, setMealPlan] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState(initialFilters);
   const [showFilters, setShowFilters] = useState(true);
   const { ingredients } = useIngredients();
+
+  useEffect(() => {
+    const fetchCalorieGoal = async () => {
+      try {
+        const response = await api.get(`/dashboard/calorie-goal`);
+        const data = response.data;
+        const fetchedGoal = data.dailyCalories || 2000;
+        setDailyCalorieGoal(fetchedGoal);
+        setFilters(getInitialFilters(fetchedGoal));
+      } catch (error) {
+        console.error('Error fetching calorie goal:', error);
+      }
+    };
+
+    fetchCalorieGoal();
+  }, []);
 
   const LoadingAnimation = () => (
     <div className="loading-animation" style={{
@@ -232,7 +263,7 @@ function MealPlanner() {
   };
 
   const handleClearFilters = () => {
-    setFilters(initialFilters);
+    setFilters(getInitialFilters(dailyCalorieGoal));
   };
 
   const handleViewRecipe = (recipe) => {

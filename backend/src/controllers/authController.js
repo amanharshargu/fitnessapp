@@ -132,7 +132,7 @@ const googleAuthCallback = async (req, res) => {
   try {
     const { user, isNewUser, token } = req.user;
     res.redirect(
-      `${process.env.FRONTEND_URL}/dashboard?token=${token}&isNewUser=${isNewUser}`
+      `${process.env.FRONTEND_URL}/dashboard?token=${token}`
     );
   } catch (error) {
     console.error("Google auth callback error:", error);

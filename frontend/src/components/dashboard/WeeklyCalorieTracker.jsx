@@ -18,7 +18,7 @@ function WeeklyCalorieTracker({ weeklyData }) {
             <div className="bar-container">
               <div 
                 className="bar actual" 
-                style={{ height: `${day.goal > 0 ? (day.calories / day.goal) * 100 : 0}%` }}
+                style={{ maxHeight: '100%',height: `${day.goal > 0 ? (day.calories / day.goal) * 100 : 0}%` }}
               ></div>
               <div 
                 className="bar goal" 

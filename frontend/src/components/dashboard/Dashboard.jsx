@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUserDetails } from "../../contexts/UserDetailsContext";
+import { useLocation } from "react-router-dom";
 import UserProfileCard from "./UserProfileCard";
 import WeeklyCalorieTracker from "./WeeklyCalorieTracker";
 import DailyCalorieGoal from "./DailyCalorieGoal";
@@ -10,46 +11,32 @@ import "../../styles/Dashboard.css";
 
 function Dashboard({ onSetUserDetails }) {
   const { user } = useAuth();
-  const { fetchUserDetails, userDetails } = useUserDetails();
+  const { fetchUserDetails, userDetails, fetchDailyCalorieGoal } = useUserDetails();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [key, setKey] = useState(0);
-  const [weeklyData, setWeeklyData] = useState([]);
+  const location = useLocation();
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const loadUserDetails = useCallback(async () => {
     try {
       await fetchUserDetails();
-      setKey(prevKey => prevKey + 1);
+      await fetchDailyCalorieGoal();
+      setLoading(false);
+      setRefreshKey(prevKey => prevKey + 1);
     } catch (err) {
       console.error("Failed to fetch user details:", err);
       setError("Failed to load user details. Please try again.");
-    } finally {
       setLoading(false);
     }
-  }, [fetchUserDetails]);
-
-  const fetchWeeklyData = useCallback(async () => {
-    try {
-      const response = await api.get('/dashboard/weekly-calorie-data');
-      setWeeklyData(response.data);
-    } catch (error) {
-      console.error('Error fetching weekly calorie data:', error);
-      setError("Failed to load weekly calorie data. Please try again.");
-    }
-  }, []);
+  }, [fetchUserDetails, fetchDailyCalorieGoal]);
 
   useEffect(() => {
     loadUserDetails();
-    fetchWeeklyData();
-  }, [loadUserDetails, fetchWeeklyData]);
-
-  useEffect(() => {
-    setKey(prevKey => prevKey + 1);
-  }, [userDetails]);
+  }, [loadUserDetails, location.state?.refresh]);
 
   const handleDishesChanged = useCallback(() => {
-    fetchWeeklyData();
-  }, [fetchWeeklyData]);
+    loadUserDetails();
+  }, [loadUserDetails]);
 
   if (loading) {
     return <div className="loading-message">Loading user details...</div>;
@@ -68,7 +55,6 @@ function Dashboard({ onSetUserDetails }) {
               <div className="dashboard-row">
                 <div className="dashboard-column">
                   <UserProfileCard
-                    key={`profile-${key}`}
                     userDetails={userDetails}
                     user={user}
                     onSetUserDetails={onSetUserDetails}
@@ -76,16 +62,12 @@ function Dashboard({ onSetUserDetails }) {
                 </div>
                 <div className="dashboard-column">
                   <DailyCalorieGoal 
-                    key={`calorie-goal-${key}`} 
-                    userDetails={userDetails} 
+                    key={refreshKey}
                     onDishesChanged={handleDishesChanged}
                   />
                 </div>
                 <div className="dashboard-column">
-                  <WeeklyCalorieTracker 
-                    key={`calorie-tracker-${key}`} 
-                    weeklyData={weeklyData}
-                  />
+                  <WeeklyCalorieTracker key={refreshKey} />
                 </div>
               </div>
             </>

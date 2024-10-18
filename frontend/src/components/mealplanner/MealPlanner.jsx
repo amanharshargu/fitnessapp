@@ -6,6 +6,9 @@ import MealPlanDisplay from "./MealPlanDisplay";
 import { useIngredients } from "../../contexts/IngredientContext";
 import api from "../../services/api";
 import "../../styles/MealPlanner.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import CardioSpinner from "../common/CardioSpinner";
 
 const MEALPLAN_APP_ID = process.env.REACT_APP_MEALPLAN_APP_ID;
 const MEALPLAN_APP_KEY = process.env.REACT_APP_MEALPLAN_APP_KEY;
@@ -104,47 +107,26 @@ function MealPlanner() {
       position: 'fixed',
       top: 0,
       left: 0,
-      backgroundColor: 'rgba(255, 255, 255, 0)',
-      zIndex: 1000
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      zIndex: 10
     }}>
-      <div className="spinner" style={{
-        width: '60px',
-        height: '60px',
-        border: '6px solid #ffe290',
-        borderTop: '6px solid #ff9800',
-        borderRadius: '50%',
-        animation: 'spin 1s linear infinite',
-        boxShadow: '0 0 10px rgba(255, 152, 0, 0.3)'
-      }}></div>
+      <CardioSpinner size="60" stroke="4" speed="2" color="#ff9800" />
       <p style={{
         marginTop: '20px',
         fontSize: '18px',
         color: '#ff9800',
         fontWeight: 'bold'
       }}>Loading...</p>
-      <style>
-        {`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}
-      </style>
     </div>
   );
 
-  const calculateIngredientRange = () => {
-    const minIngr = Math.floor(Math.random() * 5) + 3; // Random number between 3 and 7
-    const maxIngr = minIngr + Math.floor(Math.random() * 5) + 3; // Random number between minIngr + 3 and minIngr + 7
-    return `${minIngr}-${maxIngr}`;
-  };
+
 
   const fetchMealPlan = async () => {
     setLoading(true);
     setError(null);
     setShowFilters(false);
     try {
-      const ingredientRange = calculateIngredientRange();
       const response = await axios.post(
         `https://api.edamam.com/api/meal-planner/v1/${MEALPLAN_APP_ID}/select?app_id=${MEALPLAN_APP_ID}&app_key=${MEALPLAN_APP_KEY}`,
         {
@@ -157,7 +139,6 @@ function MealPlanner() {
             },
             fit: {
               ENERC_KCAL: filters.calories,
-              ingr: ingredientRange,
             },
             sections: {
               Breakfast: {
@@ -169,7 +150,6 @@ function MealPlanner() {
                 },
                 fit: {
                   ENERC_KCAL: filters.breakfastCalories,
-                  ingr: ingredientRange,
                 },
               },
               Lunch: {
@@ -181,7 +161,6 @@ function MealPlanner() {
                 },
                 fit: {
                   ENERC_KCAL: filters.lunchCalories,
-                  ingr: ingredientRange,
                 },
               },
               Dinner: {
@@ -193,7 +172,6 @@ function MealPlanner() {
                 },
                 fit: {
                   ENERC_KCAL: filters.dinnerCalories,
-                  ingr: ingredientRange,
                 },
               },
             },
@@ -445,10 +423,30 @@ function MealPlanner() {
             {loading && <LoadingAnimation />}
             {!loading && mealPlan && (
               <div className="meal-plan-display-container">
+                <button 
+                  className="btn btn-primary back-button" 
+                  onClick={handleBackToFilters}
+                  style={{
+                    position: 'absolute',
+                    top: '10px',
+                    left: '10px',
+                    zIndex: 10,
+                    fontSize: '1rem',
+                    padding: '5px 10px',
+                    backgroundColor: '#ff9800',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                  }}
+                >
+                  <FontAwesomeIcon icon={faArrowLeft} /> Back
+                </button>
                 <MealPlanDisplay 
                   mealPlan={mealPlan} 
                   handleViewRecipe={handleViewRecipe} 
-                  onBackToFilters={handleBackToFilters}
                 />
               </div>
             )}

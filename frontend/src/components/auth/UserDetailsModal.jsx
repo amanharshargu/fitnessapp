@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUserDetails } from "../../contexts/UserDetailsContext";
@@ -7,16 +7,22 @@ import "../../styles/UserDetailsModal.css";
 
 function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
   const { updateUserDetails: updateAuthUserDetails } = useAuth();
-  const { userDetails, tempUserDetails, updateTempUserDetails } = useUserDetails();
+  const { userDetails, tempUserDetails, updateTempUserDetails, fetchUserDetails } = useUserDetails();
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (show) {
+      fetchUserDetails(); // Fetch latest user details when modal is shown
+    }
+  }, [show, fetchUserDetails]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "weight" || name === "height" || name === "age") {
       const numericValue = value.replace(/\D/g, '');
-      updateTempUserDetails({ [name]: numericValue });
+      updateTempUserDetails({ [name]: numericValue ? parseFloat(numericValue) : '' });
     } else {
       updateTempUserDetails({ [name]: value });
     }
@@ -27,8 +33,24 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
     setError("");
     setIsLoading(true);
 
-    if (tempUserDetails.weight <= 0 || tempUserDetails.height <= 0 || tempUserDetails.age <= 0) {
-      setError("Weight, height, and age must be positive numbers.");
+    const weight = tempUserDetails.weight;
+    const height = tempUserDetails.height;
+    const age = tempUserDetails.age;
+
+    if (!weight || weight <= 0) {
+      setError("Weight must be a positive number.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!height || height <= 0) {
+      setError("Height must be a positive number.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!age || age <= 0) {
+      setError("Age must be a positive integer.");
       setIsLoading(false);
       return;
     }
@@ -39,7 +61,8 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
       if (onDetailsSubmitted) {
         onDetailsSubmitted();
       }
-      navigate("/dashboard");
+      // Navigate to dashboard with a unique key to force re-render
+      navigate("/dashboard", { state: { refresh: Date.now() } });
     } catch (error) {
       console.error("Updating user details failed:", error);
       setError("Failed to update user details. Please try again.");
@@ -49,7 +72,7 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
   };
 
   const getInputValue = (field) => {
-    return tempUserDetails[field] !== "" ? tempUserDetails[field] : userDetails[field] || "";
+    return tempUserDetails[field] !== undefined ? tempUserDetails[field] : userDetails[field] || "";
   };
 
   if (!show) return null;
@@ -63,39 +86,39 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
           <div className="form-group">
             <label htmlFor="weight">Weight (kg)</label>
             <input
-              type="text"
+              type="number"
               id="weight"
               name="weight"
               value={getInputValue("weight")}
               onChange={handleInputChange}
-              pattern="\d*"
-              inputMode="numeric"
+              min="1"
+              step="0.1"
               required
             />
           </div>
           <div className="form-group">
             <label htmlFor="height">Height (cm)</label>
             <input
-              type="text"
+              type="number"
               id="height"
               name="height"
               value={getInputValue("height")}
               onChange={handleInputChange}
-              pattern="\d*"
-              inputMode="numeric"
+              min="1"
+              step="0.1"
               required
             />
           </div>
           <div className="form-group">
             <label htmlFor="age">Age</label>
             <input
-              type="text"
+              type="number"
               id="age"
               name="age"
               value={getInputValue("age")}
               onChange={handleInputChange}
-              pattern="\d*"
-              inputMode="numeric"
+              min="1"
+              step="1"
               required
             />
           </div>

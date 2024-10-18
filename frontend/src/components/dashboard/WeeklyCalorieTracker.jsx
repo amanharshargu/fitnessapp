@@ -1,8 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useUserDetails } from '../../contexts/UserDetailsContext';
 import '../../styles/WeeklyCalorieTracker.css';
+import api from "../../services/api";
 
-function WeeklyCalorieTracker({ weeklyData }) {
+function WeeklyCalorieTracker() {
+  const { dailyCalorieGoal, fetchDailyCalorieGoal } = useUserDetails();
+  const [weeklyData, setWeeklyData] = useState([]);
   const [hoveredDay, setHoveredDay] = useState(null);
+
+  useEffect(() => {
+    fetchDailyCalorieGoal();
+    fetchWeeklyData();
+  }, [fetchDailyCalorieGoal]);
+
+  const fetchWeeklyData = async () => {
+    try {
+      const response = await api.get('/dashboard/weekly-calorie-data');
+      setWeeklyData(response.data.map(day => ({
+        ...day,
+        goal: dailyCalorieGoal
+      })));
+    } catch (error) {
+      console.error('Error fetching weekly calorie data:', error);
+    }
+  };
 
   const getBarColor = (calories, goal) => {
     if (calories > goal) return "#FF6666";

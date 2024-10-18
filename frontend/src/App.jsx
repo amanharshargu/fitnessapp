@@ -39,9 +39,13 @@ function AppRoutes() {
   const [showSignup, setShowSignup] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showUserDetails, setShowUserDetails] = useState(false);
+  const [refreshDashboard, setRefreshDashboard] = useState(false);
 
   const handleShowUserDetails = useCallback(() => setShowUserDetails(true), []);
-  const handleUserDetailsSubmitted = useCallback(() => setShowUserDetails(false), []);
+  const handleUserDetailsSubmitted = useCallback(() => {
+    setShowUserDetails(false);
+    setRefreshDashboard(prev => !prev);
+  }, []);
 
   const handleSwitchToLogin = useCallback(() => {
     setShowSignup(false);
@@ -80,7 +84,10 @@ function AppRoutes() {
             path="/dashboard/*"
             element={
               <ProtectedRoute>
-                <Dashboard onSetUserDetails={handleShowUserDetails} />
+                <Dashboard 
+                  onSetUserDetails={handleShowUserDetails} 
+                  refreshTrigger={refreshDashboard}
+                />
               </ProtectedRoute>
             }
           />

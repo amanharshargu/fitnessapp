@@ -1,37 +1,28 @@
 import React, { useState, useEffect } from 'react';
+import { useUserDetails } from '../../contexts/UserDetailsContext';
 import '../../styles/DailyCalorieGoal.css';
 import api from "../../services/api";
 
 function DailyCalorieGoal({ onDishesChanged }){
-  const [dailyCalorieGoal, setDailyCalorieGoal] = useState(null);
+  const { dailyCalorieGoal, fetchDailyCalorieGoal } = useUserDetails();
   const [totalDailyCalories, setTotalDailyCalories] = useState(0);
   const [dishes, setDishes] = useState([]);
   const [newDish, setNewDish] = useState({ name: '', calories: '' });
   const [editingDish, setEditingDish] = useState(null);
 
   useEffect(() => {
-    const fetchCalorieGoal = async () => {
-      try {
-        const response = await api.get(`/dashboard/calorie-goal`);
-        const data = response.data;
-        setDailyCalorieGoal(data.dailyCalories || null);
-      } catch (error) {
-        console.error('Error fetching calorie goal:', error);
-      }
-    };
-
-    const fetchEatenDishes = async () => {
-      try {
-        const response = await api.get('/dashboard/eaten-dishes');
-        setDishes(response.data);
-      } catch (error) {
-        console.error('Error fetching eaten dishes:', error);
-      }
-    };
-
-    fetchCalorieGoal();
+    fetchDailyCalorieGoal();
     fetchEatenDishes();
-  }, []);
+  }, [fetchDailyCalorieGoal]);
+
+  const fetchEatenDishes = async () => {
+    try {
+      const response = await api.get('/dashboard/eaten-dishes');
+      setDishes(response.data);
+    } catch (error) {
+      console.error('Error fetching eaten dishes:', error);
+    }
+  };
 
   useEffect(() => {
     const total = dishes.reduce((sum, dish) => sum + dish.calories, 0);

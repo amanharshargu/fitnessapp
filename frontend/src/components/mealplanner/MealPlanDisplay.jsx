@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import '../../styles/MealPlanDisplay.css';
+import CardioSpinner from "../common/CardioSpinner";
 
-function MealPlanDisplay({ mealPlan, handleViewRecipe, onBackToFilters }) {
+const MealPlanDisplay = ({ mealPlan, handleViewRecipe }) => {
   if (!mealPlan) return null;
   
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   const [selectedDay, setSelectedDay] = useState(0);
   const [loadedImages, setLoadedImages] = useState({});
+  const [loadingImages, setLoadingImages] = useState({});
 
   const formatNutrient = (nutrient, yield_) => {
     return Math.round(nutrient.quantity / yield_) + nutrient.unit;
@@ -20,10 +22,24 @@ function MealPlanDisplay({ mealPlan, handleViewRecipe, onBackToFilters }) {
     setSelectedDay(index);
   };
 
+  useEffect(() => {
+    if (mealPlan.selection) {
+      const initialLoadingState = {};
+      mealPlan.selection.forEach((day, dayIndex) => {
+        initialLoadingState[dayIndex] = {
+          Breakfast: true,
+          Lunch: true,
+          Dinner: true
+        };
+      });
+      setLoadingImages(initialLoadingState);
+    }
+  }, [mealPlan.selection]);
+
   const handleImageLoad = (mealType, dayIndex) => {
-    setLoadedImages(prev => ({
+    setLoadingImages(prev => ({
       ...prev,
-      [dayIndex]: { ...prev[dayIndex], [mealType]: true }
+      [dayIndex]: { ...prev[dayIndex], [mealType]: false }
     }));
   };
 
@@ -47,9 +63,6 @@ function MealPlanDisplay({ mealPlan, handleViewRecipe, onBackToFilters }) {
       <div className="meal-plan-error">
         <h2>No Meal Plan Found</h2>
         <p>We couldn't generate a complete meal plan based on your current preferences. Please try adjusting your dietary preferences or calorie ranges and try again.</p>
-        <button className="btn btn-primary" onClick={onBackToFilters}>
-          Back to Preferences
-        </button>
       </div>
     );
   }
@@ -59,9 +72,6 @@ function MealPlanDisplay({ mealPlan, handleViewRecipe, onBackToFilters }) {
       <div className="meal-plan-error">
         <h2>Error Loading Meal Plan</h2>
         <p>There was an issue loading your meal plan. Please try again.</p>
-        <button className="btn btn-primary" onClick={onBackToFilters}>
-          Back to Preferences
-        </button>
       </div>
     );
   }
@@ -89,12 +99,17 @@ function MealPlanDisplay({ mealPlan, handleViewRecipe, onBackToFilters }) {
               mealPlan.selection[selectedDay].sections[mealType].recipeDetails ? (
                 <div className="recipe-card">
                   <div className="recipe-image-container">
-                    {!loadedImages[selectedDay]?.[mealType] && <div className="loading-spinner"></div>}
+                    {loadingImages[selectedDay]?.[mealType] && (
+                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                        <CardioSpinner size="40" stroke="3" speed="2" color="#ff9800" />
+                      </div>
+                    )}
                     <img 
-                      className={`recipe-image ${!loadedImages[selectedDay]?.[mealType] ? 'loading' : ''}`}
+                      className={`recipe-image ${loadingImages[selectedDay]?.[mealType] ? 'loading' : ''}`}
                       src={mealImages[selectedDay][mealType]}
                       alt={mealPlan.selection[selectedDay].sections[mealType].recipeDetails.label}
                       onLoad={() => handleImageLoad(mealType, selectedDay)}
+                      style={{ display: loadingImages[selectedDay]?.[mealType] ? 'none' : 'block' }}
                     />
                   </div>
                   <div className="recipe-info">
@@ -132,6 +147,6 @@ function MealPlanDisplay({ mealPlan, handleViewRecipe, onBackToFilters }) {
       </div>
     </div>
   );
-}
+};
 
 export default MealPlanDisplay;

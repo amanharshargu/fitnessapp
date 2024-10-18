@@ -224,12 +224,3 @@
 .landing-page .card-body-lp {
   padding: 0.75rem;
 }
-
-/* Remove these styles if they exist */
-.loading-spinner,
-.spinner,
-.dish-image.loading {
-  /* Remove these style blocks */
-}
-
-/* Keep other existing styles */

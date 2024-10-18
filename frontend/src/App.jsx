@@ -13,7 +13,6 @@ import { RecipeProvider } from "./contexts/RecipeContext";
 import { UserDetailsProvider } from "./contexts/UserDetailsContext";
 import Layout from "./components/Layout";
 import LandingPage from "./components/LandingPage";
-import LoadingSpinner from "./components/common/LoadingSpinner";
 
 const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ "./components/dashboard/Dashboard"));
 const Fridge = lazy(() => import(/* webpackChunkName: "fridge" */ "./components/fridge/Fridge"));
@@ -74,7 +73,7 @@ function AppRoutes() {
 
   return (
     <Layout>
-      <Suspense fallback={<LoadingSpinner />}>
+      <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<ConditionalLanding />} />
           <Route

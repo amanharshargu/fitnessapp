@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUserDetails } from "../../contexts/UserDetailsContext";
+import CardioSpinner from '../common/CardioSpinner';
 import "../../styles/UserDetailsModal.css";
 
 function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
@@ -9,6 +10,7 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
   const { userDetails, tempUserDetails, updateTempUserDetails } = useUserDetails();
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,9 +25,11 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     if (tempUserDetails.weight <= 0 || tempUserDetails.height <= 0 || tempUserDetails.age <= 0) {
       setError("Weight, height, and age must be positive numbers.");
+      setIsLoading(false);
       return;
     }
 
@@ -40,6 +44,8 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
       console.error("Updating user details failed:", error);
       setError("Failed to update user details. Please try again.");
     }
+
+    setIsLoading(false);
   };
 
   const getInputValue = (field) => {
@@ -140,8 +146,8 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
               <option value="extraActive">Extra Active</option>
             </select>
           </div>
-          <button type="submit" className="submit-btn">
-            Update Details
+          <button type="submit" className="submit-btn" disabled={isLoading}>
+            {isLoading ? <CardioSpinner size="20" color="#ffffff" /> : 'Update Details'}
           </button>
         </form>
         <button className="close-btn" onClick={onClose}>

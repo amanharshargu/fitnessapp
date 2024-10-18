@@ -1,45 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import UserDetailsModal from "./UserDetailsModal";
+import CardioSpinner from "../common/CardioSpinner";
 
 function OAuthCallback() {
-  const { handleOAuthCallback } = useAuth();
+  const { loginWithOAuth } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [showUserDetailsModal, setShowUserDetailsModal] = useState(false);
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const token = params.get("token");
-    const isNewUser = params.get("isNewUser") === "true";
-
-    if (token) {
-      handleOAuthCallback(token);
-      if (isNewUser) {
-        setShowUserDetailsModal(true);
-      } else {
-        navigate("/dashboard");
+    const handleOAuthCallback = async () => {
+      try {
+        await loginWithOAuth();
+        navigate('/dashboard');
+      } catch (error) {
+        console.error('OAuth login failed:', error);
+        navigate('/login');
       }
-    } else {
-      navigate("/");
-    }
-  }, [location, handleOAuthCallback, navigate]);
+    };
 
-  const handleUserDetailsSubmitted = () => {
-    setShowUserDetailsModal(false);
-    navigate("/dashboard");
-  };
+    handleOAuthCallback();
+  }, [loginWithOAuth, navigate]);
 
   return (
-    <>
-      <div>Processing authentication...</div>
-      <UserDetailsModal
-        show={showUserDetailsModal}
-        onClose={() => setShowUserDetailsModal(false)}
-        onDetailsSubmitted={handleUserDetailsSubmitted}
-      />
-    </>
+    <div className="oauth-callback-container">
+      <CardioSpinner size="60" color="#007bff" />
+      <p>Processing your login...</p>
+    </div>
   );
 }
 

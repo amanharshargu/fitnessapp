@@ -1,9 +1,18 @@
 import React from "react";
 import { useUserDetails } from "../../contexts/UserDetailsContext";
+import CardioSpinner from '../common/CardioSpinner';
 import "../../styles/UserProfileCard.css";
 
 function UserProfileCard({ onSetUserDetails }) {
-  const { userDetails } = useUserDetails();
+  const { userDetails, isLoading } = useUserDetails();
+
+  if (isLoading) {
+    return (
+      <div className="user-profile-card loading">
+        <CardioSpinner size="50" color="#007bff" />
+      </div>
+    );
+  }
 
   return (
     <div className="user-profile-card">

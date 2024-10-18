@@ -23,7 +23,7 @@ export const RecipeProvider = ({ children }) => {
   const fetchLikedRecipes = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await api.get('/api/recipes/saved');
+      const response = await api.get('/recipes/saved');
       const uris = response.data;
       const detailedRecipes = await Promise.all(
         uris.map((uri) => fetchRecipeDetails(uri))

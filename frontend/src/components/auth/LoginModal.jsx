@@ -25,6 +25,7 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
   const [forgotPasswordEmailError, setForgotPasswordEmailError] = useState("");
   const [emailValidated, setEmailValidated] = useState(false);
   const [forgotPasswordEmailValidated, setForgotPasswordEmailValidated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateField = (name, value) => {
     let error = "";

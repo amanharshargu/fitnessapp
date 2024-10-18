@@ -8,20 +8,22 @@ const { Op } = require("sequelize");
 
 const register = async (req, res) => {
   try {
-    const { username, email, password, weight, height, age, gender, goal } =
-      req.body;
+    const { username, email, password, weight, height, age, gender, goal } = req.body;
 
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
+    const existingUserEmail = await User.findOne({ where: { email } });
+    if (existingUserEmail) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Password validation
+    const existingUserUsername = await User.findOne({ where: { username } });
+    if (existingUserUsername) {
+      return res.status(400).json({ message: "Username taken" });
+    }
+
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
-        message:
-          "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter",
+        message: "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter",
       });
     }
 
@@ -60,9 +62,7 @@ const register = async (req, res) => {
       user: { id: user.id, username: user.username, email: user.email },
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error registering user", error: error.message });
+    res.status(500).json({ message: "Error registering user", error: error.message });
   }
 };
 

@@ -1,20 +1,19 @@
 import React from "react";
+import { useUserDetails } from "../../contexts/UserDetailsContext";
 import "../../styles/UserProfileCard.css";
 
-function UserProfileCard({ userDetails, user, onSetUserDetails }) {
-  const handleSetUserDetails = async () => {
-    onSetUserDetails();
-  };
+function UserProfileCard({ onSetUserDetails }) {
+  const { userDetails } = useUserDetails();
 
   return (
     <div className="user-profile-card">
       <h3>User Profile</h3>
       <div className="user-info">
         <p>
-          <strong>Username:</strong> {userDetails.username || user.username}
+          <strong>Username:</strong> {userDetails.username}
         </p>
         <p>
-          <strong>Email:</strong> {userDetails.email || user.email}
+          <strong>Email:</strong> {userDetails.email}
         </p>
         <p>
           <strong>Weight:</strong>{" "}
@@ -51,7 +50,7 @@ function UserProfileCard({ userDetails, user, onSetUserDetails }) {
             : "Not set"}
         </p>
       </div>
-      <button className="set-details-btn" onClick={handleSetUserDetails}>
+      <button className="set-details-btn" onClick={onSetUserDetails}>
         Set User Details
       </button>
     </div>

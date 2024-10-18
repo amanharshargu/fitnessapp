@@ -22,6 +22,9 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [forgotPasswordError, setForgotPasswordError] = useState("");
+  const [forgotPasswordEmailError, setForgotPasswordEmailError] = useState("");
+  const [emailValidated, setEmailValidated] = useState(false);
+  const [forgotPasswordEmailValidated, setForgotPasswordEmailValidated] = useState(false);
 
   const validateField = (name, value) => {
     let error = "";
@@ -38,6 +41,7 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
     }
     return error;
   };
+
   useEffect(() => {
     if (isLoggedIn && shouldRedirect) {
       onClose();
@@ -64,6 +68,11 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
       ...prevData,
       [name]: value,
     }));
+
+    if (name === 'email' && emailValidated) {
+      const error = validateField(name, value);
+      setErrors(prev => ({ ...prev, [name]: error }));
+    }
   };
 
   const handleLogin = async (e) => {
@@ -88,16 +97,43 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
     setFocusedInput(null);
     const error = validateField(name, value);
     setErrors((prev) => ({ ...prev, [name]: error }));
+    if (name === 'email') {
+      setEmailValidated(true);
+    }
   };
 
   const handleGoogleLogin = () => {
     window.location.href = `${process.env.REACT_APP_API_BASE_URL}/auth/google`;
   };
 
+  const handleForgotPasswordEmailChange = (e) => {
+    const { value } = e.target;
+    setForgotPasswordEmail(value);
+    if (forgotPasswordEmailValidated) {
+      setForgotPasswordEmailError(validateField("email", value));
+    }
+  };
+
+  const handleForgotPasswordEmailFocus = () => {
+    setFocusedInput("forgotPasswordEmail");
+  };
+
+  const handleForgotPasswordEmailBlur = () => {
+    setFocusedInput(null);
+    setForgotPasswordEmailError(validateField("email", forgotPasswordEmail));
+    setForgotPasswordEmailValidated(true);
+  };
+
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     setForgotPasswordError("");
     setForgotPasswordMessage("");
+
+    const emailError = validateField("email", forgotPasswordEmail);
+    if (emailError) {
+      setForgotPasswordEmailError(emailError);
+      return;
+    }
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/auth/forgot-password`, {
@@ -240,21 +276,30 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
             </form>
           ) : (
             <form onSubmit={handleForgotPassword} className="w-100">
-              <div className="form-outline form-white mb-4">
+              <div className={`form-outline form-white mb-4 ${focusedInput === "forgotPasswordEmail" || forgotPasswordEmail ? "focused" : ""} ${forgotPasswordEmailError ? "is-invalid" : ""}`}>
                 <input
                   type="email"
                   id="forgotPasswordEmail"
-                  className="form-control form-control-lg"
+                  className={`form-control form-control-lg ${forgotPasswordEmailError ? "is-invalid" : ""}`}
                   value={forgotPasswordEmail}
-                  onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                  onChange={handleForgotPasswordEmailChange}
+                  onFocus={handleForgotPasswordEmailFocus}
+                  onBlur={handleForgotPasswordEmailBlur}
                   required
                 />
                 <label className="form-label" htmlFor="forgotPasswordEmail">
                   Email address
                 </label>
+                {forgotPasswordEmailError && (
+                  <div className="invalid-feedback">{forgotPasswordEmailError}</div>
+                )}
               </div>
               <div className="text-center">
-                <button className="btn btn-outline-light btn-lg px-5" type="submit">
+                <button 
+                  className="btn btn-outline-light btn-lg px-5" 
+                  type="submit"
+                  disabled={!!forgotPasswordEmailError}
+                >
                   Reset Password
                 </button>
               </div>

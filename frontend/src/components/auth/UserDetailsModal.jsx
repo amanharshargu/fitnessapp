@@ -1,35 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUserDetails } from "../../contexts/UserDetailsContext";
 import "../../styles/UserDetailsModal.css";
 
 function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
-  const { user, updateUserDetails: updateAuthUserDetails } = useAuth();
-  const { userDetails, updateUserDetails } = useUserDetails();
+  const { updateUserDetails: updateAuthUserDetails } = useAuth();
+  const { userDetails, tempUserDetails, updateTempUserDetails } = useUserDetails();
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (user) {
-      updateUserDetails({
-        weight: user.weight || "",
-        height: user.height || "",
-        age: user.age || "",
-        gender: user.gender || "",
-        goal: user.goal || "",
-        activityLevel: user.activityLevel || "",
-      });
-    }
-  }, [user, updateUserDetails]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "weight" || name === "height" || name === "age") {
-      const numValue = value === "" ? "" : Math.abs(parseInt(value, 10));
-      updateUserDetails({ [name]: numValue });
+      const numericValue = value.replace(/\D/g, '');
+      updateTempUserDetails({ [name]: numericValue });
     } else {
-      updateUserDetails({ [name]: value });
+      updateTempUserDetails({ [name]: value });
     }
   };
 
@@ -37,8 +24,13 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
     e.preventDefault();
     setError("");
 
+    if (tempUserDetails.weight <= 0 || tempUserDetails.height <= 0 || tempUserDetails.age <= 0) {
+      setError("Weight, height, and age must be positive numbers.");
+      return;
+    }
+
     try {
-      await updateAuthUserDetails(userDetails);
+      await updateAuthUserDetails(tempUserDetails);
       onClose();
       if (onDetailsSubmitted) {
         onDetailsSubmitted();
@@ -48,6 +40,10 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
       console.error("Updating user details failed:", error);
       setError("Failed to update user details. Please try again.");
     }
+  };
+
+  const getInputValue = (field) => {
+    return tempUserDetails[field] !== "" ? tempUserDetails[field] : userDetails[field] || "";
   };
 
   if (!show) return null;
@@ -61,39 +57,39 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
           <div className="form-group">
             <label htmlFor="weight">Weight (kg)</label>
             <input
-              type="number"
+              type="text"
               id="weight"
               name="weight"
-              value={userDetails.weight}
+              value={getInputValue("weight")}
               onChange={handleInputChange}
-              min="1"
-              max="500"
+              pattern="\d*"
+              inputMode="numeric"
               required
             />
           </div>
           <div className="form-group">
             <label htmlFor="height">Height (cm)</label>
             <input
-              type="number"
+              type="text"
               id="height"
               name="height"
-              value={userDetails.height}
+              value={getInputValue("height")}
               onChange={handleInputChange}
-              min="1"
-              max="300"
+              pattern="\d*"
+              inputMode="numeric"
               required
             />
           </div>
           <div className="form-group">
             <label htmlFor="age">Age</label>
             <input
-              type="number"
+              type="text"
               id="age"
               name="age"
-              value={userDetails.age}
+              value={getInputValue("age")}
               onChange={handleInputChange}
-              min="1"
-              max="120"
+              pattern="\d*"
+              inputMode="numeric"
               required
             />
           </div>
@@ -102,7 +98,7 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
             <select
               id="gender"
               name="gender"
-              value={userDetails.gender}
+              value={getInputValue("gender")}
               onChange={handleInputChange}
               required
             >
@@ -117,7 +113,7 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
             <select
               id="goal"
               name="goal"
-              value={userDetails.goal}
+              value={getInputValue("goal")}
               onChange={handleInputChange}
               required
             >
@@ -132,7 +128,7 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
             <select
               id="activityLevel"
               name="activityLevel"
-              value={userDetails.activityLevel}
+              value={getInputValue("activityLevel")}
               onChange={handleInputChange}
               required
             >

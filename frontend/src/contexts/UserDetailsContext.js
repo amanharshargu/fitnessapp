@@ -8,7 +8,8 @@ export function useUserDetails() {
 }
 
 export function UserDetailsProvider({ children }) {
-  const [userDetails, setUserDetails] = useState({
+  const [userDetails, setUserDetails] = useState({});
+  const [tempUserDetails, setTempUserDetails] = useState({
     weight: "",
     height: "",
     age: "",
@@ -19,6 +20,10 @@ export function UserDetailsProvider({ children }) {
 
   const updateUserDetails = useCallback((newDetails) => {
     setUserDetails((prevDetails) => ({ ...prevDetails, ...newDetails }));
+  }, []);
+
+  const updateTempUserDetails = useCallback((newDetails) => {
+    setTempUserDetails((prevDetails) => ({ ...prevDetails, ...newDetails }));
   }, []);
 
   const fetchUserDetails = useCallback(async () => {
@@ -39,6 +44,8 @@ export function UserDetailsProvider({ children }) {
     userDetails,
     updateUserDetails,
     fetchUserDetails,
+    tempUserDetails,
+    updateTempUserDetails,
   };
 
   return (

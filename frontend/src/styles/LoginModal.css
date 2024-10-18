@@ -70,17 +70,26 @@ body.modal-open {
   font-size: 1rem;
 }
 
-.form-outline.focused .form-label,
+/* .form-outline.focused .form-label,
 .form-control:not(:placeholder-shown) + .form-label {
   top: -1.2rem;
   font-size: 0.85rem;
   color: white;
-}
+} */
 
 .btn-outline-light:hover {
   background-color: white;
   color: #000000;
 }
+
+.password-toggle-btn{
+  margin-right: 22px;
+}
+
+.password-toggle-btn:hover {
+  border-radius: 50%;
+}
+
 
 .form-control.is-invalid {
   border-color: #dc3545;
@@ -177,3 +186,21 @@ body.modal-open {
   margin-right: 10px;
 }
 
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.password-toggle-btn:focus {
+  outline: none;
+}

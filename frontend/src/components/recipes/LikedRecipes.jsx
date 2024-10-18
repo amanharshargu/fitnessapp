@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useLikedRecipes } from "../../hooks/useLikedRecipes";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import RecipeCard from "./RecipeCard";
 import ContentWrapper from "../layout/ContentWrapper";
+import { useNavigate } from "react-router-dom";
+import { useRecipes } from "../../contexts/RecipeContext";
 import "../../styles/Recipes.css";
 import "../../styles/LikedRecipes.css";
 
@@ -38,17 +39,29 @@ const LoadingAnimation = () => (
 );
 
 function LikedRecipes() {
-  const { likedRecipes, isLoading, error, handleLikeToggle } = useLikedRecipes();
+  const { likedRecipes, isLoading, toggleLikedRecipe, fetchLikedRecipes } = useRecipes();
   const [searchTerm, setSearchTerm] = useState("");
   const [isContentLoaded, setIsContentLoaded] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    fetchLikedRecipes();
     setIsContentLoaded(true);
-  }, []);
+  }, [fetchLikedRecipes]);
 
-  const filteredRecipes = likedRecipes.filter((recipe) =>
-    recipe.label.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredRecipes = useMemo(() => {
+    return likedRecipes.filter((recipe) =>
+      recipe.label.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [likedRecipes, searchTerm]);
+
+  const handleRedirectToRecipes = useCallback(() => {
+    navigate('/recipes');
+  }, [navigate]);
+
+  const handleToggleLike = useCallback((recipe) => {
+    toggleLikedRecipe(recipe);
+  }, [toggleLikedRecipe]);
 
   return (
     <ContentWrapper>
@@ -68,10 +81,16 @@ function LikedRecipes() {
             <div className="loading">Loading recipes...</div>
           ) : isLoading ? (
             <LoadingAnimation />
-          ) : error ? (
-            <div className="error">Error: {error}</div>
           ) : filteredRecipes.length === 0 ? (
-            <p className="no-recipes">No liked recipes found.</p>
+            <div className="no-recipes">
+              <p>No liked recipes found. Try searching for some!</p>
+              <button 
+                className="btn btn-orange mt-3"
+                onClick={handleRedirectToRecipes}
+              >
+                Go to Recipes
+              </button>
+            </div>
           ) : (
             <div className="recipe-grid">
               {filteredRecipes.map((recipe) => (
@@ -79,7 +98,7 @@ function LikedRecipes() {
                   key={recipe.uri}
                   recipe={recipe}
                   isLiked={true}
-                  onLikeToggle={() => handleLikeToggle(recipe.uri)}
+                  onLikeToggle={() => handleToggleLike(recipe)}
                 />
               ))}
             </div>
@@ -90,4 +109,4 @@ function LikedRecipes() {
   );
 }
 
-export default LikedRecipes;
+export default React.memo(LikedRecipes);

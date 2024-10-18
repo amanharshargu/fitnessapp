@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import RecipeCard from "./RecipeCard";
 import { useRecipeSearch } from "../../hooks/useRecipeSearch";
 import { useRecipes } from "../../contexts/RecipeContext";
@@ -58,13 +58,20 @@ const filterOptions = {
 };
 
 function Recipes() {
-  const [showFilters, setShowFilters] = useState(true);
-  const { likedRecipes, toggleLikedRecipe } = useRecipes();
+  const { 
+    likedRecipes, 
+    toggleLikedRecipe,
+    searchTerm, 
+    setSearchTerm, 
+    hasSearched, 
+    setHasSearched,
+    showFilters,
+    setShowFilters
+  } = useRecipes();
+  
   const {
     recipes,
     isLoading,
-    searchTerm,
-    setSearchTerm,
     filters,
     activeFilter,
     setActiveFilter,
@@ -87,11 +94,20 @@ function Recipes() {
     setCurrentPage(pageNumber);
   };
 
-  const handleSearchWrapper = (e) => {
+  const handleSearchWrapper = useCallback((e) => {
     e.preventDefault();
+    if (searchTerm.trim()) {
+      setCurrentPage(1);
+      handleSearch(e);
+      setHasSearched(true);
+    }
+  }, [handleSearch, searchTerm, setHasSearched]);
+
+  const handleApplyFilters = useCallback(() => {
     setCurrentPage(1);
-    handleSearch(e);
-  };
+    applyFilters();
+    setHasSearched(true);
+  }, [applyFilters, setHasSearched]);
 
   const PaginationControls = ({ isBottom }) => {
     const pageNumbers = [];
@@ -202,19 +218,25 @@ function Recipes() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <button type="submit" className="btn btn-primary search-button">
+              <button 
+                type="submit" 
+                className="btn btn-primary search-button"
+                disabled={!searchTerm.trim()}
+              >
                 Search
               </button>
             </div>
           </form>
-          <button
-            className={`btn ${
-              showFilters ? "btn-secondary" : "btn-outline-secondary"
-            } show-filters-btn`}
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            {showFilters ? "Hide Filters" : "Show Filters"}
-          </button>
+          {hasSearched && (
+            <button
+              className={`btn ${
+                showFilters ? "btn-secondary" : "btn-outline-secondary"
+              } show-filters-btn`}
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              {showFilters ? "Hide Filters" : "Show Filters"}
+            </button>
+          )}
         </div>
 
         {showFilters && (
@@ -243,7 +265,7 @@ function Recipes() {
               >
                 Clear Filters
               </button>
-              <button className="btn btn-success" onClick={() => { setCurrentPage(1); applyFilters(); }}>
+              <button className="btn btn-success" onClick={handleApplyFilters}>
                 Apply Filters
               </button>
             </div>
@@ -279,11 +301,11 @@ function Recipes() {
           <>
             <div className="row">
               {currentRecipes.map((recipe, index) => (
-                <div key={index} className="col-md-3 col-sm-6 mb-4">
+                <div key={`${recipe.uri}-${index}`} className="col-md-3 col-sm-6 mb-4">
                   <RecipeCard
                     recipe={recipe}
-                    isLiked={likedRecipes.includes(recipe.uri)}
-                    onLikeToggle={() => toggleLikedRecipe(recipe.uri)}
+                    isLiked={likedRecipes.some(likedRecipe => likedRecipe.uri === recipe.uri)}
+                    onLikeToggle={() => toggleLikedRecipe(recipe)}
                   />
                 </div>
               ))}

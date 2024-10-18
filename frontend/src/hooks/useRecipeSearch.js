@@ -1,9 +1,8 @@
-import { useState } from 'react';
-import { useRecipes } from '../contexts/RecipeContext';
+import { useState, useCallback } from "react";
+import { useRecipes } from "../contexts/RecipeContext";
 
 export function useRecipeSearch() {
-  const { recipes, isLoading, fetchRecipes } = useRecipes();
-  const [searchTerm, setSearchTerm] = useState('');
+  const { recipes, isLoading, fetchRecipes, searchTerm } = useRecipes();
   const [filters, setFilters] = useState({
     diet: [],
     health: [],
@@ -12,23 +11,23 @@ export function useRecipeSearch() {
   });
   const [activeFilter, setActiveFilter] = useState(null);
 
-  const handleSearch = (e) => {
+  const handleSearch = useCallback((e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       fetchRecipes(searchTerm, filters);
     }
-  };
+  }, [searchTerm, filters, fetchRecipes]);
 
-  const handleFilterChange = (filterType, value) => {
+  const handleFilterChange = useCallback((filterType, value) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [filterType]: prevFilters[filterType].includes(value)
         ? prevFilters[filterType].filter((item) => item !== value)
         : [...prevFilters[filterType], value],
     }));
-  };
+  }, []);
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setFilters({
       diet: [],
       health: [],
@@ -36,19 +35,17 @@ export function useRecipeSearch() {
       mealType: [],
     });
     setActiveFilter(null);
-  };
+  }, []);
 
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     if (searchTerm.trim()) {
       fetchRecipes(searchTerm, filters);
     }
-  };
+  }, [searchTerm, filters, fetchRecipes]);
 
   return {
     recipes,
     isLoading,
-    searchTerm,
-    setSearchTerm,
     filters,
     activeFilter,
     setActiveFilter,

@@ -10,7 +10,7 @@
 }
 
 .wisheat-header__container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
@@ -41,7 +41,6 @@
   border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-right: 15px;
 }
 
 .wisheat-header__btn--outline:hover {

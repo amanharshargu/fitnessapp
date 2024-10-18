@@ -186,6 +186,39 @@
   border-radius: 5px;
 }
 
+.meal-plan-error {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+.meal-plan-error h2 {
+  color: #721c24;
+  margin-bottom: 1rem;
+}
+
+.meal-plan-error p {
+  color: #721c24;
+  margin-bottom: 1rem;
+}
+
+.meal-plan-error button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.meal-plan-error button:hover {
+  background-color: #c82333;
+}
+
 @media (max-width: 768px) {
   .meal-plan {
     height: auto;

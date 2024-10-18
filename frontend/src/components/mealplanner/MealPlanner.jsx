@@ -20,7 +20,7 @@ const dishTypes = [
 
 const healthLabels = [
   "DAIRY_FREE", "EGG_FREE", "GLUTEN_FREE", "PEANUT_FREE",
-  "VEGETARIAN", "VEGAN", "KETO_FRIENDLY", "LOW_CARB"
+  "VEGETARIAN", "VEGAN"
 ];
 
 const dietLabels = [
@@ -75,6 +75,7 @@ function MealPlanner() {
   const [error, setError] = useState(null);
   const [showFilters, setShowFilters] = useState(true);
   const { ingredients } = useIngredients();
+  const [calories, setCalories] = useState({ min: 2000, max: 2500 });
 
   useEffect(() => {
     const fetchCalorieGoal = async () => {
@@ -132,11 +133,18 @@ function MealPlanner() {
     </div>
   );
 
+  const calculateIngredientRange = () => {
+    const minIngr = Math.floor(Math.random() * 5) + 3; // Random number between 3 and 7
+    const maxIngr = minIngr + Math.floor(Math.random() * 5) + 3; // Random number between minIngr + 3 and minIngr + 7
+    return `${minIngr}-${maxIngr}`;
+  };
+
   const fetchMealPlan = async () => {
     setLoading(true);
     setError(null);
     setShowFilters(false);
     try {
+      const ingredientRange = calculateIngredientRange();
       const response = await axios.post(
         `https://api.edamam.com/api/meal-planner/v1/${MEALPLAN_APP_ID}/select?app_id=${MEALPLAN_APP_ID}&app_key=${MEALPLAN_APP_KEY}`,
         {
@@ -149,6 +157,7 @@ function MealPlanner() {
             },
             fit: {
               ENERC_KCAL: filters.calories,
+              ingr: ingredientRange,
             },
             sections: {
               Breakfast: {
@@ -160,6 +169,7 @@ function MealPlanner() {
                 },
                 fit: {
                   ENERC_KCAL: filters.breakfastCalories,
+                  ingr: ingredientRange,
                 },
               },
               Lunch: {
@@ -171,6 +181,7 @@ function MealPlanner() {
                 },
                 fit: {
                   ENERC_KCAL: filters.lunchCalories,
+                  ingr: ingredientRange,
                 },
               },
               Dinner: {
@@ -182,6 +193,7 @@ function MealPlanner() {
                 },
                 fit: {
                   ENERC_KCAL: filters.dinnerCalories,
+                  ingr: ingredientRange,
                 },
               },
             },
@@ -194,7 +206,15 @@ function MealPlanner() {
           },
         }
       );
-      await fetchRecipeDetails(response.data);
+      
+      if (response.data && response.data.status === "INCOMPLETE") {
+        setMealPlan({ status: "INCOMPLETE" });
+        setLoading(false);
+      } else if (response.data && response.data.selection) {
+        await fetchRecipeDetails(response.data);
+      } else {
+        throw new Error("Unexpected API response structure");
+      }
     } catch (err) {
       setError("Failed to fetch meal plan. Please try again later.");
       console.error("Error fetching meal plan:", err);
@@ -205,6 +225,10 @@ function MealPlanner() {
 
   const fetchRecipeDetails = async (mealPlanData) => {
     try {
+      if (!mealPlanData.selection || !Array.isArray(mealPlanData.selection)) {
+        throw new Error("Invalid meal plan data structure");
+      }
+
       const recipePromises = mealPlanData.selection.flatMap((day) =>
         Object.values(day.sections).map((meal) =>
           axios.get(`https://api.edamam.com/api/recipes/v2/by-uri`, {
@@ -256,10 +280,19 @@ function MealPlanner() {
   };
 
   const handleFilterChange = (name, value) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: value,
-    }));
+    if (name === "diet") {
+      // For diet labels, set the value directly (single selection)
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        [name]: [value], // Wrap in an array to maintain consistency with API expectations
+      }));
+    } else {
+      // For other filters, keep the existing logic
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        [name]: value,
+      }));
+    }
   };
 
   const handleClearFilters = () => {
@@ -276,6 +309,11 @@ function MealPlanner() {
     setShowFilters(true);
     setMealPlan(null);
     setError(null);
+  };
+
+  const handleCaloriesChange = (values) => {
+    const [min, max] = values;
+    setCalories({ min: Math.min(min, max), max: Math.max(min, max) });
   };
 
   return (
@@ -307,13 +345,13 @@ function MealPlanner() {
                     <h5>Diet Labels</h5>
                     <div className="filter-options compact">
                       {dietLabels.map((label) => (
-                        <label key={label} className="checkbox-label">
+                        <label key={label} className="radio-label">
                           <input
-                            type="checkbox"
+                            type="radio"
                             name="diet"
                             value={label}
-                            checked={filters.diet.includes(label)}
-                            onChange={(e) => handleFilterChange("diet", e.target.checked ? [...filters.diet, label] : filters.diet.filter((item) => item !== label))}
+                            checked={filters.diet[0] === label}
+                            onChange={(e) => handleFilterChange("diet", e.target.value)}
                           />
                           <span>{capitalizeWords(label)}</span>
                         </label>
@@ -406,14 +444,13 @@ function MealPlanner() {
           <>
             {loading && <LoadingAnimation />}
             {!loading && mealPlan && (
-              <>
-                <button onClick={handleBackToFilters} className="btn btn-link back-button">
-                  <i className="fas fa-arrow-left"></i> Back
-                </button>
-                <div className="meal-plan-display-container">
-                  <MealPlanDisplay mealPlan={mealPlan} handleViewRecipe={handleViewRecipe} />
-                </div>
-              </>
+              <div className="meal-plan-display-container">
+                <MealPlanDisplay 
+                  mealPlan={mealPlan} 
+                  handleViewRecipe={handleViewRecipe} 
+                  onBackToFilters={handleBackToFilters}
+                />
+              </div>
             )}
           </>
         )}

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import '../../styles/MealPlanDisplay.css';
 
-function MealPlanDisplay({ mealPlan, handleViewRecipe }) {
+function MealPlanDisplay({ mealPlan, handleViewRecipe, onBackToFilters }) {
   if (!mealPlan) return null;
   
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   const [selectedDay, setSelectedDay] = useState(0);
-  const [loadingImages, setLoadingImages] = useState({});
+  const [loadedImages, setLoadedImages] = useState({});
 
   const formatNutrient = (nutrient, yield_) => {
     return Math.round(nutrient.quantity / yield_) + nutrient.unit;
@@ -18,34 +18,56 @@ function MealPlanDisplay({ mealPlan, handleViewRecipe }) {
 
   const toggleDay = (index) => {
     setSelectedDay(index);
-    // Reset loading state for all images when changing day
-    setLoadingImages({});
   };
 
-  const handleImageLoad = (mealType) => {
-    setLoadingImages(prev => ({ ...prev, [mealType]: false }));
+  const handleImageLoad = (mealType, dayIndex) => {
+    setLoadedImages(prev => ({
+      ...prev,
+      [dayIndex]: { ...prev[dayIndex], [mealType]: true }
+    }));
   };
 
-  useEffect(() => {
-    // Set loading state to true for all images when selected day changes
-    if (mealPlan.selection[selectedDay]) {
-      const newLoadingState = {};
+  // Memoize the image URLs
+  const mealImages = useMemo(() => {
+    if (!mealPlan.selection) return {};
+    
+    return mealPlan.selection.reduce((acc, day, dayIndex) => {
+      acc[dayIndex] = {};
       ["Breakfast", "Lunch", "Dinner"].forEach(mealType => {
-        if (mealPlan.selection[selectedDay].sections[mealType]?.recipeDetails) {
-          newLoadingState[mealType] = true;
+        if (day.sections[mealType]?.recipeDetails) {
+          acc[dayIndex][mealType] = day.sections[mealType].recipeDetails.image;
         }
       });
-      setLoadingImages(newLoadingState);
-    }
-  }, [selectedDay, mealPlan]);
+      return acc;
+    }, {});
+  }, [mealPlan.selection]);
+
+  if (mealPlan.status === "INCOMPLETE") {
+    return (
+      <div className="meal-plan-error">
+        <h2>No Meal Plan Found</h2>
+        <p>We couldn't generate a complete meal plan based on your current preferences. Please try adjusting your dietary preferences or calorie ranges and try again.</p>
+        <button className="btn btn-primary" onClick={onBackToFilters}>
+          Back to Preferences
+        </button>
+      </div>
+    );
+  }
+
+  if (!mealPlan.selection) {
+    return (
+      <div className="meal-plan-error">
+        <h2>Error Loading Meal Plan</h2>
+        <p>There was an issue loading your meal plan. Please try again.</p>
+        <button className="btn btn-primary" onClick={onBackToFilters}>
+          Back to Preferences
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="meal-plan">
-      {mealPlan.status === "INCOMPLETE" && (
-        <div className="warning">
-          Note: The meal plan is incomplete. Some days may not have assigned meals. Consider adjusting your dietary preferences or regenerating the plan.
-        </div>
-      )}
       <div className="meal-plan-layout">
         <div className="day-buttons">
           {daysOfWeek.map((day, index) => (
@@ -67,12 +89,12 @@ function MealPlanDisplay({ mealPlan, handleViewRecipe }) {
               mealPlan.selection[selectedDay].sections[mealType].recipeDetails ? (
                 <div className="recipe-card">
                   <div className="recipe-image-container">
-                    {loadingImages[mealType] && <div className="loading-spinner"></div>}
+                    {!loadedImages[selectedDay]?.[mealType] && <div className="loading-spinner"></div>}
                     <img 
-                      className={`recipe-image ${loadingImages[mealType] ? 'loading' : ''}`}
-                      src={mealPlan.selection[selectedDay].sections[mealType].recipeDetails.image} 
+                      className={`recipe-image ${!loadedImages[selectedDay]?.[mealType] ? 'loading' : ''}`}
+                      src={mealImages[selectedDay][mealType]}
                       alt={mealPlan.selection[selectedDay].sections[mealType].recipeDetails.label}
-                      onLoad={() => handleImageLoad(mealType)}
+                      onLoad={() => handleImageLoad(mealType, selectedDay)}
                     />
                   </div>
                   <div className="recipe-info">

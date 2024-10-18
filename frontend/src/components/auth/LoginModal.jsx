@@ -3,6 +3,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "../../styles/LoginModal.css";
 import { FcGoogle } from 'react-icons/fc';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import axios from 'axios';
 
 function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
@@ -19,6 +20,8 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [forgotPasswordMessage, setForgotPasswordMessage] = useState("");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [forgotPasswordError, setForgotPasswordError] = useState("");
 
   const validateField = (name, value) => {
     let error = "";
@@ -31,13 +34,10 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
     } else if (name === "password") {
       if (!value) {
         error = "Password is required";
-      } else if (!validatePassword(value)) {
-        error = "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter";
       }
     }
     return error;
   };
-
   useEffect(() => {
     if (isLoggedIn && shouldRedirect) {
       onClose();
@@ -66,26 +66,16 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
     }));
   };
 
-  const validatePassword = (password) => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-    return passwordRegex.test(password);
-  };
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-
-    if (!validatePassword(loginData.password)) {
-      setError("Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter");
-      return;
-    }
 
     try {
       await login(loginData.email, loginData.password);
       onClose();
     } catch (error) {
       console.error("Login failed:", error);
-      setError("Login failed. Please check your credentials and try again.");
+      setError(error.response?.data?.message || "Login failed. Please check your credentials and try again.");
     }
   };
 
@@ -106,7 +96,7 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
-    setError("");
+    setForgotPasswordError("");
     setForgotPasswordMessage("");
 
     try {
@@ -116,7 +106,11 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
       setForgotPasswordMessage(response.data.message);
     } catch (error) {
       console.error("Forgot password failed:", error);
-      setError("Failed to send password reset email. Please try again.");
+      if (error.response && error.response.data && error.response.data.message) {
+        setForgotPasswordError(error.response.data.message);
+      } else {
+        setForgotPasswordError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
@@ -130,6 +124,10 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
     setShowForgotPassword(false);
     setForgotPasswordMessage("");
     setError("");
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   if (!show) return null;
@@ -153,7 +151,8 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
               : "Please enter your login and password!"}
           </p>
 
-          {error && <div className="alert alert-danger">{error}</div>}
+          {!showForgotPassword && error && <div className="alert alert-danger">{error}</div>}
+          {showForgotPassword && forgotPasswordError && <div className="alert alert-danger">{forgotPasswordError}</div>}
           {forgotPasswordMessage && <div className="alert alert-success">{forgotPasswordMessage}</div>}
 
           {!showForgotPassword ? (
@@ -191,19 +190,28 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
                     : ""
                 } ${errors.password ? "is-invalid" : ""}`}
               >
-                <input
-                  type="password"
-                  id="loginPassword"
-                  className={`form-control form-control-lg ${
-                    errors.password ? "is-invalid" : ""
-                  }`}
-                  name="password"
-                  value={loginData.password}
-                  onChange={handleLoginInputChange}
-                  onFocus={() => handleInputFocus("password")}
-                  onBlur={handleInputBlur}
-                  required
-                />
+                <div className="password-input-wrapper">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="loginPassword"
+                    className={`form-control form-control-lg ${
+                      errors.password ? "is-invalid" : ""
+                    }`}
+                    name="password"
+                    value={loginData.password}
+                    onChange={handleLoginInputChange}
+                    onFocus={() => handleInputFocus("password")}
+                    onBlur={handleInputBlur}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary password-toggle-btn"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
                 <label className="form-label" htmlFor="loginPassword">
                   Password
                 </label>

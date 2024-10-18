@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRecipes } from '../../contexts/RecipeContext';
 import '../../styles/RecipeCard.css';
 
-function RecipeCard({ recipe, isLiked, onLikeToggle }) {
+function RecipeCard({ recipe, isLiked: initialIsLiked, onLikeToggle }) {
   const [showDetails, setShowDetails] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
+  const { likedRecipes } = useRecipes();
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
+
+  useEffect(() => {
+    setIsLiked(likedRecipes.some(likedRecipe => likedRecipe.uri === recipe.uri) || initialIsLiked);
+  }, [likedRecipes, recipe.uri, initialIsLiked]);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
@@ -11,6 +18,11 @@ function RecipeCard({ recipe, isLiked, onLikeToggle }) {
 
   const handleImageLoad = () => {
     setImageLoading(false);
+  };
+
+  const handleLikeToggle = () => {
+    onLikeToggle(recipe);
+    setIsLiked(!isLiked);
   };
 
   const caloriesPerServing = Math.round(recipe.calories / recipe.yield);
@@ -29,7 +41,7 @@ function RecipeCard({ recipe, isLiked, onLikeToggle }) {
           <div className="recipe-card__image-overlay"></div>
           <button 
             className={`recipe-card__like-button ${isLiked ? 'recipe-card__like-button--liked' : ''}`} 
-            onClick={() => onLikeToggle(recipe.uri)}
+            onClick={handleLikeToggle}
           >
             {isLiked ? '❤️' : '🤍'}
           </button>

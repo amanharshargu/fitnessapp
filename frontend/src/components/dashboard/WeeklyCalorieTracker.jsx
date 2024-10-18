@@ -4,6 +4,12 @@ import '../../styles/WeeklyCalorieTracker.css';
 function WeeklyCalorieTracker({ weeklyData }) {
   const [hoveredDay, setHoveredDay] = useState(null);
 
+  const getBarColor = (calories, goal) => {
+    if (calories > goal) return "#FF6666";
+    if (calories === goal) return "#90EE90";
+    return "#ff7800";
+  };
+
   return (
     <div className="weekly-calorie-tracker">
       <h3>Weekly Calorie Tracker</h3>
@@ -18,7 +24,11 @@ function WeeklyCalorieTracker({ weeklyData }) {
             <div className="bar-container">
               <div 
                 className="bar actual" 
-                style={{ maxHeight: '100%',height: `${day.goal > 0 ? (day.calories / day.goal) * 100 : 0}%` }}
+                style={{ 
+                  maxHeight: '100%',
+                  height: `${day.goal > 0 ? (day.calories / day.goal) * 100 : 0}%`,
+                  backgroundColor: getBarColor(day.calories, day.goal)
+                }}
               ></div>
               <div 
                 className="bar goal" 
@@ -28,7 +38,7 @@ function WeeklyCalorieTracker({ weeklyData }) {
             <span className="day">{day.day}</span>
             {hoveredDay === day.date && (
               <div className="calories-tooltip">
-                {day.calories}/{day.goal}
+                {day.goal > 0 ? `${day.calories}/${day.goal}` : "Please set your information"}
               </div>
             )}
           </div>

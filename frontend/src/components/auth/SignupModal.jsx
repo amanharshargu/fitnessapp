@@ -16,9 +16,10 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
   const validateField = (name, value) => {
     let error = "";
     if (name === "username") {
-      if (!value) {
+      const trimmedValue = value.trim();
+      if (!trimmedValue) {
         error = "Username is required";
-      } else if (value.length < 3) {
+      } else if (trimmedValue.length < 3) {
         error = "Username must be at least 3 characters long";
       }
     } else if (name === "email") {
@@ -41,21 +42,56 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
 
   const handleSignupInputChange = (e) => {
     const { name, value } = e.target;
+    let updatedValue = value;
+    
+    if (name === "username") {
+      updatedValue = value.replace(/\s+/g, ' ').trim();
+    }
+    
     setSignupData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: updatedValue,
     }));
+
+    const error = validateField(name, updatedValue);
+    setErrors(prev => ({ ...prev, [name]: error }));
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
     setError("");
+    
+    // Validate all fields
+    const validationErrors = {};
+    Object.entries(signupData).forEach(([key, value]) => {
+      const error = validateField(key, value);
+      if (error) {
+        validationErrors[key] = error;
+      }
+    });
+
+    // If there are any validation errors, set them and return
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    
+    // If all validations pass, proceed with signup
+    const trimmedSignupData = {
+      ...signupData,
+      username: signupData.username.trim(),
+    };
+    
     try {
-      await signup(signupData);
+      await signup(trimmedSignupData);
       onSignupSuccess();
     } catch (error) {
       console.error("Signup failed:", error);
-      setError("Signup failed. Please try again.");
+      if (error.response && error.response.data && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
@@ -158,7 +194,13 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
             </div>
 
             <div className="text-center">
-              <button className="btn btn-outline-light btn-lg px-5" type="submit">Sign Up</button>
+              <button 
+                className="btn btn-outline-light btn-lg px-5" 
+                type="submit"
+                disabled={Object.values(errors).some(error => error !== "")}
+              >
+                Sign Up
+              </button>
             </div>
           </form>
 

@@ -25,12 +25,18 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    updateUserDetails({ [name]: value });
+    if (name === "weight" || name === "height" || name === "age") {
+      const numValue = value === "" ? "" : Math.abs(parseInt(value, 10));
+      updateUserDetails({ [name]: numValue });
+    } else {
+      updateUserDetails({ [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
     try {
       await updateAuthUserDetails(userDetails);
       onClose();
@@ -60,6 +66,8 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
               name="weight"
               value={userDetails.weight}
               onChange={handleInputChange}
+              min="1"
+              max="500"
               required
             />
           </div>
@@ -71,6 +79,8 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
               name="height"
               value={userDetails.height}
               onChange={handleInputChange}
+              min="1"
+              max="300"
               required
             />
           </div>
@@ -82,6 +92,8 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
               name="age"
               value={userDetails.age}
               onChange={handleInputChange}
+              min="1"
+              max="120"
               required
             />
           </div>

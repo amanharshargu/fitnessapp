@@ -22,37 +22,6 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-exports.updateProfile = async (req, res) => {
-  try {
-    const { weight, height, age, gender, goal } = req.body;
-    const user = await User.findByPk(req.user.id);
-
-    user.weight = weight || user.weight;
-    user.height = height || user.height;
-    user.age = age || user.age;
-    user.gender = gender || user.gender;
-    user.goal = goal || user.goal;
-    user.activityLevel = activityLevel || user.activityLevel;
-
-    user.dailyCalorieGoal = calculateCalories(
-      user.weight,
-      user.height,
-      user.age,
-      user.gender,
-      user.goal,
-      user.activityLevel
-    );
-
-    await user.save();
-
-    res.json({ message: "Profile updated successfully", user });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error updating user profile", error: error.message });
-  }
-};
-
 exports.updateUser = async (req, res) => {
   try {
     const userId = req.user.id;

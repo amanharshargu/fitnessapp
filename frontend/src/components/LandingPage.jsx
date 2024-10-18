@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useRecipes } from "../contexts/RecipeContext";
 import LoginModal from "./auth/LoginModal";
@@ -11,20 +11,21 @@ function LandingPage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
   const [randomRecipes, setRandomRecipes] = useState([]);
-  const [loadingImages, setLoadingImages] = useState([true, true, true]);
+
+  const fetchRandomRecipes = useCallback(async () => {
+    try {
+      const recipes = await getRandomRecipes(3);
+      console.log("Fetched random recipes:", recipes);
+      setRandomRecipes(recipes);
+    } catch (error) {
+      console.error("Error fetching random recipes:", error);
+      setRandomRecipes([]);
+    }
+  }, [getRandomRecipes]);
 
   useEffect(() => {
-    const fetchRandomRecipes = async () => {
-      try {
-        const recipes = await getRandomRecipes(3);
-        setRandomRecipes(recipes);
-      } catch (error) {
-        console.error("Error fetching random recipes:", error);
-      }
-    };
-
     fetchRandomRecipes();
-  }, [getRandomRecipes]);
+  }, [fetchRandomRecipes]);
 
   const handleCloseAuthModal = () => {
     setShowAuthModal(false);
@@ -40,14 +41,6 @@ function LandingPage() {
     setIsSignup(false);
   };
 
-  const handleImageLoad = (index) => {
-    setLoadingImages(prev => {
-      const newLoadingImages = [...prev];
-      newLoadingImages[index] = false;
-      return newLoadingImages;
-    });
-  };
-
   return (
     <div className="landing-page">
       <div className="hero-section">
@@ -59,12 +52,10 @@ function LandingPage() {
           <div className="food-images">
             {randomRecipes.map((recipe, index) => (
               <div key={recipe.uri} className="image-container">
-                {loadingImages[index] && <div className="loading-spinner"></div>}
                 <img
                   src={recipe.image}
                   alt={`Food dish ${index + 1}`}
-                  className={`dish-image dish-${index + 1} ${loadingImages[index] ? 'loading' : ''}`}
-                  onLoad={() => handleImageLoad(index)}
+                  className={`dish-image dish-${index + 1}`}
                 />
               </div>
             ))}

@@ -3,7 +3,7 @@ import '../../styles/DailyCalorieGoal.css';
 import api from "../../services/api";
 
 function DailyCalorieGoal({ onDishesChanged }){
-  const [dailyCalorieGoal, setDailyCalorieGoal] = useState(0);
+  const [dailyCalorieGoal, setDailyCalorieGoal] = useState(null);
   const [totalDailyCalories, setTotalDailyCalories] = useState(0);
   const [dishes, setDishes] = useState([]);
   const [newDish, setNewDish] = useState({ name: '', calories: '' });
@@ -14,7 +14,7 @@ function DailyCalorieGoal({ onDishesChanged }){
       try {
         const response = await api.get(`/dashboard/calorie-goal`);
         const data = response.data;
-        setDailyCalorieGoal(data.dailyCalories || 0);
+        setDailyCalorieGoal(data.dailyCalories || null);
       } catch (error) {
         console.error('Error fetching calorie goal:', error);
       }
@@ -109,7 +109,9 @@ function DailyCalorieGoal({ onDishesChanged }){
   };
 
   const percentage = dailyCalorieGoal > 0 ? Math.min((totalDailyCalories / dailyCalorieGoal) * 100, 100) : 0;
-  const isOverGoal = totalDailyCalories > dailyCalorieGoal;
+  const isOverGoal = dailyCalorieGoal > 0 && totalDailyCalories > dailyCalorieGoal;
+  const progressColor = isOverGoal ? "#FF6666" : totalDailyCalories === dailyCalorieGoal ? "#90EE90" : "#ff7800";
+  const caloriesExceeded = isOverGoal ? totalDailyCalories - dailyCalorieGoal : 0;
 
   return (
     <div className="dcg-daily-calorie-goal">
@@ -130,14 +132,22 @@ function DailyCalorieGoal({ onDishesChanged }){
                 d="M18 2.0845
                   a 15.9155 15.9155 0 0 1 0 31.831
                   a 15.9155 15.9155 0 0 1 0 -31.831"
-                stroke="#ff7800"
+                stroke={progressColor}
               />
               <text x="18" y="20.35" className="dcg-percentage">{Math.round(percentage)}%</text>
             </svg>
           </div>
           <p className="dcg-calorie-info">
-            Calories eaten: {totalDailyCalories} / {dailyCalorieGoal}
+            {dailyCalorieGoal > 0 
+              ? `Calories eaten: ${totalDailyCalories} / ${dailyCalorieGoal}`
+              : "Please set your information to view calorie goal"}
           </p>
+          {isOverGoal && (
+            <div className="dcg-calorie-warning">
+              <p>Warning: You have exceeded your daily calorie goal</p>
+              <p>by {Math.round(caloriesExceeded)} {Math.round(caloriesExceeded) === 1 ? 'calorie' : 'calories'}!</p>
+            </div>
+          )}
         </div>
         
         <div className="dcg-goal-details">

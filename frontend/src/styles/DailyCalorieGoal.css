@@ -192,3 +192,19 @@
 .dcg-editing-dish-actions button:hover {
   background-color: #ffe290;
 }
+
+.dcg-calorie-warning {
+  color: #FF6666;
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.dcg-calorie-warning p {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.dcg-calorie-warning p:first-child {
+  margin-bottom: 5px;
+}

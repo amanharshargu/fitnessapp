@@ -439,3 +439,8 @@
   background-color: #e68a00;
   border-color: #e68a00;
 }
+
+.search-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -1,0 +1,206 @@
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.card {
+  width: 400px;
+  max-width: 90%;
+  max-height: none;
+  border-radius: 1rem;
+  margin: 2rem 0;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.form-outline {
+  position: relative;
+  margin-bottom: 4rem !important;
+}
+
+.login-modal .form-control {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid white;
+  border-radius: 0;
+  color: white;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  width: 100%;
+  padding-top: 0.25rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.form-control {
+  background-color: transparent;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: white;
+  background-color: transparent;
+  color: white;
+}
+
+.form-label {
+  position: absolute;
+  top: 0.2rem;
+  left: 0;
+  transition: all 0.2s ease-out;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  font-size: 1rem;
+}
+
+/* .form-outline.focused .form-label,
+.form-control:not(:placeholder-shown) + .form-label {
+  top: -1.2rem;
+  font-size: 0.85rem;
+  color: white;
+} */
+
+.btn-outline-light:hover {
+  background-color: white;
+  color: #000000;
+}
+
+.password-toggle-btn{
+  margin-right: 22px;
+}
+
+.password-toggle-btn:hover {
+  border-radius: 50%;
+}
+
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+  border-width: 2px;
+  background-color: transparent;
+}
+
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+  background-color: transparent;
+}
+
+.form-outline.is-invalid .form-label {
+  color: #dc3545;
+}
+
+.form-outline.is-invalid .form-control {
+  border-color: #dc3545;
+  background-color: transparent;
+}
+
+.form-outline.is-invalid.focused .form-label,
+.form-outline.is-invalid .form-control:not(:placeholder-shown) + .form-label {
+  color: #dc3545;
+}
+
+.invalid-feedback {
+  top: 100%;
+  left: 0;
+  font-size: 0.75rem;
+  color: #dc3545;
+}
+
+.error-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #dc3545;
+  font-size: 1.2rem;
+}
+
+.text-white-50.mb-5 {
+  margin-bottom: 1rem !important;
+}
+
+.alert.alert-danger {
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.form-outline:first-of-type {
+  margin-top: 1.5rem;
+}
+
+.form-outline:not(:last-child) {
+  margin-bottom: 4rem !important;
+}
+
+.form-outline:last-of-type {
+  margin-bottom: 2rem !important;
+}
+
+.google-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #212529;
+  color: #ffffff;
+  border: 1px solid white;
+  border-radius: 25px;
+  padding: 10px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.google-login-btn:hover {
+  background-color: #ffffff;
+  color: #000000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.google-login-btn:hover::after {
+  opacity: 1;
+  top: calc(100% + 10px);
+}
+
+.google-login-button img {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+}
+
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.password-toggle-btn:focus {
+  outline: none;
+}

@@ -1,0 +1,71 @@
+.expiring-ingredients {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.expiring-ingredients h3 {
+  color: #FF9800;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.expiring-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.expiring-group {
+  margin-bottom: 15px;
+}
+
+.ingredient-name {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.expiring-items {
+  list-style-type: none;
+  padding-left: 15px;
+}
+
+.expiring-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.ingredient-quantity {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.expiration-info {
+  display: flex;
+  align-items: center;
+}
+
+.expiration-badge {
+  background-color: #FFD600;
+  color: #333;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  margin-right: 10px;
+}
+
+.delete-button {
+  background-color: transparent;
+  border: none;
+  color: #FF9800;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.delete-button:hover {
+  color: #F57C00;
+}

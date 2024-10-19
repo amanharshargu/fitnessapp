@@ -1,0 +1,446 @@
+.recipes-container,
+.liked-recipes-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff5e6;
+  position: relative;
+  background-image: radial-gradient(circle, #ff9800 1px, transparent 1px),
+    radial-gradient(circle, #ff9800 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+}
+
+.recipes-container {
+  padding: 100px 20px 20px 250px;
+}
+
+.recipes-container::before {
+  content: "";
+  position: absolute;
+}
+
+.liked-recipes-container {
+  padding: 40px 20px 20px 20px;
+}
+
+.liked-recipes-content {
+  position: relative;
+  z-index: 1;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.recipes-content,
+.input-group {
+  flex-wrap: nowrap;
+}
+
+
+.liked-recipes-content .recipes-title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.liked-recipes-content .search-and-filter {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 30px;
+}
+
+.liked-recipes-content .search-form {
+  width: 70%;
+}
+
+.liked-recipes-content .search-input {
+  border: 1px solid #ff9800;
+  border-right: none;
+  transition: border-color 0.3s, color 0.3s, width 0.3s;
+  width: 10%;
+}
+
+.liked-recipes-content .search-input:focus {
+  border-color: #ff7800;
+  color: #ff7800;
+  width: 85%;
+}
+
+.liked-recipes-content .search-button {
+  background-color: #ff9800;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+.liked-recipes-content .search-button:hover {
+  background-color: #ff7800;
+}
+
+.liked-recipes-content .no-recipes-message {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: #666;
+  border-radius: 10px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.liked-recipes-content .row {
+  width: 200%;
+  justify-content: center;
+}
+
+.recipes-content,
+.liked-recipes-content {
+  position: relative;
+  z-index: 1;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.recipes-container .search-and-filter {
+  margin-bottom: 0px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.recipes-container .search-form {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.recipes-container .search-input {
+  border: 1px solid #ddd;
+  border-right: none;
+  transition: border-color 0.3s, color 0.3s, width 0.3s;
+  width: 70%;
+}
+
+.recipes-container .search-input:focus {
+  border-color: #ff7800;
+  color: #ff7800;
+  width: 100%;
+}
+
+.recipes-container .search-button {
+  background-color: #ffe290;
+  color: #333;
+  transition: background-color 0.3s;
+}
+
+.recipes-container .search-button:hover {
+  background-color: #ff9801;
+  border: 2px solid #ff9800;
+}
+
+.recipes-container .show-filters-btn {
+  background-color: #ffe290;
+  color: #333;
+  transition: background-color 0.3s;
+}
+
+.recipes-container .show-filters-btn:hover {
+  background-color: #ff9801;
+  border: 2px solid #ff9800;
+}
+
+.recipes-container .filters-section {
+  background-color: rgba(255, 224, 130, 0.85);
+  border-radius: 15px;
+  padding: 20px;
+  align-self: flex-start;
+}
+
+.recipes-container .filters-section h5 {
+  color: #f57c00;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.recipes-container .filters-section .form-check {
+  margin-bottom: 10px;
+}
+
+.recipes-container .filters-section .form-check-input {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.recipes-container .filters-section .form-check-label {
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.recipes-container .filters-section .form-check-label:hover {
+  color: #ff9800;
+}
+
+.recipes-container
+  .filters-section
+  .form-check-input:checked
+  + .form-check-label {
+  color: #ff9800;
+  font-weight: 600;
+}
+
+.recipes-container .filters-section .d-flex.flex-wrap {
+  gap: 10px;
+}
+
+/* Custom checkbox styles */
+.recipes-container .filters-section .form-check-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ff9800;
+  border-radius: 3px;
+  outline: none;
+  transition: all 0.3s ease;
+  position: relative;
+  top: 2px;
+}
+
+.recipes-container .filters-section .form-check-input:checked {
+  background-color: #ff9800;
+}
+
+.recipes-container .filters-section .form-check-input:checked::before {
+  content: "\2713";
+  font-size: 14px;
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.recipes-container .pagination-container {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.recipes-container .page-link {
+  background-color: #ffe290;
+  color: #333;
+  transition: background-color 0.3s;
+  border: none;
+}
+
+.recipes-container .page-link:hover {
+  background-color: #ff9800;
+  border: none;
+}
+
+.recipes-container .page-item.active .page-link {
+  background-color: #ff7800;
+  color: #fff;
+  border: none;
+}
+
+.recipes-container .row {
+  margin: -15px;
+  padding: 0 20px;
+}
+
+.recipes-container .col-md-3 {
+  padding: 15px;
+}
+
+.recipes-container .no-recipes-message {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: #666;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+@media (max-width: 992px) {
+  .recipes-container .col-md-3 {
+    width: 33.33%;
+  }
+}
+
+@media (max-width: 768px) {
+  .recipes-container {
+    padding: 60px 20px 20px 20px;
+  }
+
+  .recipes-content {
+    align-items: center;
+  }
+
+  .recipes-title {
+    align-self: center;
+  }
+
+  .recipes-container .col-md-3 {
+    width: 50%;
+  }
+}
+
+@media (max-width: 576px) {
+  .recipes-container .col-md-3 {
+    width: 100%;
+  }
+}
+
+.search-and-filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-form {
+  flex-grow: 1;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 70%;
+  transition: width 0.3s ease-in-out;
+}
+
+.search-input:focus {
+  width: 85%;
+}
+
+.show-filters-btn {
+  white-space: nowrap;
+  position: relative;
+  top: -10px;
+}
+.active-filter {
+  font-weight: bold;
+  box-shadow: 0 0 0 2px #ff9800;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+}
+
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #fff;
+  border: 2px solid #ff9800;
+  border-radius: 4px;
+}
+
+.custom-checkbox:hover input ~ .checkmark {
+  background-color: #fff3e0;
+}
+
+.custom-checkbox input:checked ~ .checkmark {
+  background-color: #ff9800;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.custom-checkbox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.custom-checkbox .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.label-text {
+  margin-left: 5px;
+}
+
+.filters-section .btn {
+  margin-right: 10px;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.filters-section .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.filters-section .btn-primary,
+.filters-section .btn-outline-primary {
+  border-color: #ff9800;
+  color: #ff9800;
+  background-color: transparent;
+}
+
+.filters-section .btn-primary:hover,
+.filters-section .btn-outline-primary:hover {
+  background-color: #ff9800;
+  border-color: #ff9800;
+  color: white;
+}
+
+.filters-section .btn-primary.active-filter {
+  background-color: #ff9800;
+  border-color: #ff9800;
+  color: white;
+  border-width: 2px;
+}
+
+.filters-section .btn-success {
+  background-color: #ff9800;
+  border-color: #ff9800;
+  color: white;
+}
+
+.filters-section .btn-success:hover {
+  background-color: #e68a00;
+  border-color: #e68a00;
+}
+
+.search-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

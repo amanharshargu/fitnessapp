@@ -1,0 +1,148 @@
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.card {
+  max-width: 90%;
+  max-height: none;
+  border-radius: 1rem;
+  margin: 2rem 0;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.form-outline {
+  position: relative;
+  margin-bottom: 3rem !important;
+  z-index: 1; /* Add this line */
+}
+
+.signup-modal .form-control {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid white;
+  border-radius: 0;
+  color: white;
+  padding: 0.5rem 0;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  width: 100%;
+  padding-right: 30px;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem; 
+  font-size: 0.9rem;
+  opacity: 1; 
+  position: relative;
+  z-index: 2; 
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: white;
+  background-color: transparent;
+  color: white;
+  opacity: 1; /* Add this line to ensure text is always fully opaque when focused */
+}
+
+.form-label {
+  position: absolute;
+  top: -1.2rem;
+  left: 0;
+  transition: all 0.2s ease-out;
+  color: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  font-size: 0.85rem; 
+  z-index: 3;
+}
+
+.form-outline.focused .form-label,
+.form-control:not(:placeholder-shown) + .form-label {
+  top: -1.2rem;
+  font-size: 0.85rem;
+  z-index: 3;
+}
+
+.btn-outline-light {
+  border-color: white;
+}
+
+.btn-outline-light:hover {
+  background-color: white;
+  color: #000000;
+}
+
+.form-control:-webkit-autofill,
+.form-control:-webkit-autofill:hover,
+.form-control:-webkit-autofill:focus,
+.form-control:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #212529 inset !important;
+  -webkit-text-fill-color: white !important;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+  border-width: 2px;
+}
+
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
+.invalid-feedback {
+  position: absolute;
+  top: calc(100% + 0.25rem); /* Position below the input */
+  left: 0;
+  font-size: 0.75rem;
+  color: #dc3545;
+  z-index: 3; /* Add this line */
+}
+
+/* Remove or comment out this rule if it exists */
+/* form > div:last-of-type {
+  margin-bottom: 1rem;
+} */
+
+/* Add this new rule to ensure consistent spacing */
+.form-outline:not(:last-child) {
+  margin-bottom: 3rem !important;
+}
+
+.error-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #dc3545;
+  font-size: 1.2rem;
+  z-index: 3; /* Add this line */
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6); /* Add this rule to style the placeholder text */
+}
+
+.form-control:not(:focus)::placeholder {
+  opacity: 0; /* Hide placeholder when not focused */
+}
+
+.form-control-lg {
+  color: white !important;
+}

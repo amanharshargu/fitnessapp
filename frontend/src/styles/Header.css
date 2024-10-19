@@ -1,0 +1,60 @@
+.wisheat-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 15px 0;
+  background-color: #FFF5E6;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.wisheat-header__container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wisheat-header__logo {
+  text-decoration: none;
+  color: #FF9800;
+  font-size: 1.8rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.wisheat-header__actions {
+  display: flex;
+  align-items: center;
+}
+
+.wisheat-header__btn {
+  background-color: transparent;
+  border: 2px solid #FF9800;
+  color: #FF9800;
+  padding: 8px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.wisheat-header__btn--outline:hover {
+  background-color: #FF9800;
+  color: #FFF;
+}
+
+@media (max-width: 768px) {
+  .wisheat-header {
+    padding: 10px 0;
+  }
+
+  .wisheat-header__btn {
+    padding: 6px 15px;
+    font-size: 0.9rem;
+  }
+}

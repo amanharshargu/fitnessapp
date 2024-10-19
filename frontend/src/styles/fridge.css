@@ -1,0 +1,109 @@
+.fridge-container {
+  padding: 20px 20px 0px 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #FFF5E6;
+  background-image: 
+    radial-gradient(circle, #FF9800 1px, transparent 1px),
+    radial-gradient(circle, #FF9800 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  position: relative;
+}
+
+.fridge-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle, #FF9800 1px, transparent 1px),
+    radial-gradient(circle, #FF9800 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  opacity: 0.1;
+  z-index: 0;
+}
+
+.fridge-title {
+  margin-bottom: 40px;
+  color: #FF7800;
+  font-size: 2.5rem;
+  text-align: center;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.fridge-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  position: relative;
+  z-index: 1;
+}
+
+.fridge-left {
+  background-color: rgba(255, 224, 130, 0.85);
+  border-radius: 15px;
+  padding: 30px;
+  flex: 3;
+  max-width: 65%;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fridge-right {
+  border-radius: 15px;
+  padding: 30px;
+  flex: 2;
+  max-width: 35%;
+}
+
+.fridge-left:hover,
+.fridge-right:hover {
+  transform: translateY(-5px);
+}
+
+.ingredients-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.ingredients-header h3 {
+  color: #FF7800;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.add-ingredient-btn {
+  padding: 10px 20px;
+  background-color: #FFD600;
+  color: #333;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
+}
+
+.add-ingredient-btn:hover {
+  background-color: #FFC107;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.add-ingredient-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,215 @@
+.landing-page {
+  min-height: 100vh;
+  background-color: #FFF5E6;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-section {
+  flex: 1;
+  width: 100%;
+  padding: 120px 0 60px;
+  position: relative;
+  background-image: 
+    radial-gradient(circle, #FF9800 1px, transparent 1px),
+    radial-gradient(circle, #FF9800 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+}
+
+.hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+}
+
+.hero-title {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #333;
+  max-width: 600px;
+  margin-bottom: 30px;
+  line-height: 1.2;
+}
+
+.highlight {
+  color: #FF9800;
+}
+
+.get-started-btn {
+  background-color: #ff9800;
+  color: #fff;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.get-started-btn:hover {
+  background-color: #e68a00;
+  transform: translateY(-2px);
+}
+
+.food-images {
+  position: absolute;
+  right: 200px;
+  bottom: -140px;
+  width: 400px;
+  height: 400px;
+}
+
+.image-container {
+  position: relative;
+  margin-top: 400px;
+}
+
+.image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  width: 100%;
+  height: 0;
+  transition: .5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-container:hover .image-overlay {
+  height: 100%;
+}
+
+.image-overlay p {
+  color: white;
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 90%;
+}
+
+.dish-image {
+  border-radius: 50%;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  object-fit: cover;
+}
+
+.dish-image:hover {
+  transform: scale(1.05);
+}
+
+.dish-1 {
+  width: 250px;
+  height: 250px;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+}
+
+.dish-2 {
+  width: 200px;
+  height: 200px;
+  right: 180px;
+  bottom: 100px;
+  z-index: 2;
+}
+
+.dish-3 {
+  width: 150px;
+  height: 150px;
+  right: 100px;
+  bottom: 220px;
+  z-index: 1;
+}
+
+.footer {
+  background-color: #FF9800;
+  color: #FFF;
+  padding: 20px 0;
+  margin-top: auto;
+}
+
+.footer .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footer nav a {
+  color: #FFF;
+  text-decoration: none;
+  margin-left: 20px;
+  transition: opacity 0.3s ease;
+}
+
+.footer nav a:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 80px 0 40px;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .food-images {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 50px;
+  }
+
+  .dish-1, .dish-2, .dish-3 {
+    position: static;
+    width: 150px;
+    height: 150px;
+    margin: 10px;
+  }
+
+  .footer .container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer nav {
+    margin-top: 10px;
+  }
+
+  .footer nav a {
+    margin: 0 10px;
+  }
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 1;
+  padding-top: 60px;
+}
+
+.landing-page .card-body-lp {
+  padding: 0.75rem;
+}

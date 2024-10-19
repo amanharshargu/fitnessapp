@@ -1,0 +1,51 @@
+{
+  "dependencies": {
+    "@tanstack/react-query": "^5.56.2",
+    "axios": "^1.7.7",
+    "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.5",
+    "ldrs": "^1.0.2",
+    "primeicons": "^7.0.0",
+    "primereact": "^10.8.3",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.10.4",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.3.0",
+    "react-router-dom": "^6.26.2",
+    "react-scripts": "5.0.1",
+    "react-slider": "^2.0.6",
+    "web-vitals": "^4.2.3"
+  },
+  "name": "your-app-name",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint src/**/*.{js,jsx}"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.12"
+  }
+}

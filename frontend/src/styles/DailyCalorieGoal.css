@@ -52,10 +52,16 @@
   animation: progress 1s ease-out forwards;
 }
 
+@keyframes progress {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+}
+
 .dcg-percentage {
-  fill: #ff7800;
+  fill: #666;
   font-family: sans-serif;
-  font-size: 0.4em;
+  font-size: 0.35em; /* Reduced from 0.5em */
   text-anchor: middle;
 }
 
@@ -207,4 +213,27 @@
 
 .dcg-calorie-warning p:first-child {
   margin-bottom: 5px;
+}
+
+.dcg-goal-reached {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 10px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

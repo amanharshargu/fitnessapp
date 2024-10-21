@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/DailyCalorieGoal.css';
 import api from "../../services/api";
+import Confetti from 'react-confetti';
 
 function DailyCalorieGoal({ onDishesChanged }){
   const [dailyCalorieGoal, setDailyCalorieGoal] = useState(null);
@@ -8,6 +9,8 @@ function DailyCalorieGoal({ onDishesChanged }){
   const [dishes, setDishes] = useState([]);
   const [newDish, setNewDish] = useState({ name: '', calories: '' });
   const [editingDish, setEditingDish] = useState(null);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [confettiRecycle, setConfettiRecycle] = useState(true);
 
   useEffect(() => {
     const fetchCalorieGoal = async () => {
@@ -36,7 +39,22 @@ function DailyCalorieGoal({ onDishesChanged }){
   useEffect(() => {
     const total = dishes.reduce((sum, dish) => sum + dish.calories, 0);
     setTotalDailyCalories(total);
-  }, [dishes]);
+
+    if (dailyCalorieGoal && total === dailyCalorieGoal) {
+      setShowConfetti(true);
+      setConfettiRecycle(true);
+      setTimeout(() => {
+        setConfettiRecycle(false);
+        setTimeout(() => setShowConfetti(false), 5000);
+      }, 4000);
+    }
+  }, [dishes, dailyCalorieGoal]);
+
+  const percentage = dailyCalorieGoal > 0 ? Math.min((totalDailyCalories / dailyCalorieGoal) * 100, 100) : 0;
+  const isGoalReached = totalDailyCalories === dailyCalorieGoal;
+  const isOverGoal = dailyCalorieGoal > 0 && totalDailyCalories > dailyCalorieGoal;
+  const progressColor = isGoalReached ? "#28a745" : isOverGoal ? "#FF6666" : "#ff7800";
+  const caloriesExceeded = isOverGoal ? totalDailyCalories - dailyCalorieGoal : 0;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -108,13 +126,22 @@ function DailyCalorieGoal({ onDishesChanged }){
     }
   };
 
-  const percentage = dailyCalorieGoal > 0 ? Math.min((totalDailyCalories / dailyCalorieGoal) * 100, 100) : 0;
-  const isOverGoal = dailyCalorieGoal > 0 && totalDailyCalories > dailyCalorieGoal;
-  const progressColor = isOverGoal ? "#FF6666" : totalDailyCalories === dailyCalorieGoal ? "#90EE90" : "#ff7800";
-  const caloriesExceeded = isOverGoal ? totalDailyCalories - dailyCalorieGoal : 0;
+  const formatPercentage = (value) => {
+    if (value === 100) return "100";
+    return value.toFixed(2).replace(/\.00$/, '');
+  };
 
   return (
     <div className="dcg-daily-calorie-goal">
+      {showConfetti && (
+        <Confetti
+          width={window.innerWidth}
+          height={window.innerHeight}
+          recycle={confettiRecycle}
+          numberOfPieces={200}
+          gravity={0.1}
+        />
+      )}
       <h3>Daily Calorie Goal</h3>
       <div className="dcg-goal-content">
         <div className="dcg-goal-chart-container">
@@ -134,7 +161,7 @@ function DailyCalorieGoal({ onDishesChanged }){
                   a 15.9155 15.9155 0 0 1 0 -31.831"
                 stroke={progressColor}
               />
-              <text x="18" y="20.35" className="dcg-percentage">{percentage.toFixed(2)}%</text>
+              <text x="18" y="20.35" className="dcg-percentage">{formatPercentage(percentage)}%</text>
             </svg>
           </div>
           <p className="dcg-calorie-info">
@@ -142,6 +169,11 @@ function DailyCalorieGoal({ onDishesChanged }){
               ? `Calories eaten: ${totalDailyCalories} / ${dailyCalorieGoal}`
               : "Please set your information to view calorie goal"}
           </p>
+          {isGoalReached && (
+            <div className="dcg-goal-reached">
+              <p>Congratulations! You've reached your daily calorie goal!</p>
+            </div>
+          )}
           {isOverGoal && (
             <div className="dcg-calorie-warning">
               <p>Warning: You have exceeded your daily calorie goal</p>

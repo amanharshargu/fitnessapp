@@ -103,8 +103,6 @@
 
 .button-group {
   display: flex;
-  justify-content: space-between;
-  margin-top: auto;
   padding-top: 20px;
 }
 
@@ -442,7 +440,7 @@
   display: flex;
   gap: 20px;
   overflow-y: auto;
-  overflow-x:hidden;
+  overflow-x: hidden;
   padding-right: 10px;
 }
 
@@ -565,13 +563,13 @@
 
 /* Add this new style for the diet labels */
 .filter-group .radio-label input[type="radio"] {
-  margin-right: 8px;  /* Adjust this value to increase or decrease the spacing */
+  margin-right: 8px; /* Adjust this value to increase or decrease the spacing */
 }
 
 /* Add this new style for all checkboxes and radio buttons in filter groups */
 .filter-group input[type="checkbox"],
 .filter-group input[type="radio"] {
-  margin-right: 8px;  /* Adjust this value to increase or decrease the spacing */
+  margin-right: 8px; /* Adjust this value to increase or decrease the spacing */
 }
 
 .loading-container {
@@ -580,4 +578,17 @@
   align-items: center;
   height: 100%;
   width: 100%;
+}
+
+.meal-planner button.btn-secondary {
+  background-color: transparent;
+  color: #6c757d;
+  border: 1px solid #6c757d;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.meal-planner button.btn-secondary:hover {
+  background-color: #6c757d;
+  color: white;
+  border-color: #6c757d;
 }

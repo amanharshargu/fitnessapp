@@ -68,6 +68,9 @@ function MealPlanDisplay({ mealPlan, handleViewRecipe, onBackToFilters }) {
 
   return (
     <div className="meal-plan">
+      <button className="back-button" onClick={onBackToFilters}>
+        &larr; Back
+      </button>
       <div className="meal-plan-layout">
         <div className="day-buttons">
           {daysOfWeek.map((day, index) => (

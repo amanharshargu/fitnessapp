@@ -412,7 +412,7 @@
 .filters-section .btn-outline-primary {
   border-color: #ff9800;
   color: #ff9800;
-  background-color: transparent;
+  background-color: white;
 }
 
 .filters-section .btn-primary:hover,
@@ -429,15 +429,27 @@
   border-width: 2px;
 }
 
-.filters-section .btn-success {
-  background-color: #ff9800;
-  border-color: #ff9800;
+.filters-section .btn-outline-secondary {
+  background-color: white;
+  color: #6c757d;
+  border-color: #6c757d;
+}
+
+.filters-section .btn-outline-secondary:hover {
+  background-color: #6c757d;
   color: white;
 }
 
+.filters-section .btn-success {
+  background-color: white;
+  border-color: #28a745;
+  color: #28a745;
+}
+
 .filters-section .btn-success:hover {
-  background-color: #e68a00;
-  border-color: #e68a00;
+  background-color: #28a745;
+  border-color: #28a745;
+  color: white;
 }
 
 .search-button:disabled {

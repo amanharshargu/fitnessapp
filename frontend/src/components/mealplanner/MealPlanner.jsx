@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import CalorieSlider from "../dashboard/CalorieSlider";
 import ContentWrapper from "../layout/ContentWrapper";
 import MealPlanDisplay from "./MealPlanDisplay";
 import { useIngredients } from "../../contexts/IngredientContext";
+import { useIngredientList, formatQuantity, aggregateIngredients } from "../../hooks/useIngredientForm";
+import CardioSpinner from "../common/CardioSpinner";
 import api from "../../services/api";
 import "../../styles/MealPlanner.css";
 
@@ -75,7 +77,17 @@ function MealPlanner() {
   const [error, setError] = useState(null);
   const [showFilters, setShowFilters] = useState(true);
   const { ingredients } = useIngredients();
+  const { processedIngredients } = useIngredientList(ingredients);
   const [calories, setCalories] = useState({ min: 2000, max: 2500 });
+
+  // Remove this useMemo block as we're now using processedIngredients
+  // const aggregatedIngredients = useMemo(() => {
+  //   return aggregateIngredients(ingredients, {
+  //     keyExtractor: (ingredient) => ingredient.name,
+  //     quantityConverter: (quantity, unit) => convertToBaseUnit(parseFloat(quantity), unit),
+  //     unitNormalizer: (unit) => unit.toLowerCase(),
+  //   });
+  // }, [ingredients]);
 
   useEffect(() => {
     const fetchCalorieGoal = async () => {
@@ -93,58 +105,11 @@ function MealPlanner() {
     fetchCalorieGoal();
   }, []);
 
-  const LoadingAnimation = () => (
-    <div className="loading-animation" style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100vh',
-      width: '100%',
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      backgroundColor: 'rgba(255, 255, 255, 0)',
-      zIndex: 1000
-    }}>
-      <div className="spinner" style={{
-        width: '60px',
-        height: '60px',
-        border: '6px solid #ffe290',
-        borderTop: '6px solid #ff9800',
-        borderRadius: '50%',
-        animation: 'spin 1s linear infinite',
-        boxShadow: '0 0 10px rgba(255, 152, 0, 0.3)'
-      }}></div>
-      <p style={{
-        marginTop: '20px',
-        fontSize: '18px',
-        color: '#ff9800',
-        fontWeight: 'bold'
-      }}>Loading...</p>
-      <style>
-        {`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}
-      </style>
-    </div>
-  );
-
-  const calculateIngredientRange = () => {
-    const minIngr = Math.floor(Math.random() * 5) + 3; // Random number between 3 and 7
-    const maxIngr = minIngr + Math.floor(Math.random() * 5) + 3; // Random number between minIngr + 3 and minIngr + 7
-    return `${minIngr}-${maxIngr}`;
-  };
-
   const fetchMealPlan = async () => {
     setLoading(true);
     setError(null);
     setShowFilters(false);
     try {
-      const ingredientRange = calculateIngredientRange();
       const response = await axios.post(
         `https://api.edamam.com/api/meal-planner/v1/${MEALPLAN_APP_ID}/select?app_id=${MEALPLAN_APP_ID}&app_key=${MEALPLAN_APP_KEY}`,
         {
@@ -157,7 +122,6 @@ function MealPlanner() {
             },
             fit: {
               ENERC_KCAL: filters.calories,
-              ingr: ingredientRange,
             },
             sections: {
               Breakfast: {
@@ -169,7 +133,6 @@ function MealPlanner() {
                 },
                 fit: {
                   ENERC_KCAL: filters.breakfastCalories,
-                  ingr: ingredientRange,
                 },
               },
               Lunch: {
@@ -181,7 +144,6 @@ function MealPlanner() {
                 },
                 fit: {
                   ENERC_KCAL: filters.lunchCalories,
-                  ingr: ingredientRange,
                 },
               },
               Dinner: {
@@ -193,7 +155,6 @@ function MealPlanner() {
                 },
                 fit: {
                   ENERC_KCAL: filters.dinnerCalories,
-                  ingr: ingredientRange,
                 },
               },
             },
@@ -316,6 +277,21 @@ function MealPlanner() {
     setCalories({ min: Math.min(min, max), max: Math.max(min, max) });
   };
 
+  const isIngredientExpired = (items) => {
+    return items.some(item => {
+      if (!item.expirationDate) return false;
+      const today = new Date();
+      const expirationDate = new Date(item.expirationDate);
+      return expirationDate < today;
+    });
+  };
+
+  const getIngredientDetails = (items) => {
+    const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+    const unit = items[0].unit;
+    return formatQuantity(totalQuantity, unit);
+  };
+
   return (
     <ContentWrapper>
       <div className="meal-planner">
@@ -380,18 +356,26 @@ function MealPlanner() {
                   <div className="filter-group">
                     <h5>Ingredients from Fridge</h5>
                     <div className="filter-options compact scrollable-list">
-                      {ingredients.map((ingredient) => (
-                        <label key={ingredient.id} className="checkbox-label">
-                          <input
-                            type="checkbox"
-                            name="ingredients"
-                            value={ingredient.name}
-                            checked={filters.ingredients.includes(ingredient.name)}
-                            onChange={(e) => handleFilterChange("ingredients", e.target.checked ? [...filters.ingredients, ingredient.name] : filters.ingredients.filter((item) => item !== ingredient.name))}
-                          />
-                          <span>{ingredient.name}</span>
-                        </label>
-                      ))}
+                      {processedIngredients.map(({ name, items, totalQuantity }) => {
+                        const isExpired = isIngredientExpired(items);
+                        return (
+                          <label 
+                            key={name} 
+                            className={`checkbox-label ${isExpired ? 'expired' : ''}`}
+                            title={isExpired ? "This ingredient has expired" : totalQuantity}
+                          >
+                            <input
+                              type="checkbox"
+                              name="ingredients"
+                              value={name}
+                              checked={filters.ingredients.includes(name)}
+                              onChange={(e) => handleFilterChange("ingredients", e.target.checked ? [...filters.ingredients, name] : filters.ingredients.filter((item) => item !== name))}
+                              disabled={isExpired}
+                            />
+                            <span>{name}</span>
+                          </label>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
@@ -402,28 +386,28 @@ function MealPlanner() {
                   <CalorieSlider
                     label="Daily Total"
                     min={1000}
-                    max={3000}
+                    max={4000}
                     value={filters.calories}
                     onChange={(value) => handleFilterChange("calories", value)}
                   />
                   <CalorieSlider
                     label="Breakfast"
                     min={200}
-                    max={800}
+                    max={1200}
                     value={filters.breakfastCalories}
                     onChange={(value) => handleFilterChange("breakfastCalories", value)}
                   />
                   <CalorieSlider
                     label="Lunch"
                     min={300}
-                    max={1000}
+                    max={1500}
                     value={filters.lunchCalories}
                     onChange={(value) => handleFilterChange("lunchCalories", value)}
                   />
                   <CalorieSlider
                     label="Dinner"
-                    min={300}
-                    max={1000}
+                    min={400}
+                    max={1500}
                     value={filters.dinnerCalories}
                     onChange={(value) => handleFilterChange("dinnerCalories", value)}
                   />
@@ -442,7 +426,11 @@ function MealPlanner() {
           </div>
         ) : (
           <>
-            {loading && <LoadingAnimation />}
+            {loading && (
+              <div className="loading-container">
+                <CardioSpinner size="50" stroke="4" speed="2" color="#ff9800" />
+              </div>
+            )}
             {!loading && mealPlan && (
               <div className="meal-plan-display-container">
                 <MealPlanDisplay 

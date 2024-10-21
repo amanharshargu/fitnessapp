@@ -55,10 +55,50 @@
   align-items: center;
   font-size: 0.9em;
   cursor: pointer;
+  flex: 0 0 calc(50% - 4px);
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.checkbox-label.expired {
+  background-color: rgba(255, 0, 0, 0.2);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.checkbox-label.expired:hover {
+  background-color: rgba(200, 0, 0, 0.3);
+  opacity: 0.9;
+}
+
+.checkbox-label.expired input[type="checkbox"] {
+  cursor: not-allowed;
 }
 
 .checkbox-label input[type="checkbox"] {
   margin-right: 6px;
+}
+
+.checkbox-label span {
+  color: black;
+}
+
+/* Add this new style for the hover effect */
+.checkbox-label[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  white-space: nowrap;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 .button-group {
@@ -449,11 +489,50 @@
   align-items: center;
   font-size: 0.9em;
   cursor: pointer;
-  flex: 0 0 calc(50% - 4px); /* Adjust the width as needed */
+  flex: 0 0 calc(50% - 4px);
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.checkbox-label.expired {
+  background-color: rgba(255, 0, 0, 0.2);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.checkbox-label.expired:hover {
+  background-color: rgba(200, 0, 0, 0.3);
+  opacity: 0.9;
+}
+
+.checkbox-label.expired input[type="checkbox"] {
+  cursor: not-allowed;
 }
 
 .checkbox-label input[type="checkbox"] {
   margin-right: 6px;
+}
+
+.checkbox-label span {
+  color: black;
+}
+
+/* Add this new style for the hover effect */
+.checkbox-label[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  white-space: nowrap;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 /* ... (rest of the styles remain unchanged) */
@@ -483,3 +562,22 @@
 }
 
 /* ... (rest of the styles remain unchanged) */
+
+/* Add this new style for the diet labels */
+.filter-group .radio-label input[type="radio"] {
+  margin-right: 8px;  /* Adjust this value to increase or decrease the spacing */
+}
+
+/* Add this new style for all checkboxes and radio buttons in filter groups */
+.filter-group input[type="checkbox"],
+.filter-group input[type="radio"] {
+  margin-right: 8px;  /* Adjust this value to increase or decrease the spacing */
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}

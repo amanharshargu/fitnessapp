@@ -158,27 +158,21 @@ export const isCountBasedUnit = (unit) => {
 };
 
 export const convertToBaseUnit = (quantity, unit) => {
-  if (isCountBasedUnit(unit)) return quantity;
-  const conversionFactors = {
-    ml: 1,
-    l: 1000,
-    g: 1,
-    kg: 1000,
-  };
-  return quantity * (conversionFactors[unit.toLowerCase()] || 1);
+  const lowerUnit = unit.toLowerCase();
+  if (lowerUnit === 'kg') return quantity * 1000;
+  if (lowerUnit === 'g') return quantity;
+  if (lowerUnit === 'l') return quantity * 1000;
+  if (lowerUnit === 'ml') return quantity;
+  return quantity; // for units like 'piece' or 'count'
 };
 
 export const formatQuantity = (quantity, unit) => {
-  const formatNumber = (num) => {
-    return Number.isInteger(num) ? num.toString() : num.toFixed(2);
-  };
-
-  if (isCountBasedUnit(unit)) return `${formatNumber(quantity)} ${unit === '' ? 'count' : unit}`;
-  if (unit.toLowerCase() === 'g' && quantity >= 1000) {
-    return `${formatNumber(quantity / 1000)} kg`;
+  const lowerUnit = unit.toLowerCase();
+  if (lowerUnit === 'g' && quantity >= 1000) {
+    return `${(quantity / 1000).toFixed(2)} kg`;
   }
-  if (unit.toLowerCase() === 'ml' && quantity >= 1000) {
-    return `${formatNumber(quantity / 1000)} l`;
+  if (lowerUnit === 'ml' && quantity >= 1000) {
+    return `${(quantity / 1000).toFixed(2)} L`;
   }
-  return `${formatNumber(quantity)} ${unit}`;
+  return `${quantity.toFixed(2)} ${unit}`;
 };

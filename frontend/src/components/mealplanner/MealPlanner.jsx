@@ -1,24 +1,12 @@
-import React, { useState, useEffect, useMemo } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import CalorieSlider from "../dashboard/CalorieSlider";
 import ContentWrapper from "../layout/ContentWrapper";
 import MealPlanDisplay from "./MealPlanDisplay";
 import { useIngredients } from "../../contexts/IngredientContext";
-import { useIngredientList, formatQuantity, aggregateIngredients } from "../../hooks/useIngredientForm";
+import { useIngredientList, formatQuantity, convertToBaseUnit } from "../../hooks/useIngredientForm";
 import CardioSpinner from "../common/CardioSpinner";
-import api from "../../services/api";
+import { useMealPlanner } from "../../contexts/MealPlannerContext";
 import "../../styles/MealPlanner.css";
-
-const MEALPLAN_APP_ID = process.env.REACT_APP_MEALPLAN_APP_ID;
-const MEALPLAN_APP_KEY = process.env.REACT_APP_MEALPLAN_APP_KEY;
-const EDAMAM_APP_ID = process.env.REACT_APP_EDAMAM_APP_ID;
-const EDAMAM_APP_KEY = process.env.REACT_APP_EDAMAM_APP_KEY;
-const EDAMAM_USER_ID = process.env.REACT_APP_EDAMAM_USER_ID;
-
-const dishTypes = [
-"biscuits and cookies", "bread", "cereals", "desserts", "drinks",
-  "ice cream and custard", "pancake", "pasta", "pizza",  "salad", "sandwiches", "seafood", "soup", "sweets"
-];
 
 const healthLabels = [
   "DAIRY_FREE", "EGG_FREE", "GLUTEN_FREE", "PEANUT_FREE",
@@ -29,29 +17,10 @@ const dietLabels = [
   "BALANCED", "HIGH_PROTEIN", "LOW_FAT", "LOW_CARB"
 ];
 
-const getInitialFilters = (dailyCalorieGoal) => {
-  const breakfastPercentage = 0.28;
-  const lunchPercentage = 0.38;
-  const dinnerPercentage = 0.34;
-
-  const calculateRange = (percentage) => {
-    const baseCalories = Math.round(dailyCalorieGoal * percentage);
-    const min = Math.round(baseCalories * 0.9);
-    const max = Math.round(baseCalories * 1.1);
-    return { min, max };
-  };
-
-  return {
-    health: [],
-    diet: [],
-    dishType: [],
-    ingredients: [],
-    calories: { min: Math.max(1000, dailyCalorieGoal - 150), max: Math.min(3000, dailyCalorieGoal + 150) },
-    breakfastCalories: calculateRange(breakfastPercentage),
-    lunchCalories: calculateRange(lunchPercentage),
-    dinnerCalories: calculateRange(dinnerPercentage),
-  };
-};
+const dishTypes = [
+  "biscuits and cookies", "bread", "cereals", "desserts", "drinks",
+  "ice cream and custard", "pancake", "pasta", "pizza", "salad", "sandwiches", "seafood", "soup", "sweets"
+];
 
 const capitalizeWords = (str) => {
   const articles = ['and', 'or', 'the', 'a', 'an'];
@@ -70,226 +39,84 @@ const capitalizeWords = (str) => {
 };
 
 function MealPlanner() {
-  const [dailyCalorieGoal, setDailyCalorieGoal] = useState(2000); // Default value
-  const [filters, setFilters] = useState(getInitialFilters(dailyCalorieGoal));
-  const [mealPlan, setMealPlan] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [showFilters, setShowFilters] = useState(true);
   const { ingredients } = useIngredients();
   const { processedIngredients } = useIngredientList(ingredients);
-  const [calories, setCalories] = useState({ min: 2000, max: 2500 });
-
-  // Remove this useMemo block as we're now using processedIngredients
-  // const aggregatedIngredients = useMemo(() => {
-  //   return aggregateIngredients(ingredients, {
-  //     keyExtractor: (ingredient) => ingredient.name,
-  //     quantityConverter: (quantity, unit) => convertToBaseUnit(parseFloat(quantity), unit),
-  //     unitNormalizer: (unit) => unit.toLowerCase(),
-  //   });
-  // }, [ingredients]);
+  const {
+    filters,
+    mealPlan,
+    loading,
+    error,
+    showFilters,
+    fetchCalorieGoal,
+    fetchMealPlan,
+    handleFilterChange,
+    handleClearFilters,
+    handleViewRecipe,
+    handleBackToFilters,
+    setProcessedIngredients,
+  } = useMealPlanner();
 
   useEffect(() => {
-    const fetchCalorieGoal = async () => {
-      try {
-        const response = await api.get(`/dashboard/calorie-goal`);
-        const data = response.data;
-        const fetchedGoal = data.dailyCalories || 2000;
-        setDailyCalorieGoal(fetchedGoal);
-        setFilters(getInitialFilters(fetchedGoal));
-      } catch (error) {
-        console.error('Error fetching calorie goal:', error);
-      }
-    };
-
     fetchCalorieGoal();
-  }, []);
+  }, [fetchCalorieGoal]);
 
-  const fetchMealPlan = async () => {
-    setLoading(true);
-    setError(null);
-    setShowFilters(false);
-    try {
-      const response = await axios.post(
-        `https://api.edamam.com/api/meal-planner/v1/${MEALPLAN_APP_ID}/select?app_id=${MEALPLAN_APP_ID}&app_key=${MEALPLAN_APP_KEY}`,
-        {
-          plan: {
-            accept: {
-              all: [
-                { health: filters.health },
-                { diet: filters.diet },
-              ],
-            },
-            fit: {
-              ENERC_KCAL: filters.calories,
-            },
-            sections: {
-              Breakfast: {
-                accept: {
-                  all: [
-                    { meal: ["breakfast"] },
-                    { dish: filters.dishType.filter(type => ["cereals", "egg", "pancake", "pastry", "bread", "sandwiches"].includes(type)) }
-                  ],
-                },
-                fit: {
-                  ENERC_KCAL: filters.breakfastCalories,
-                },
-              },
-              Lunch: {
-                accept: {
-                  all: [
-                    { meal: ["lunch/dinner"] },
-                    { dish: filters.dishType.filter(type => ["main course", "salad", "sandwiches", "soup", "pasta", "pizza"].includes(type)) }
-                  ],
-                },
-                fit: {
-                  ENERC_KCAL: filters.lunchCalories,
-                },
-              },
-              Dinner: {
-                accept: {
-                  all: [
-                    { meal: ["lunch/dinner"] },
-                    { dish: filters.dishType.filter(type => ["main course", "seafood", "pasta", "pizza", "soup", "salad"].includes(type)) }
-                  ],
-                },
-                fit: {
-                  ENERC_KCAL: filters.dinnerCalories,
-                },
-              },
-            },
-          },
-          size: 7,
-        },
-        {
-          headers: {
-            "Edamam-Account-User": EDAMAM_USER_ID,
-          },
-        }
-      );
-      
-      if (response.data && response.data.status === "INCOMPLETE") {
-        setMealPlan({ status: "INCOMPLETE" });
-        setLoading(false);
-      } else if (response.data && response.data.selection) {
-        await fetchRecipeDetails(response.data);
-      } else {
-        throw new Error("Unexpected API response structure");
-      }
-    } catch (err) {
-      setError("Failed to fetch meal plan. Please try again later.");
-      console.error("Error fetching meal plan:", err);
-      setShowFilters(true);
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    setProcessedIngredients(processedIngredients);
+  }, [processedIngredients, setProcessedIngredients]);
 
-  const fetchRecipeDetails = async (mealPlanData) => {
-    try {
-      if (!mealPlanData.selection || !Array.isArray(mealPlanData.selection)) {
-        throw new Error("Invalid meal plan data structure");
-      }
+  const getIngredientStatus = (name) => {
+    const today = new Date();
+    const processedIngredient = processedIngredients.find(ing => ing.name === name);
 
-      const recipePromises = mealPlanData.selection.flatMap((day) =>
-        Object.values(day.sections).map((meal) =>
-          axios.get(`https://api.edamam.com/api/recipes/v2/by-uri`, {
-            params: {
-              type: "public",
-              app_id: EDAMAM_APP_ID,
-              app_key: EDAMAM_APP_KEY,
-              uri: meal.assigned,
-            },
-          })
-        )
-      );
-      const recipeResponses = await Promise.all(recipePromises);
-      const updatedMealPlan = mealPlanData.selection.map((day, dayIndex) => ({
-        ...day,
-        sections: Object.fromEntries(
-          Object.entries(day.sections).map(([mealType, meal], mealIndex) => {
-            const response = recipeResponses[dayIndex * 3 + mealIndex];
-            let recipeDetails = null;
-            if (
-              response &&
-              response.data &&
-              response.data.hits &&
-              response.data.hits.length > 0
-            ) {
-              recipeDetails = response.data.hits[0].recipe;
-            } else {
-              console.warn(
-                `No recipe details found for ${mealType} on day ${dayIndex + 1}`
-              );
-            }
-            return [
-              mealType,
-              {
-                ...meal,
-                recipeDetails,
-              },
-            ];
-          })
-        ),
-      }));
-      setMealPlan({ ...mealPlanData, selection: updatedMealPlan });
-    } catch (err) {
-      setError("Failed to fetch recipe details. Please try again later.");
-      console.error("Error fetching recipe details:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (!processedIngredient) return 'unknown';
 
-  const handleFilterChange = (name, value) => {
-    if (name === "diet") {
-      // For diet labels, set the value directly (single selection)
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [name]: [value], // Wrap in an array to maintain consistency with API expectations
-      }));
-    } else {
-      // For other filters, keep the existing logic
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [name]: value,
-      }));
-    }
-  };
-
-  const handleClearFilters = () => {
-    setFilters(getInitialFilters(dailyCalorieGoal));
-  };
-
-  const handleViewRecipe = (recipe) => {
-    if (recipe.url) {
-      window.open(recipe.url, '_blank');
-    }
-  };
-
-  const handleBackToFilters = () => {
-    setShowFilters(true);
-    setMealPlan(null);
-    setError(null);
-  };
-
-  const handleCaloriesChange = (values) => {
-    const [min, max] = values;
-    setCalories({ min: Math.min(min, max), max: Math.max(min, max) });
-  };
-
-  const isIngredientExpired = (items) => {
-    return items.some(item => {
-      if (!item.expirationDate) return false;
-      const today = new Date();
+    const expiringSoonItems = processedIngredient.items.filter(item => {
       const expirationDate = new Date(item.expirationDate);
-      return expirationDate < today;
+      return expirationDate > today && expirationDate <= new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000);
     });
+
+    const expiredItems = processedIngredient.items.filter(item => new Date(item.expirationDate) < today);
+
+    if (expiredItems.length > 0) {
+      return 'expired';
+    } else if (expiringSoonItems.length > 0) {
+      return 'expiring-soon';
+    } else {
+      return 'fresh';
+    }
   };
 
-  const getIngredientDetails = (items) => {
-    const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
-    const unit = items[0].unit;
+  const getIngredientQuantity = (name, filterExpiringSoon = false) => {
+    const ingredient = processedIngredients.find(ing => ing.name === name);
+    if (!ingredient) return 'N/A';
+
+    const today = new Date();
+    const threeDaysFromNow = new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000);
+
+    let totalQuantity = 0;
+    let unit = '';
+
+    ingredient.items.forEach(item => {
+      const expirationDate = new Date(item.expirationDate);
+      if (!filterExpiringSoon || (expirationDate > today && expirationDate <= threeDaysFromNow)) {
+        totalQuantity += convertToBaseUnit(item.quantity, item.unit);
+        unit = item.unit || '';
+      }
+    });
+
     return formatQuantity(totalQuantity, unit);
+  };
+
+  const getIngredientHoverText = (name, status) => {
+    if (status === 'expired') {
+      return 'Expired';
+    } else if (status === 'expiring-soon') {
+      const expiringSoonQuantity = getIngredientQuantity(name, true);
+      const totalQuantity = getIngredientQuantity(name);
+      return `${expiringSoonQuantity} out of ${totalQuantity} Expiring Soon`;
+    } else {
+      return `Quantity: ${getIngredientQuantity(name)}`;
+    }
   };
 
   return (
@@ -327,7 +154,7 @@ function MealPlanner() {
                             name="diet"
                             value={label}
                             checked={filters.diet[0] === label}
-                            onChange={(e) => handleFilterChange("diet", e.target.value)}
+                            onChange={(e) => handleFilterChange("diet", [e.target.value])}
                           />
                           <span>{capitalizeWords(label)}</span>
                         </label>
@@ -356,13 +183,14 @@ function MealPlanner() {
                   <div className="filter-group">
                     <h5>Ingredients from Fridge</h5>
                     <div className="filter-options compact scrollable-list">
-                      {processedIngredients.map(({ name, items, totalQuantity }) => {
-                        const isExpired = isIngredientExpired(items);
+                      {processedIngredients.map(({ name }) => {
+                        const status = getIngredientStatus(name);
+                        const hoverText = getIngredientHoverText(name, status);
                         return (
                           <label 
                             key={name} 
-                            className={`checkbox-label ${isExpired ? 'expired' : ''}`}
-                            title={isExpired ? "This ingredient has expired" : totalQuantity}
+                            className={`checkbox-label ${status}`}
+                            data-hover={hoverText}
                           >
                             <input
                               type="checkbox"
@@ -370,7 +198,7 @@ function MealPlanner() {
                               value={name}
                               checked={filters.ingredients.includes(name)}
                               onChange={(e) => handleFilterChange("ingredients", e.target.checked ? [...filters.ingredients, name] : filters.ingredients.filter((item) => item !== name))}
-                              disabled={isExpired}
+                              disabled={status === 'expired'}
                             />
                             <span>{name}</span>
                           </label>
@@ -431,13 +259,18 @@ function MealPlanner() {
                 <CardioSpinner size="50" stroke="4" speed="2" color="#ff9800" />
               </div>
             )}
-            {!loading && mealPlan && (
+            {!loading && mealPlan && mealPlan.status !== "INCOMPLETE" && (
               <div className="meal-plan-display-container">
-                <MealPlanDisplay 
-                  mealPlan={mealPlan} 
-                  handleViewRecipe={handleViewRecipe} 
-                  onBackToFilters={handleBackToFilters}
-                />
+                <MealPlanDisplay />
+              </div>
+            )}
+            {!loading && (!mealPlan || mealPlan.status === "INCOMPLETE") && (
+              <div className="no-meal-plan-fallback">
+                <h2>No Meal Plan Available</h2>
+                <p>We couldn't generate a meal plan based on your current preferences. Please try adjusting your filters and try again.</p>
+                <button className="back-to-filters-btn" onClick={handleBackToFilters}>
+                  Back to Filters
+                </button>
               </div>
             )}
           </>

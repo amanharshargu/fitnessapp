@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useMealPlanner } from '../../contexts/MealPlannerContext';
 import '../../styles/MealPlanDisplay.css';
 
-function MealPlanDisplay({ mealPlan, handleViewRecipe, onBackToFilters }) {
+function MealPlanDisplay() {
+  const { mealPlan, handleViewRecipe, handleBackToFilters } = useMealPlanner();
+  
   if (!mealPlan) return null;
   
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -47,7 +50,7 @@ function MealPlanDisplay({ mealPlan, handleViewRecipe, onBackToFilters }) {
       <div className="meal-plan-error">
         <h2>No Meal Plan Found</h2>
         <p>We couldn't generate a complete meal plan based on your current preferences. Please try adjusting your dietary preferences or calorie ranges and try again.</p>
-        <button className="btn btn-primary" onClick={onBackToFilters}>
+        <button className="btn btn-primary" onClick={handleBackToFilters}>
           Back to Preferences
         </button>
       </div>
@@ -59,7 +62,7 @@ function MealPlanDisplay({ mealPlan, handleViewRecipe, onBackToFilters }) {
       <div className="meal-plan-error">
         <h2>Error Loading Meal Plan</h2>
         <p>There was an issue loading your meal plan. Please try again.</p>
-        <button className="btn btn-primary" onClick={onBackToFilters}>
+        <button className="btn btn-primary" onClick={handleBackToFilters}>
           Back to Preferences
         </button>
       </div>
@@ -68,7 +71,7 @@ function MealPlanDisplay({ mealPlan, handleViewRecipe, onBackToFilters }) {
 
   return (
     <div className="meal-plan">
-      <button className="back-button" onClick={onBackToFilters}>
+      <button className="back-button" onClick={handleBackToFilters}>
         &larr; Back
       </button>
       <div className="meal-plan-layout">

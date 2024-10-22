@@ -14,6 +14,7 @@
 .expiring-list {
   list-style-type: none;
   padding: 0;
+  margin-bottom: 20px;
 }
 
 .expiring-group {
@@ -24,11 +25,21 @@
   font-weight: bold;
   color: #333;
   margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.ingredient-name input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.ingredient-name label {
+  cursor: pointer;
 }
 
 .expiring-items {
   list-style-type: none;
-  padding-left: 15px;
+  padding-left: 25px;
 }
 
 .expiring-item {
@@ -68,4 +79,33 @@
 
 .delete-button:hover {
   color: #F57C00;
+}
+
+.search-recipes-button {
+  background-color: #FF9800;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-recipes-button:hover:not(:disabled) {
+  background-color: #F57C00;
+}
+
+.search-recipes-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.3);
+}
+
+.search-recipes-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

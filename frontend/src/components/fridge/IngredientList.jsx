@@ -1,12 +1,12 @@
 import React from "react";
 import { useIngredients } from "../../contexts/IngredientContext";
-import { useExpiringIngredients, useIngredientList } from "../../hooks/useIngredientForm";
+import { useExpiringIngredients, useIngredientList, formatQuantity } from "../../hooks/useIngredientForm";
 import "../../styles/IngredientList.css";
 
 function IngredientList() {
   const { ingredients, deleteIngredient } = useIngredients();
   const { formatExpirationDate } = useExpiringIngredients(ingredients);
-  const { processedIngredients, toggleExpand, formatQuantity } = useIngredientList(ingredients);
+  const { processedIngredients, toggleExpand } = useIngredientList(ingredients);
 
   const renderExpirationText = (expirationDate) => {
     const now = new Date();
@@ -58,7 +58,7 @@ function IngredientList() {
               {items.map((item) => (
                 <li key={item.id} className="expiration-item">
                   <small className="expiration-date">
-                    {formatQuantity(item.quantity, item.unit)} - {renderExpirationText(item.expirationDate)}
+                    {`${formatQuantity(item.quantity, item.unit)} - ${renderExpirationText(item.expirationDate)}`}
                   </small>
                   <button
                     className="delete-button"

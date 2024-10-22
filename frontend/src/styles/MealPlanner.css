@@ -8,7 +8,7 @@
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  height: calc(91vh);
+  height: 90vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -18,6 +18,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  justify-content: space-between;
 }
 
 .filters-container h4 {
@@ -42,6 +43,8 @@
   margin-bottom: 10px;
   color: #2c3e50;
   font-weight: 600;
+  z-index: 1;
+  position: relative;
 }
 
 .filter-options.compact {
@@ -59,6 +62,8 @@
   padding: 4px;
   border-radius: 4px;
   transition: background-color 0.3s ease, opacity 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .checkbox-label.expired {
@@ -72,21 +77,33 @@
   opacity: 0.9;
 }
 
-.checkbox-label.expired input[type="checkbox"] {
-  cursor: not-allowed;
+.checkbox-label.expiring-soon {
+  background-color: #fff3cd;
+}
+
+.checkbox-label.expiring-soon:hover {
+  background-color: #ffeeba;
+}
+
+.checkbox-label.fresh {
+  background-color: #fae8c8;
+}
+
+.checkbox-label.fresh:hover {
+  background-color: #f8e0b0;
 }
 
 .checkbox-label input[type="checkbox"] {
   margin-right: 6px;
+  cursor: inherit;
 }
 
 .checkbox-label span {
   color: black;
 }
 
-/* Add this new style for the hover effect */
-.checkbox-label[title]:hover::after {
-  content: attr(title);
+.checkbox-label[data-hover]:hover::after {
+  content: attr(data-hover);
   position: absolute;
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
@@ -94,7 +111,7 @@
   border-radius: 4px;
   font-size: 0.8em;
   white-space: nowrap;
-  z-index: 1;
+  z-index: 1000;
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
@@ -102,13 +119,35 @@
 }
 
 .button-group {
-  display: flex;
-  padding-top: 20px;
+  padding-bottom: 50px;
 }
 
 .meal-planner button {
-  padding: 8px 16px;
+  margin: 12px 12px 0 0;
+  padding: 10px 16px;
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
   font-size: 0.9em;
+}
+
+.meal-planner button:hover {
+  background-color: #f57c00;
+}
+
+.meal-planner button.btn-secondary {
+  background-color: transparent;
+  color: #6c757d;
+  border: 1px solid #6c757d;
+}
+
+.meal-planner button.btn-secondary:hover {
+  background-color: #6c757d;
+  color: white;
+  border-color: #6c757d;
 }
 
 .filters-form {
@@ -116,22 +155,6 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.filters-form h4 {
-  color: #ff9800; /* Change the color to orange */
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-
-.filter-group {
-  margin-bottom: 20px;
-}
-
-.filter-group h5 {
-  margin-bottom: 12px;
-  color: #2c3e50;
-  font-weight: 600;
 }
 
 .filter-options {
@@ -153,33 +176,6 @@
 .filter-group label:hover {
   background-color: rgba(255, 152, 0, 0.3);
 }
-
-.filter-group input[type="checkbox"] {
-  margin-right: 6px;
-}
-
-.meal-planner button {
-  margin: 12px 12px 0 0;
-  padding: 10px 16px;
-  background-color: #ff9800;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.meal-planner button:hover {
-  background-color: #f57c00;
-}
-
-/* .meal-plan {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: -50px;
-  overflow-y: hidden;
-} */
 
 .meal-day-row {
   display: flex;
@@ -237,10 +233,8 @@
 }
 
 .meal-day {
-  /* background-color: white; */
   border-radius: 8px;
   padding: 16px;
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 }
 
 .meal-day h4 {
@@ -305,16 +299,6 @@
 .regenerate-btn {
   margin-top: 24px;
   padding: 12px 20px;
-  background-color: #ff9800;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.regenerate-btn:hover {
-  background-color: #f57c00;
 }
 
 .recipe-card-compact {
@@ -388,10 +372,6 @@
   transform: scale(1.05);
 }
 
-.meal-planner {
-  position: relative;
-}
-
 .back-button {
   position: absolute;
   top: 10px;
@@ -423,7 +403,6 @@
   overflow-y: auto;
 }
 
-/* Adjust CalorieSlider styles */
 .calorie-slider {
   margin-bottom: 10px;
 }
@@ -442,6 +421,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 10px;
+  height: calc(100% - 80px);
 }
 
 .filters-checkboxes {
@@ -466,79 +446,12 @@
   flex-direction: column;
 }
 
-.filter-group {
-  margin-bottom: 20px;
-}
-
-.filter-group h5 {
-  margin-bottom: 10px;
-  color: #2c3e50;
-  font-weight: 600;
-}
-
-.filter-options.compact {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  font-size: 0.9em;
-  cursor: pointer;
-  flex: 0 0 calc(50% - 4px);
-  padding: 4px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease, opacity 0.3s ease;
-}
-
-.checkbox-label.expired {
-  background-color: rgba(255, 0, 0, 0.2);
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.checkbox-label.expired:hover {
-  background-color: rgba(200, 0, 0, 0.3);
-  opacity: 0.9;
-}
-
-.checkbox-label.expired input[type="checkbox"] {
-  cursor: not-allowed;
-}
-
-.checkbox-label input[type="checkbox"] {
-  margin-right: 6px;
-}
-
-.checkbox-label span {
-  color: black;
-}
-
-/* Add this new style for the hover effect */
-.checkbox-label[title]:hover::after {
-  content: attr(title);
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-size: 0.8em;
-  white-space: nowrap;
-  z-index: 1;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-
-/* ... (rest of the styles remain unchanged) */
-
 .filter-options.compact.scrollable-list {
   max-height: 200px;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   padding-right: 10px;
+  position: relative;
+  z-index: 2;
 }
 
 .filter-options.compact.scrollable-list::-webkit-scrollbar {
@@ -559,17 +472,10 @@
   background: #f57c00;
 }
 
-/* ... (rest of the styles remain unchanged) */
-
-/* Add this new style for the diet labels */
-.filter-group .radio-label input[type="radio"] {
-  margin-right: 8px; /* Adjust this value to increase or decrease the spacing */
-}
-
-/* Add this new style for all checkboxes and radio buttons in filter groups */
+.filter-group .radio-label input[type="radio"],
 .filter-group input[type="checkbox"],
 .filter-group input[type="radio"] {
-  margin-right: 8px; /* Adjust this value to increase or decrease the spacing */
+  margin-right: 8px;
 }
 
 .loading-container {
@@ -580,15 +486,41 @@
   width: 100%;
 }
 
-.meal-planner button.btn-secondary {
-  background-color: transparent;
-  color: #6c757d;
-  border: 1px solid #6c757d;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+.no-meal-plan-fallback {
+  text-align: center;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 2rem auto;
 }
 
-.meal-planner button.btn-secondary:hover {
-  background-color: #6c757d;
-  color: white;
-  border-color: #6c757d;
+.no-meal-plan-fallback h2 {
+  color: #333333;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.no-meal-plan-fallback p {
+  color: #666666;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.back-to-filters-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  color: #333333;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  border: 1px solid #dddddd;
+}
+
+.back-to-filters-btn:hover {
+  background-color: #e0e0e0;
 }

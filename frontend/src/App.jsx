@@ -13,6 +13,7 @@ import { RecipeProvider } from "./contexts/RecipeContext";
 import { UserDetailsProvider } from "./contexts/UserDetailsContext";
 import Layout from "./components/Layout";
 import LandingPage from "./components/LandingPage";
+import { MealPlannerProvider } from './contexts/MealPlannerContext';
 
 const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ "./components/dashboard/Dashboard"));
 const Fridge = lazy(() => import(/* webpackChunkName: "fridge" */ "./components/fridge/Fridge"));
@@ -155,7 +156,9 @@ function App() {
         <UserDetailsProvider>
           <IngredientProvider>
             <RecipeProvider>
-              <AppRoutes />
+              <MealPlannerProvider>
+                <AppRoutes />
+              </MealPlannerProvider>
             </RecipeProvider>
           </IngredientProvider>
         </UserDetailsProvider>

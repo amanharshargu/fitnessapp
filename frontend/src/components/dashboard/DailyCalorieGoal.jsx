@@ -136,7 +136,7 @@ function DailyCalorieGoal({ onDishesChanged }){
       {showConfetti && (
         <Confetti
           width={window.innerWidth}
-          height={window.innerHeight}
+          height={window.innerHeight - 75}
           recycle={confettiRecycle}
           numberOfPieces={200}
           gravity={0.1}

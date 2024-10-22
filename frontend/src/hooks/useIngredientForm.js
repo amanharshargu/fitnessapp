@@ -98,15 +98,12 @@ export function useIngredientList(ingredients) {
   const processedIngredients = useMemo(() => {
     return Object.entries(groupedIngredients).map(([name, items]) => {
       const totalQuantity = items.reduce((sum, item) => sum + convertToBaseUnit(item.quantity, item.unit), 0);
-      const baseUnit = isCountBasedUnit(items[0].unit) ? items[0].unit : 
-                       (items[0].unit.toLowerCase() === 'l' || items[0].unit.toLowerCase() === 'ml' ? 'l' : 'kg');
-      const displayQuantity = isCountBasedUnit(baseUnit) ? totalQuantity : 
-                              (baseUnit === 'l' ? totalQuantity / 1000 : totalQuantity / 1000);
+      const baseUnit = items[0].unit; // Use the unit of the first item
 
       return {
         name,
         items,
-        totalQuantity: formatQuantity(displayQuantity, baseUnit),
+        totalQuantity: formatQuantity(totalQuantity, baseUnit),
         isExpanded: expandedItems[name] || false
       };
     });
@@ -115,7 +112,6 @@ export function useIngredientList(ingredients) {
   return {
     processedIngredients,
     toggleExpand,
-    formatQuantity
   };
 }
 
@@ -168,11 +164,22 @@ export const convertToBaseUnit = (quantity, unit) => {
 
 export const formatQuantity = (quantity, unit) => {
   const lowerUnit = unit.toLowerCase();
-  if (lowerUnit === 'g' && quantity >= 1000) {
-    return `${(quantity / 1000).toFixed(2)} kg`;
+  if (lowerUnit === 'g' || lowerUnit === 'kg') {
+    if (quantity >= 1000) {
+      return `${(quantity / 1000).toFixed(2)} kg`;
+    } else {
+      return `${quantity.toFixed(2)} g`;
+    }
   }
-  if (lowerUnit === 'ml' && quantity >= 1000) {
-    return `${(quantity / 1000).toFixed(2)} L`;
+  if (lowerUnit === 'ml' || lowerUnit === 'l') {
+    if (quantity >= 1000) {
+      return `${(quantity / 1000).toFixed(2)} L`;
+    } else {
+      return `${quantity.toFixed(2)} ml`;
+    }
+  }
+  if (['piece', 'pieces', 'pcs', ''].includes(lowerUnit)) {
+    return `${Math.round(quantity)} ${quantity === 1 ? 'piece' : 'pieces'}`;
   }
   return `${quantity.toFixed(2)} ${unit}`;
 };

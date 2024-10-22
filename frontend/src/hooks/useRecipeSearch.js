@@ -11,8 +11,7 @@ export function useRecipeSearch() {
   });
   const [activeFilter, setActiveFilter] = useState(null);
 
-  const handleSearch = useCallback((e) => {
-    e.preventDefault();
+  const handleSearch = useCallback(() => {
     if (searchTerm.trim()) {
       fetchRecipes(searchTerm, filters);
     }

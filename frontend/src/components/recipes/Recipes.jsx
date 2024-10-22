@@ -94,14 +94,21 @@ function Recipes() {
     setCurrentPage(pageNumber);
   };
 
-  const handleSearchWrapper = useCallback((e) => {
-    e.preventDefault();
+  useEffect(() => {
     if (searchTerm.trim()) {
-      setCurrentPage(1);
-      handleSearch(e);
+      handleSearch();
       setHasSearched(true);
     }
-  }, [handleSearch, searchTerm, setHasSearched]);
+  }, [searchTerm, handleSearch, setHasSearched]);
+
+  const handleSearchWrapper = useCallback((e) => {
+    if (e) e.preventDefault();
+    if (searchTerm.trim()) {
+      setCurrentPage(1);
+      handleSearch();
+      setHasSearched(true);
+    }
+  }, [handleSearch, searchTerm, setHasSearched, setCurrentPage]);
 
   const handleApplyFilters = useCallback(() => {
     setCurrentPage(1);

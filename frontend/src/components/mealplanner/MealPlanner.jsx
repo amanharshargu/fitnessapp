@@ -94,17 +94,18 @@ function MealPlanner() {
     const threeDaysFromNow = new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000);
 
     let totalQuantity = 0;
-    let unit = '';
+    let baseUnit = '';
 
     ingredient.items.forEach(item => {
       const expirationDate = new Date(item.expirationDate);
       if (!filterExpiringSoon || (expirationDate > today && expirationDate <= threeDaysFromNow)) {
-        totalQuantity += convertToBaseUnit(item.quantity, item.unit);
-        unit = item.unit || '';
+        const convertedQuantity = convertToBaseUnit(item.quantity, item.unit);
+        totalQuantity += convertedQuantity;
+        if (!baseUnit) baseUnit = item.unit.toLowerCase() === 'kg' ? 'g' : (item.unit.toLowerCase() === 'l' ? 'ml' : item.unit);
       }
     });
 
-    return formatQuantity(totalQuantity, unit);
+    return formatQuantity(totalQuantity, baseUnit);
   };
 
   const getIngredientHoverText = (name, status) => {

@@ -78,7 +78,7 @@ function IngredientList() {
                     className="delete-button"
                     onClick={() => deleteIngredient(item.id)}
                   >
-                    Delete
+                    Remove
                   </button>
                 </li>
               ))}

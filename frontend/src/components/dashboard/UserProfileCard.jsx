@@ -39,9 +39,6 @@ function UserProfileCard({ onSetUserDetails }) {
           <strong>Username:</strong> {userDetails.username}
         </p>
         <p>
-          <strong>Email:</strong> {userDetails.email}
-        </p>
-        <p>
           <strong>Weight:</strong>{" "}
           {userDetails.weight ? `${userDetails.weight} Kg` : "Not set"}
         </p>
@@ -76,14 +73,9 @@ function UserProfileCard({ onSetUserDetails }) {
             : "Not set"}
         </p>
         {bmi && (
-          <div className="bmi-info">
-            <p>
-              <strong>BMI:</strong> {bmi}
-            </p>
-            <p>
-              <strong>Category:</strong> {bmiCategory}
-            </p>
-          </div>
+          <p>
+            <strong>BMI:</strong> {bmi} ({bmiCategory})
+          </p>
         )}
       </div>
       <button className="set-details-btn" onClick={onSetUserDetails}>

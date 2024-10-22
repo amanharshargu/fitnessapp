@@ -68,17 +68,23 @@ export const RecipeProvider = ({ children }) => {
   const fetchRecipes = useCallback(async (term, filters = {}) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
-        "https://api.edamam.com/api/recipes/v2",
-        {
-          params: {
-            type: "public",
-            q: term,
-            app_id: process.env.REACT_APP_EDAMAM_APP_ID,
-            app_key: process.env.REACT_APP_EDAMAM_APP_KEY,
-            ...filters,
-          },
+      const params = new URLSearchParams({
+        type: "public",
+        q: term,
+        app_id: process.env.REACT_APP_EDAMAM_APP_ID,
+        app_key: process.env.REACT_APP_EDAMAM_APP_KEY,
+      });
+
+      Object.entries(filters).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach(item => params.append(key, item));
+        } else {
+          params.append(key, value);
         }
+      });
+
+      const response = await axios.get(
+        `https://api.edamam.com/api/recipes/v2?${params.toString()}`
       );
       setRecipes(response.data.hits.map((hit) => hit.recipe));
       setHasSearched(true);

@@ -140,11 +140,10 @@
 }
 
 .dcg-form-inputs button:hover {
-  background-color: #ffe290;
+  background-color: #ffc107;
   transform: translateY(-2px);
 }
 
-/* Remove these styles as they're no longer needed */
 .dcg-form-button-container {
   display: none;
 }

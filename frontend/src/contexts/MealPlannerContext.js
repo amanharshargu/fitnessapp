@@ -125,7 +125,7 @@ export const MealPlannerProvider = ({ children }) => {
         const ingredient = processedIngredients.find(ing => ing.name === name);
         return {
           name,
-          quantity: ingredient ? ingredient.totalQuantity : 1 // Default to 1 if quantity is not found
+          quantity: ingredient ? ingredient.totalQuantity : 1
         };
       });
       const ingredientRecipes = await searchRecipesWithIngredients(selectedIngredients);
@@ -192,9 +192,16 @@ export const MealPlannerProvider = ({ children }) => {
         setMealPlan({ status: "INCOMPLETE" });
         setLoading(false);
       } else if (response.data && response.data.selection) {
-        const updatedSelection = response.data.selection.map(day => {
+        const updatedSelection = response.data.selection.map((day, dayIndex) => {
           const updatedSections = Object.entries(day.sections).map(([mealType, meal]) => {
-            if (ingredientRecipes.length > 0 && Math.random() < 0.5) {
+            if (ingredientRecipes.length > 0 && dayIndex < 3) {
+              // For the first 3 days, prioritize recipes from fridge ingredients
+              const randomIndex = Math.floor(Math.random() * ingredientRecipes.length);
+              const selectedRecipe = ingredientRecipes[randomIndex];
+              ingredientRecipes.splice(randomIndex, 1);
+              return [mealType, { ...meal, assigned: selectedRecipe.uri, recipeDetails: selectedRecipe }];
+            } else if (ingredientRecipes.length > 0 && Math.random() < 0.3) {
+              // For the remaining days, randomly replace some meals with fridge ingredient recipes
               const randomIndex = Math.floor(Math.random() * ingredientRecipes.length);
               const selectedRecipe = ingredientRecipes[randomIndex];
               ingredientRecipes.splice(randomIndex, 1);

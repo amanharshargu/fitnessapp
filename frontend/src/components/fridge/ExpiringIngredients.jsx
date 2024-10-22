@@ -73,7 +73,7 @@ function ExpiringIngredients({ ingredients }) {
                           className="delete-button"
                           onClick={() => handleDelete(item.id)}
                         >
-                          Delete
+                          Remove
                         </button>
                       </div>
                     </li>

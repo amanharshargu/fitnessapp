@@ -163,23 +163,16 @@ export const convertToBaseUnit = (quantity, unit) => {
 };
 
 export const formatQuantity = (quantity, unit) => {
-  const lowerUnit = unit.toLowerCase();
-  if (lowerUnit === 'g' || lowerUnit === 'kg') {
-    if (quantity >= 1000) {
-      return `${(quantity / 1000).toFixed(2)} kg`;
-    } else {
-      return `${quantity.toFixed(2)} g`;
+  const numericQuantity = parseFloat(quantity);
+  if (isNaN(numericQuantity)) return '';
+
+  if (unit === 'kg' || unit === 'g') {
+    if (numericQuantity >= 1000 && unit === 'g') {
+      return `${(numericQuantity / 1000).toFixed(2)} kg`;
+    } else if (numericQuantity < 1 && unit === 'kg') {
+      return `${(numericQuantity * 1000).toFixed(0)} g`;
     }
   }
-  if (lowerUnit === 'ml' || lowerUnit === 'l') {
-    if (quantity >= 1000) {
-      return `${(quantity / 1000).toFixed(2)} L`;
-    } else {
-      return `${quantity.toFixed(2)} ml`;
-    }
-  }
-  if (['piece', 'pieces', 'pcs', ''].includes(lowerUnit)) {
-    return `${Math.round(quantity)} ${quantity === 1 ? 'piece' : 'pieces'}`;
-  }
-  return `${quantity.toFixed(2)} ${unit}`;
+
+  return `${numericQuantity} ${unit}`;
 };

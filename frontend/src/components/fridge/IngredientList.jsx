@@ -26,13 +26,27 @@ function IngredientList() {
     }
   };
 
+  const formatAggregatedQuantity = (items) => {
+    const quantities = {};
+    items.forEach(item => {
+      if (!quantities[item.unit]) {
+        quantities[item.unit] = 0;
+      }
+      quantities[item.unit] += parseFloat(item.quantity);
+    });
+
+    return Object.entries(quantities)
+      .map(([unit, quantity]) => `${formatQuantity(quantity, unit)}`)
+      .join(", ");
+  };
+
   return (
     <ul className="ingredient-list list-unstyled">
-      {processedIngredients.map(({ name, items, totalQuantity, isExpanded }) => (
+      {processedIngredients.map(({ name, items, isExpanded }) => (
         <li key={name} className="ingredient-item" onClick={(e) => handleItemClick(e, name)}>
           <div className="ingredient-info">
             <span className="ingredient-name">
-              {name} - {totalQuantity}
+              {name} - {formatAggregatedQuantity(items)}
             </span>
             {items.length > 1 && (
               <span className="expand-indicator">
@@ -44,7 +58,7 @@ function IngredientList() {
                 className="delete-button"
                 onClick={() => deleteIngredient(items[0].id)}
               >
-                Delete
+                Remove
               </button>
             )}
           </div>

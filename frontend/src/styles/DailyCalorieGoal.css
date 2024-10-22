@@ -26,35 +26,65 @@
   margin-bottom: 15px;
 }
 
+.dcg-goal-chart-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .dcg-goal-chart {
-  width: 100%;
-  max-width: 200px;
-  margin: 0 auto;
+  width: 150px;
+  flex-shrink: 0;
 }
 
 .dcg-circular-chart {
   display: block;
-  margin: 10px auto;
-  max-width: 80%;
-  max-height: 150px;
+  width: 100%;
+  height: auto;
 }
 
-.dcg-circle-bg {
-  fill: none;
-  stroke: #ffe290;
-  stroke-width: 3.8;
+.dcg-goal-info {
+  flex-grow: 1;
 }
 
-.dcg-circle {
-  fill: none;
-  stroke-width: 2.8;
-  stroke-linecap: round;
-  animation: progress 1s ease-out forwards;
+.dcg-calorie-info {
+  font-size: 1rem;
+  color: #ff7800;
+  margin-bottom: 10px;
 }
 
-@keyframes progress {
+.dcg-goal-reached {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+  padding: 10px;
+  border-radius: 5px;
+  animation: pulse 2s infinite;
+}
+
+.dcg-calorie-warning {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.dcg-goal-reached p,
+.dcg-calorie-warning p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+@keyframes pulse {
   0% {
-    stroke-dasharray: 0 100;
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
@@ -63,13 +93,6 @@
   font-family: sans-serif;
   font-size: 0.35em; /* Reduced from 0.5em */
   text-anchor: middle;
-}
-
-.dcg-calorie-info {
-  text-align: center;
-  font-size: 1rem;
-  color: #ff7800;
-  margin-top: 10px;
 }
 
 .dcg-goal-details {
@@ -87,7 +110,7 @@
 .dcg-form-inputs {
   display: flex;
   gap: 10px;
-  margin-bottom: 10px;
+  align-items: center;
 }
 
 .dcg-form-inputs input {
@@ -95,38 +118,44 @@
   padding: 8px;
   border: 1px solid #ffe290;
   border-radius: 5px;
+  font-size: 0.9rem;
 }
 
 .dcg-form-inputs input:focus {
   border-color: #ff9800;
-  /* color: #ff9800; */
   outline: none;
 }
 
-.dcg-form-button-container {
-  text-align: right;
-}
-
-.dcg-form button {
+.dcg-form-inputs button {
   background-color: #ffd600;
   color: #333;
   border: none;
   padding: 8px 15px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
-  border-radius: 30px;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  white-space: nowrap;
 }
 
-.dcg-form button:hover {
+.dcg-form-inputs button:hover {
   background-color: #ffe290;
   transform: translateY(-2px);
+}
+
+/* Remove these styles as they're no longer needed */
+.dcg-form-button-container {
+  display: none;
 }
 
 .dcg-dishes-list-container {
   flex-grow: 1;
   overflow-y: auto;
+  max-height: 150px; /* Reduced height */
+  border: 1px solid #ffe290;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 .dcg-dishes-list {
@@ -135,22 +164,42 @@
   margin: 0;
 }
 
+.dcg-dishes-list li {
+  margin-bottom: 5px; /* Reduced margin */
+}
+
 .dcg-dish-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  padding: 8px 10px; /* Reduced padding */
   border-bottom: 1px solid #ffe290;
+  background-color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.dcg-dish-content:hover {
+  background-color: #fff9e6; /* Light yellow background on hover */
+}
+
+.dcg-dishes-list li:last-child .dcg-dish-content {
+  border-bottom: none;
 }
 
 .dcg-dish-info {
-  font-weight: bold;
+  font-weight: 500; /* Slightly reduced font weight */
   color: #ff7800;
+  font-size: 0.9rem; /* Reduced font size */
 }
 
 .dcg-dish-calories {
-  font-size: 0.9rem;
+  font-size: 0.8rem; /* Reduced font size */
   color: #ff7800;
+}
+
+.dcg-dish-actions {
+  display: flex;
+  gap: 5px;
 }
 
 .dcg-dish-actions button {
@@ -158,82 +207,72 @@
   border: none;
   color: #ff7800;
   cursor: pointer;
-  margin-left: 10px;
-  transition: color 0.3s ease;
+  font-size: 0.8rem; /* Reduced font size */
+  padding: 2px 5px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  border-radius: 3px;
 }
 
 .dcg-dish-actions button:hover {
-  color: #ffd600;
+  color: #fff;
+  background-color: #ff7800;
 }
 
 .dcg-editing-dish {
   display: flex;
-  gap: 10px;
+  gap: 5px;
   align-items: center;
 }
 
 .dcg-editing-dish input {
-  padding: 5px;
+  padding: 3px 5px;
   border: 1px solid #ffe290;
-  border-radius: 5px;
+  border-radius: 3px;
+  font-size: 0.8rem;
 }
 
 .dcg-editing-dish-actions {
   display: flex;
-  gap: 5px;
+  gap: 3px;
 }
 
 .dcg-editing-dish-actions button {
   background-color: #ffd600;
   color: #333;
   border: none;
-  padding: 5px 10px;
-  font-size: 0.9rem;
+  padding: 3px 8px;
+  font-size: 0.8rem;
   font-weight: bold;
-  border-radius: 30px;
+  border-radius: 3px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .dcg-editing-dish-actions button:hover {
-  background-color: #ffe290;
+  background-color: #ff7800;
+  color: #fff;
 }
 
-.dcg-calorie-warning {
-  color: #FF6666;
-  font-weight: bold;
-  margin-top: 10px;
-  text-align: center;
+.dcg-circle-bg {
+  fill: none;
+  stroke: #ffe290;
+  stroke-width: 3.8;
+  transition: stroke 0.3s ease;
 }
 
-.dcg-calorie-warning p {
-  margin: 0;
-  line-height: 1.2;
+.dcg-circle-bg.dcg-goal-reached-bg {
+  stroke-width: 3.8;
 }
 
-.dcg-calorie-warning p:first-child {
-  margin-bottom: 5px;
+.dcg-circle {
+  fill: none;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  animation: progress 1s ease-out forwards;
 }
 
-.dcg-goal-reached {
-  background-color: #d4edda;
-  border-color: #c3e6cb;
-  color: #155724;
-  padding: 10px;
-  border-radius: 5px;
-  text-align: center;
-  margin-top: 10px;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
+@keyframes progress {
   0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
+    stroke-dasharray: 0 100;
   }
 }

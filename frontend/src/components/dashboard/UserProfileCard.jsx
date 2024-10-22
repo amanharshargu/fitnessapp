@@ -6,6 +6,23 @@ import "../../styles/UserProfileCard.css";
 function UserProfileCard({ onSetUserDetails }) {
   const { userDetails, isLoading } = useUserDetails();
 
+  const calculateBMI = (weight, height) => {
+    if (!weight || !height) return null;
+    const heightInMeters = height / 100;
+    const bmi = weight / (heightInMeters * heightInMeters);
+    return bmi.toFixed(1);
+  };
+
+  const getBMICategory = (bmi) => {
+    if (bmi < 18.5) return "Underweight";
+    if (bmi < 25) return "Normal weight";
+    if (bmi < 30) return "Overweight";
+    return "Obese";
+  };
+
+  const bmi = calculateBMI(userDetails.weight, userDetails.height);
+  const bmiCategory = bmi ? getBMICategory(parseFloat(bmi)) : null;
+
   if (isLoading) {
     return (
       <div className="user-profile-card loading">
@@ -58,6 +75,16 @@ function UserProfileCard({ onSetUserDetails }) {
                 .replace(/^./, str => str.toUpperCase())
             : "Not set"}
         </p>
+        {bmi && (
+          <div className="bmi-info">
+            <p>
+              <strong>BMI:</strong> {bmi}
+            </p>
+            <p>
+              <strong>Category:</strong> {bmiCategory}
+            </p>
+          </div>
+        )}
       </div>
       <button className="set-details-btn" onClick={onSetUserDetails}>
         Set User Details

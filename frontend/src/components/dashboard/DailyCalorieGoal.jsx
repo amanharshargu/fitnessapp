@@ -51,9 +51,9 @@ function DailyCalorieGoal({ onDishesChanged }){
   }, [dishes, dailyCalorieGoal]);
 
   const percentage = dailyCalorieGoal > 0 ? Math.min((totalDailyCalories / dailyCalorieGoal) * 100, 100) : 0;
-  const isGoalReached = totalDailyCalories === dailyCalorieGoal;
+  const isGoalExactlyMet = totalDailyCalories === dailyCalorieGoal;
   const isOverGoal = dailyCalorieGoal > 0 && totalDailyCalories > dailyCalorieGoal;
-  const progressColor = isGoalReached ? "#28a745" : isOverGoal ? "#FF6666" : "#ff7800";
+  const progressColor = isOverGoal ? "#FF6666" : (isGoalExactlyMet ? "#28a745" : "#ff7800");
   const caloriesExceeded = isOverGoal ? totalDailyCalories - dailyCalorieGoal : 0;
 
   const handleInputChange = (e) => {
@@ -145,41 +145,45 @@ function DailyCalorieGoal({ onDishesChanged }){
       <h3>Daily Calorie Goal</h3>
       <div className="dcg-goal-content">
         <div className="dcg-goal-chart-container">
-          <div className="dcg-goal-chart">
-            <svg viewBox="0 0 36 36" className="dcg-circular-chart">
-              <path
-                className="dcg-circle-bg"
-                d="M18 2.0845
-                  a 15.9155 15.9155 0 0 1 0 31.831
-                  a 15.9155 15.9155 0 0 1 0 -31.831"
-              />
-              <path
-                className="dcg-circle"
-                strokeDasharray={`${percentage}, 100`}
-                d="M18 2.0845
-                  a 15.9155 15.9155 0 0 1 0 31.831
-                  a 15.9155 15.9155 0 0 1 0 -31.831"
-                stroke={progressColor}
-              />
-              <text x="18" y="20.35" className="dcg-percentage">{formatPercentage(percentage)}%</text>
-            </svg>
+          <div className="dcg-goal-chart-wrapper">
+            <div className="dcg-goal-chart">
+              <svg viewBox="0 0 36 36" className="dcg-circular-chart">
+                <path
+                  className={`dcg-circle-bg ${isGoalExactlyMet || isOverGoal ? 'dcg-goal-reached-bg' : ''}`}
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                  stroke={isGoalExactlyMet || isOverGoal ? progressColor : "#ffe290"}
+                />
+                <path
+                  className="dcg-circle"
+                  strokeDasharray={`${percentage}, 100`}
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                  stroke={progressColor}
+                />
+                <text x="18" y="20.35" className="dcg-percentage">{formatPercentage(percentage)}%</text>
+              </svg>
+            </div>
+            <div className="dcg-goal-info">
+              <p className="dcg-calorie-info">
+                {dailyCalorieGoal > 0 
+                  ? `Calories eaten: ${totalDailyCalories} / ${dailyCalorieGoal}`
+                  : "Please set your information to view calorie goal"}
+              </p>
+              {isGoalExactlyMet && (
+                <div className="dcg-goal-reached">
+                  <p>Congratulations! You've reached your daily calorie goal!</p>
+                </div>
+              )}
+              {isOverGoal && (
+                <div className="dcg-calorie-warning">
+                  <p>Warning: You have exceeded your daily calorie goal by {Math.round(caloriesExceeded)} {Math.round(caloriesExceeded) === 1 ? 'calorie' : 'calories'}!</p>
+                </div>
+              )}
+            </div>
           </div>
-          <p className="dcg-calorie-info">
-            {dailyCalorieGoal > 0 
-              ? `Calories eaten: ${totalDailyCalories} / ${dailyCalorieGoal}`
-              : "Please set your information to view calorie goal"}
-          </p>
-          {isGoalReached && (
-            <div className="dcg-goal-reached">
-              <p>Congratulations! You've reached your daily calorie goal!</p>
-            </div>
-          )}
-          {isOverGoal && (
-            <div className="dcg-calorie-warning">
-              <p>Warning: You have exceeded your daily calorie goal</p>
-              <p>by {Math.round(caloriesExceeded)} {Math.round(caloriesExceeded) === 1 ? 'calorie' : 'calories'}!</p>
-            </div>
-          )}
         </div>
         
         <div className="dcg-goal-details">
@@ -202,8 +206,6 @@ function DailyCalorieGoal({ onDishesChanged }){
                 required
                 pattern="\d*"
               />
-            </div>
-            <div className="dcg-form-button-container">
               <button type="submit">Add Dish</button>
             </div>
           </form>
@@ -237,9 +239,9 @@ function DailyCalorieGoal({ onDishesChanged }){
                       </div>
                     ) : (
                       <>
-                        <div>
-                          <span className="dcg-dish-info">{dish.dishName}</span>
-                          <div className="dcg-dish-calories">{dish.calories} calories</div>
+                        <div className="dcg-dish-info">
+                          <span>{dish.dishName}</span>
+                          <span className="dcg-dish-calories"> • {dish.calories} cal</span>
                         </div>
                         <div className="dcg-dish-actions">
                           <button onClick={() => startEditing(dish)}>Edit</button>

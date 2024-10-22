@@ -12,9 +12,9 @@ import { IngredientProvider } from "./contexts/IngredientContext";
 import { RecipeProvider } from "./contexts/RecipeContext";
 import { UserDetailsProvider } from "./contexts/UserDetailsContext";
 import Layout from "./components/Layout";
-import LandingPage from "./components/LandingPage";
 import { MealPlannerProvider } from './contexts/MealPlannerContext';
 
+const LandingPage = lazy(() => import(/* webpackChunkName: "landing-page" */ "./components/LandingPage"));
 const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ "./components/dashboard/Dashboard"));
 const Fridge = lazy(() => import(/* webpackChunkName: "fridge" */ "./components/fridge/Fridge"));
 const Recipes = lazy(() => import(/* webpackChunkName: "recipes" */ "./components/recipes/Recipes"));

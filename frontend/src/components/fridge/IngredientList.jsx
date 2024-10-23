@@ -20,7 +20,6 @@ function IngredientList() {
   };
 
   const handleItemClick = (e, name) => {
-    // Prevent toggling when clicking on the delete button
     if (e.target.className !== "delete-button") {
       toggleExpand(name);
     }
@@ -72,7 +71,8 @@ function IngredientList() {
               {items.map((item) => (
                 <li key={item.id} className="expiration-item">
                   <small className="expiration-date">
-                    {`${formatQuantity(item.quantity, item.unit)} - ${renderExpirationText(item.expirationDate)}`}
+                    {`${formatQuantity(item.quantity, item.unit)} - `}
+                    {renderExpirationText(item.expirationDate)}
                   </small>
                   <button
                     className="delete-button"

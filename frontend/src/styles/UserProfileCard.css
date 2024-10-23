@@ -1,49 +1,51 @@
 .user-profile-card {
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: transparent;
+  width: 100%;
 }
 
 .user-profile-card h3 {
   color: #ff9800;
-  font-size: 1.5rem;
-  margin-bottom: 15px;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 
 .user-info {
-  margin-bottom: 15px;
-  font-size: 14px;
-  flex-grow: 1;
+  margin-bottom: 20px;
+  font-size: 1rem;
 }
 
 .user-info p {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
 }
 
 .user-info strong {
   color: #333;
   font-weight: 600;
-  margin-right: 5px;
 }
 
 .set-details-btn {
-  background-color: #ffd600;
-  color: #333;
+  background-color: #ff9800;
+  color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 1rem;
   font-weight: bold;
   border-radius: 30px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin-top: 15px;
+  transition: all 0.3s ease;
   display: block;
+  width: 100%;
+  text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .set-details-btn:hover {
-  background-color: #ffc107;
+  background-color: #f57c00;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -54,13 +56,13 @@
 }
 
 .bmi-info {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
 }
 
 .bmi-info p {
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .bmi-info strong {

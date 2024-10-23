@@ -40,7 +40,7 @@ function UserDetailsModal({ show, onClose, onDetailsSubmitted }) {
       if (onDetailsSubmitted) {
         onDetailsSubmitted();
       }
-      navigate("/dashboard");
+      navigate("/profile");  // Changed from "/dashboard" to "/profile"
     } catch (error) {
       console.error("Updating user details failed:", error);
       setError("Failed to update user details. Please try again.");

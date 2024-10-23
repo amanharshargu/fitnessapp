@@ -71,7 +71,7 @@ function AppRoutes() {
     if (token) {
       handleOAuthCallback(token);
       if (isNewUser) {
-        setShowUserDetails(true);
+        navigate("/profile", { replace: true });
       } else {
         navigate("/dashboard", { replace: true });
       }

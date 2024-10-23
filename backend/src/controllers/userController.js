@@ -74,3 +74,21 @@ exports.getUserDetails = async (req, res) => {
     });
   }
 };
+
+exports.uploadPhoto = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const user = await getUserById(req.user.id);
+    const photoUrl = `/uploads/${req.file.filename}`; // Adjust this based on your server setup
+    
+    await user.update({ photo: photoUrl });
+
+    res.json({ message: "Photo uploaded successfully", photoUrl });
+  } catch (error) {
+    console.error("Error uploading photo:", error);
+    res.status(500).json({ message: "Error uploading photo", error: error.message });
+  }
+};

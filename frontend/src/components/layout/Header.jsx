@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import LoginModal from "../auth/LoginModal";
 import SignupModal from "../auth/SignupModal";
@@ -11,6 +11,7 @@ function Header() {
   const [isSignup, setIsSignup] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleCloseAuthModal = () => {
     setShowAuthModal(false);
@@ -36,6 +37,21 @@ function Header() {
 
   const displayName = user?.username || "Account";
 
+  const handleProfileClick = () => {
+    setShowDropdown(false);
+    navigate("/profile");
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setShowDropdown(false);
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <header className="wisheat-header">
       <div className="wisheat-header__container">
@@ -60,12 +76,15 @@ function Header() {
               </button>
               {showDropdown && (
                 <div className="wisheat-header__dropdown-content">
-                  <Link to="/profile" className="wisheat-header__dropdown-item">
-                    My Profile
-                  </Link>
                   <button
                     className="wisheat-header__dropdown-item"
-                    onClick={logout}
+                    onClick={handleProfileClick}
+                  >
+                    My Profile
+                  </button>
+                  <button
+                    className="wisheat-header__dropdown-item"
+                    onClick={handleLogout}
                   >
                     Logout
                   </button>

@@ -4,7 +4,7 @@ import { useUserDetails } from '../../contexts/UserDetailsContext';
 import '../../styles/ProfilePage.css';
 
 const ProfilePage = () => {
-  const { user } = useAuth();
+  const { user, updateUserDetails: updateAuthUserDetails } = useAuth();
   const { userDetails, fetchUserDetails, updateUserDetails } = useUserDetails();
   const [isEditing, setIsEditing] = useState(false);
   const [editedDetails, setEditedDetails] = useState({});
@@ -31,7 +31,9 @@ const ProfilePage = () => {
     e.preventDefault();
     try {
       await updateUserDetails(editedDetails);
+      await updateAuthUserDetails(editedDetails);
       setIsEditing(false);
+      fetchUserDetails(); // Refresh user details after update
     } catch (error) {
       console.error('Error updating profile:', error);
     }
@@ -51,7 +53,13 @@ const ProfilePage = () => {
         <h1>My Profile</h1>
         <div className="profile-content">
           <div className="profile-photo">
-            <img src={user.photo || 'default-avatar.png'} alt={user.username} />
+            {user.photo ? (
+              <img src={user.photo} alt={user.username} />
+            ) : (
+              <div className="photo-placeholder">
+                <span>No photo available</span>
+              </div>
+            )}
           </div>
           <div className="profile-details">
             {isEditing ? (

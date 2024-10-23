@@ -44,9 +44,9 @@ function LandingPage() {
     <div className="landing-page">
       <div className="hero-section">
         <div className="hero-content">
-          <h1 className="hero-title">
+          <h2 className="hero-title">
             Make Your <span className="highlight">Food</span> Count
-          </h1>
+          </h2>
           <button className="get-started-btn" onClick={handleGetStarted}>Get Started</button>
           <div className="food-images">
             {randomRecipes.map((recipe, index) => (

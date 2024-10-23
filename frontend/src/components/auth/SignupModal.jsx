@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import "../../styles/SignupModal.css";
 
 function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
   const { signup } = useAuth();
+  const navigate = useNavigate();
   const [signupData, setSignupData] = useState({
     username: "",
     email: "",
@@ -57,41 +59,15 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
     setErrors(prev => ({ ...prev, [name]: error }));
   };
 
-  const handleSignup = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    
-    // Validate all fields
-    const validationErrors = {};
-    Object.entries(signupData).forEach(([key, value]) => {
-      const error = validateField(key, value);
-      if (error) {
-        validationErrors[key] = error;
-      }
-    });
-
-    // If there are any validation errors, set them and return
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-    
-    // If all validations pass, proceed with signup
-    const trimmedSignupData = {
-      ...signupData,
-      username: signupData.username.trim(),
-    };
-    
     try {
-      await signup(trimmedSignupData);
+      await signup(signupData);
       onSignupSuccess();
+      navigate("/profile"); // Navigate to profile page after successful signup
     } catch (error) {
-      console.error("Signup failed:", error);
-      if (error.response && error.response.data && error.response.data.message) {
-        setError(error.response.data.message);
-      } else {
-        setError("An unexpected error occurred. Please try again.");
-      }
+      setError("Failed to create an account");
     }
   };
 
@@ -129,7 +105,7 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
 
           {error && <div className="alert alert-danger">{error}</div>}
 
-          <form onSubmit={handleSignup} className="w-100">
+          <form onSubmit={handleSubmit} className="w-100">
             <div className={`form-outline form-white mb-4 ${focusedInput === 'username' || signupData.username ? 'focused' : ''} ${errors.username ? 'is-invalid' : ''}`}>
               <input
                 type="text"

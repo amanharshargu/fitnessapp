@@ -11,7 +11,7 @@ function OAuthCallback() {
     const handleOAuthCallback = async () => {
       try {
         await loginWithOAuth();
-        navigate('/dashboard');
+        navigate('/profile');
       } catch (error) {
         console.error('OAuth login failed:', error);
         navigate('/login');

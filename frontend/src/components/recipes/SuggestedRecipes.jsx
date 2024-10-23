@@ -17,7 +17,7 @@ function SuggestedRecipes() {
     setError(null);
     try {
       const fridgeIngredients = ingredients.map(ing => ing.name);
-      const recipes = await getRandomRecipes(10, fridgeIngredients);
+      const recipes = await getRandomRecipes(12, fridgeIngredients);
       setSuggestedRecipes(recipes);
     } catch (err) {
       setError('Failed to fetch suggested recipes. Please try again later.');

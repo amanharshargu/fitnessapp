@@ -99,7 +99,7 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease, padding 0.3s ease;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  border: none;
 }
 
 .dropdown-menu.show {

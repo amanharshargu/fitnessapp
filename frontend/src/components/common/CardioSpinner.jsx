@@ -11,7 +11,7 @@ function CardioSpinner({ size = "50", stroke = "4", speed = "2", color = "black"
       size={size}
       stroke={stroke}
       speed={speed}
-      color={color}
+      color="#ff9800"
     ></l-cardio>
   );
 }

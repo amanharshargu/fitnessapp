@@ -1,1 +1,111 @@
+.suggested-recipes-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff5e6;
+  position: relative;
+  background-image: radial-gradient(circle, #ff9800 1px, transparent 1px),
+    radial-gradient(circle, #ff9800 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  padding: 20px;
+  overflow: hidden;
+}
 
+.suggested-recipes-container .suggested-recipes-title {
+  font-size: 2.5rem;
+  color: #ff9800;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.suggested-recipes {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.suggested-recipes h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.suggest-button {
+  background-color: #FF9800;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.suggest-button:hover {
+  background-color: #F57C00;
+}
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 15px;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.loading, .error, .no-recipes {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 50px;
+  color: #666;
+}
+
+.loading-animation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
+
+.spinner {
+  border: 4px solid #ffe290;
+  border-top: 4px solid #ff9800;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: suggested-recipes-spin 1s linear infinite;
+}
+
+@keyframes suggested-recipes-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1200px) {
+  .recipe-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .recipe-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .recipe-grid {
+    grid-template-columns: 1fr;
+  }
+}

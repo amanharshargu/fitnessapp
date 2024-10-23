@@ -19,6 +19,7 @@ const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ "./compo
 const Fridge = lazy(() => import(/* webpackChunkName: "fridge" */ "./components/fridge/Fridge"));
 const Recipes = lazy(() => import(/* webpackChunkName: "recipes" */ "./components/recipes/Recipes"));
 const LikedRecipes = lazy(() => import(/* webpackChunkName: "liked-recipes" */ "./components/recipes/LikedRecipes"));
+const SuggestedRecipes = lazy(() => import(/* webpackChunkName: "suggested-recipes" */ "./components/recipes/SuggestedRecipes"));
 const SignupModal = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/SignupModal"));
 const UserDetailsModal = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/UserDetailsModal"));
 const LoginModal = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/LoginModal"));
@@ -113,6 +114,14 @@ function AppRoutes() {
             element={
               <ProtectedRoute>
                 <LikedRecipes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/suggested-recipes"
+            element={
+              <ProtectedRoute>
+                <SuggestedRecipes />
               </ProtectedRoute>
             }
           />

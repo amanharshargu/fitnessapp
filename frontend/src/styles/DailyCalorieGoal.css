@@ -151,8 +151,7 @@
 .dcg-dishes-list-container {
   flex-grow: 1;
   overflow-y: auto;
-  max-height: 150px; /* Reduced height */
-  border: 1px solid #ffe290;
+  max-height: 150px;
   border-radius: 5px;
   padding: 5px;
 }

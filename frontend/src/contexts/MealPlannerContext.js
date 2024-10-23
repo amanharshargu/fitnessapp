@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import axios from 'axios';
-import api from '../services/api';
+import React, { createContext, useContext, useState, useCallback } from "react";
+import axios from "axios";
+import api from "../services/api";
 
 const MealPlannerContext = createContext();
 
@@ -27,7 +27,10 @@ const getInitialFilters = (dailyCalorieGoal) => {
     diet: [],
     dishType: [],
     ingredients: [],
-    calories: { min: Math.max(1000, dailyCalorieGoal - 150), max: Math.min(3000, dailyCalorieGoal + 150) },
+    calories: {
+      min: Math.max(1000, dailyCalorieGoal - 150),
+      max: Math.min(3000, dailyCalorieGoal + 150),
+    },
     breakfastCalories: calculateRange(breakfastPercentage),
     lunchCalories: calculateRange(lunchPercentage),
     dinnerCalories: calculateRange(dinnerPercentage),
@@ -51,14 +54,14 @@ export const MealPlannerProvider = ({ children }) => {
       setDailyCalorieGoal(fetchedGoal);
       setFilters(getInitialFilters(fetchedGoal));
     } catch (error) {
-      console.error('Error fetching calorie goal:', error);
+      console.error("Error fetching calorie goal:", error);
     }
   }, []);
 
   const searchRecipesWithIngredients = useCallback(async (ingredients) => {
     try {
-      const combinedSearch = ingredients.map(ing => ing.name).join(" ");
-      
+      const combinedSearch = ingredients.map((ing) => ing.name).join(" ");
+
       const searchPromises = [
         // Combined search
         axios.get(`https://api.edamam.com/api/recipes/v2`, {
@@ -71,7 +74,7 @@ export const MealPlannerProvider = ({ children }) => {
           },
         }),
         // Individual searches
-        ...ingredients.map(ingredient => 
+        ...ingredients.map((ingredient) =>
           axios.get(`https://api.edamam.com/api/recipes/v2`, {
             params: {
               type: "public",
@@ -81,16 +84,20 @@ export const MealPlannerProvider = ({ children }) => {
               random: true,
             },
           })
-        )
+        ),
       ];
 
       const searchResults = await Promise.all(searchPromises);
-      
-      const totalQuantity = ingredients.reduce((sum, ing) => sum + ing.quantity, 0);
+
+      const totalQuantity = ingredients.reduce(
+        (sum, ing) => sum + ing.quantity,
+        0
+      );
       const allRecipes = searchResults.flatMap((response, index) => {
-        const recipes = response.data.hits.map(hit => ({
+        const recipes = response.data.hits.map((hit) => ({
           ...hit.recipe,
-          ingredientSource: index === 0 ? 'combined' : ingredients[index - 1].name
+          ingredientSource:
+            index === 0 ? "combined" : ingredients[index - 1].name,
         }));
 
         if (index === 0) {
@@ -121,24 +128,25 @@ export const MealPlannerProvider = ({ children }) => {
     setError(null);
     setShowFilters(false);
     try {
-      const selectedIngredients = filters.ingredients.map(name => {
-        const ingredient = processedIngredients.find(ing => ing.name === name);
+      const selectedIngredients = filters.ingredients.map((name) => {
+        const ingredient = processedIngredients.find(
+          (ing) => ing.name === name
+        );
         return {
           name,
-          quantity: ingredient ? ingredient.totalQuantity : 1
+          quantity: ingredient ? ingredient.totalQuantity : 1,
         };
       });
-      const ingredientRecipes = await searchRecipesWithIngredients(selectedIngredients);
+      const ingredientRecipes = await searchRecipesWithIngredients(
+        selectedIngredients
+      );
 
       const response = await axios.post(
         `https://api.edamam.com/api/meal-planner/v1/${MEALPLAN_APP_ID}/select?app_id=${MEALPLAN_APP_ID}&app_key=${MEALPLAN_APP_KEY}`,
         {
           plan: {
             accept: {
-              all: [
-                { health: filters.health },
-                { diet: filters.diet },
-              ],
+              all: [{ health: filters.health }, { diet: filters.diet }],
             },
             fit: {
               ENERC_KCAL: filters.calories,
@@ -147,8 +155,19 @@ export const MealPlannerProvider = ({ children }) => {
               Breakfast: {
                 accept: {
                   all: [
+                    {
+                      dish: filters.dishType.filter((type) =>
+                        [
+                          "cereals",
+                          "egg",
+                          "pancake",
+                          "pastry",
+                          "bread",
+                          "sandwiches",
+                        ].includes(type)
+                      ),
+                    },
                     { meal: ["breakfast"] },
-                    { dish: filters.dishType.filter(type => ["cereals", "egg", "pancake", "pastry", "bread", "sandwiches"].includes(type)) }
                   ],
                 },
                 fit: {
@@ -158,8 +177,19 @@ export const MealPlannerProvider = ({ children }) => {
               Lunch: {
                 accept: {
                   all: [
+                    {
+                      dish: filters.dishType.filter((type) =>
+                        [
+                          "main course",
+                          "salad",
+                          "sandwiches",
+                          "soup",
+                          "pasta",
+                          "pizza",
+                        ].includes(type)
+                      ),
+                    },
                     { meal: ["lunch/dinner"] },
-                    { dish: filters.dishType.filter(type => ["main course", "salad", "sandwiches", "soup", "pasta", "pizza"].includes(type)) }
                   ],
                 },
                 fit: {
@@ -169,8 +199,19 @@ export const MealPlannerProvider = ({ children }) => {
               Dinner: {
                 accept: {
                   all: [
+                    {
+                      dish: filters.dishType.filter((type) =>
+                        [
+                          "main course",
+                          "seafood",
+                          "pasta",
+                          "pizza",
+                          "soup",
+                          "salad",
+                        ].includes(type)
+                      ),
+                    },
                     { meal: ["lunch/dinner"] },
-                    { dish: filters.dishType.filter(type => ["main course", "seafood", "pasta", "pizza", "soup", "salad"].includes(type)) }
                   ],
                 },
                 fit: {
@@ -187,31 +228,59 @@ export const MealPlannerProvider = ({ children }) => {
           },
         }
       );
-      
+
       if (response.data && response.data.status === "INCOMPLETE") {
         setMealPlan({ status: "INCOMPLETE" });
         setLoading(false);
       } else if (response.data && response.data.selection) {
-        const updatedSelection = response.data.selection.map((day, dayIndex) => {
-          const updatedSections = Object.entries(day.sections).map(([mealType, meal]) => {
-            if (ingredientRecipes.length > 0 && dayIndex < 3) {
-              // For the first 3 days, prioritize recipes from fridge ingredients
-              const randomIndex = Math.floor(Math.random() * ingredientRecipes.length);
-              const selectedRecipe = ingredientRecipes[randomIndex];
-              ingredientRecipes.splice(randomIndex, 1);
-              return [mealType, { ...meal, assigned: selectedRecipe.uri, recipeDetails: selectedRecipe }];
-            } else if (ingredientRecipes.length > 0 && Math.random() < 0.3) {
-              // For the remaining days, randomly replace some meals with fridge ingredient recipes
-              const randomIndex = Math.floor(Math.random() * ingredientRecipes.length);
-              const selectedRecipe = ingredientRecipes[randomIndex];
-              ingredientRecipes.splice(randomIndex, 1);
-              return [mealType, { ...meal, assigned: selectedRecipe.uri, recipeDetails: selectedRecipe }];
-            }
-            return [mealType, meal];
-          });
-          return { ...day, sections: Object.fromEntries(updatedSections) };
+        const updatedSelection = response.data.selection.map(
+          (day, dayIndex) => {
+            const updatedSections = Object.entries(day.sections).map(
+              ([mealType, meal]) => {
+                if (ingredientRecipes.length > 0 && dayIndex < 3) {
+                  // For the first 3 days, prioritize recipes from fridge ingredients
+                  const randomIndex = Math.floor(
+                    Math.random() * ingredientRecipes.length
+                  );
+                  const selectedRecipe = ingredientRecipes[randomIndex];
+                  ingredientRecipes.splice(randomIndex, 1);
+                  return [
+                    mealType,
+                    {
+                      ...meal,
+                      assigned: selectedRecipe.uri,
+                      recipeDetails: selectedRecipe,
+                    },
+                  ];
+                } else if (
+                  ingredientRecipes.length > 0 &&
+                  Math.random() < 0.3
+                ) {
+                  // For the remaining days, randomly replace some meals with fridge ingredient recipes
+                  const randomIndex = Math.floor(
+                    Math.random() * ingredientRecipes.length
+                  );
+                  const selectedRecipe = ingredientRecipes[randomIndex];
+                  ingredientRecipes.splice(randomIndex, 1);
+                  return [
+                    mealType,
+                    {
+                      ...meal,
+                      assigned: selectedRecipe.uri,
+                      recipeDetails: selectedRecipe,
+                    },
+                  ];
+                }
+                return [mealType, meal];
+              }
+            );
+            return { ...day, sections: Object.fromEntries(updatedSections) };
+          }
+        );
+        await fetchRecipeDetails({
+          ...response.data,
+          selection: updatedSelection,
         });
-        await fetchRecipeDetails({ ...response.data, selection: updatedSelection });
       } else {
         throw new Error("Unexpected API response structure");
       }
@@ -232,7 +301,9 @@ export const MealPlannerProvider = ({ children }) => {
       const recipePromises = mealPlanData.selection.flatMap((day) =>
         Object.values(day.sections).map((meal) => {
           if (meal.recipeDetails) {
-            return Promise.resolve({ data: { hits: [{ recipe: meal.recipeDetails }] } });
+            return Promise.resolve({
+              data: { hits: [{ recipe: meal.recipeDetails }] },
+            });
           }
           return axios.get(`https://api.edamam.com/api/recipes/v2/by-uri`, {
             params: {
@@ -295,7 +366,7 @@ export const MealPlannerProvider = ({ children }) => {
 
   const handleViewRecipe = useCallback((recipe) => {
     if (recipe.url) {
-      window.open(recipe.url, '_blank');
+      window.open(recipe.url, "_blank");
     }
   }, []);
 
@@ -335,7 +406,7 @@ export const MealPlannerProvider = ({ children }) => {
 export const useMealPlanner = () => {
   const context = useContext(MealPlannerContext);
   if (!context) {
-    throw new Error('useMealPlanner must be used within a MealPlannerProvider');
+    throw new Error("useMealPlanner must be used within a MealPlannerProvider");
   }
   return context;
 };

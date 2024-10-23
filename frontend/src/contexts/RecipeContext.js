@@ -95,90 +95,47 @@ export const RecipeProvider = ({ children }) => {
     }
   }, []);
 
-  const getRandomRecipes = useCallback(async (count) => {
+  const getRandomRecipes = useCallback(async (count, ingredients = []) => {
     setIsLoading(true);
     try {
-      const calculateIngredientRange = () => {
-        const minIngr = Math.floor(Math.random() * 5) + 3; // Random number between 3 and 7
-        const maxIngr = minIngr + Math.floor(Math.random() * 5) + 3; // Random number between minIngr + 3 and minIngr + 7
-        return `${minIngr}-${maxIngr}`;
-      };
-
-      const ingredientRange = calculateIngredientRange();
+      // Select 2-3 random ingredients
+      const numIngredients = Math.floor(Math.random() * 2) + 2; // 2 or 3
+      const shuffled = ingredients.sort(() => 0.5 - Math.random());
+      const selectedIngredients = shuffled.slice(0, numIngredients);
+      
+      const ingredientQuery = selectedIngredients.join(' ');
+      
+      console.log(`Searching for recipes with ingredients: ${ingredientQuery}`);
 
       const response = await axios.get(
         "https://api.edamam.com/api/recipes/v2",
         {
           params: {
-            type: "any",
+            type: "public",
             app_id: process.env.REACT_APP_EDAMAM_APP_ID,
             app_key: process.env.REACT_APP_EDAMAM_APP_KEY,
+            q: ingredientQuery,
             random: true,
-            q: "",
-            ingr: ingredientRange,
           },
         }
       );
 
-      if (
-        response.data &&
-        response.data.hits &&
-        response.data.hits.length > 0
-      ) {
+      if (response.data && response.data.hits && response.data.hits.length > 0) {
         const randomRecipes = response.data.hits
           .slice(0, count)
           .map((hit) => hit.recipe);
-        setIsLoading(false);
         return randomRecipes;
       } else {
-        // If no random recipes found, try a broader search
-        const broadSearchResponse = await axios.get(
-          "https://api.edamam.com/api/recipes/v2",
-          {
-            params: {
-              type: "public",
-              app_id: process.env.REACT_APP_EDAMAM_APP_ID,
-              app_key: process.env.REACT_APP_EDAMAM_APP_KEY,
-              q: "meal",
-              ingr: ingredientRange,
-            },
-          }
-        );
-
-        console.log("Broad Search API Response:", broadSearchResponse.data);
-
-        if (
-          broadSearchResponse.data &&
-          broadSearchResponse.data.hits &&
-          broadSearchResponse.data.hits.length > 0
-        ) {
-          const broadSearchRecipes = broadSearchResponse.data.hits
-            .slice(0, count)
-            .map((hit) => hit.recipe);
-          console.log("Broad search recipes from API:", broadSearchRecipes);
-          setIsLoading(false);
-          return broadSearchRecipes;
-        } else {
-          console.log("No recipes found even with broad search");
-          setIsLoading(false);
-          return [];
-        }
+        console.log("No recipes found with the given ingredients");
+        return [];
       }
     } catch (error) {
       console.error("Error fetching random recipes:", error);
-      if (error.response) {
-        console.error("Error response:", error.response.data);
-        console.error("Error status:", error.response.status);
-        console.error("Error headers:", error.response.headers);
-      } else if (error.request) {
-        console.error("Error request:", error.request);
-      } else {
-        console.error("Error message:", error.message);
-      }
-      setIsLoading(false);
       return [];
+    } finally {
+      setIsLoading(false);
     }
-  }, []); // Empty dependency array if it doesn't depend on any external values
+  }, []);
 
   // Fallback function to provide sample recipes
   const getFallbackRecipes = (count) => {

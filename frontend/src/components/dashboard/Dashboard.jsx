@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUserDetails } from "../../contexts/UserDetailsContext";
-import UserProfileCard from "./UserProfileCard";
 import WeeklyCalorieTracker from "./WeeklyCalorieTracker";
 import DailyCalorieGoal from "./DailyCalorieGoal";
 import ContentWrapper from "../layout/ContentWrapper";
@@ -60,14 +59,6 @@ function Dashboard({ onSetUserDetails, userDetailsVersion }) {
           {user ? (
             <>
               <div className="dashboard-row">
-                <div className="dashboard-column">
-                  <UserProfileCard
-                    key={`profile-${userDetailsVersion}`}
-                    userDetails={userDetails}
-                    user={user}
-                    onSetUserDetails={onSetUserDetails}
-                  />
-                </div>
                 <div className="dashboard-column">
                   <DailyCalorieGoal 
                     key={`calorie-goal-${userDetailsVersion}`} 

@@ -10,6 +10,7 @@
     radial-gradient(circle, #ff9800 1px, transparent 1px);
   background-size: 40px 40px;
   background-position: 0 0, 20px 20px;
+  padding: 20px;
 }
 
 .dashboard-container::before {
@@ -28,23 +29,19 @@
 }
 
 .dashboard-grid {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  position: relative;
-  z-index: 1;
+  gap: 20px;
 }
 
 .dashboard-row {
   display: flex;
   gap: 20px;
-  margin-bottom: 20px;
 }
 
 .dashboard-column {
   flex: 1;
-  border-radius: 10px;
-  padding: 20px;
+  min-width: 0;
 }
 
 .dashboard-title {
@@ -61,5 +58,11 @@
 }
 
 .error-message {
-  color: #dc3545;
+  color: #d32f2f;
+}
+
+@media (max-width: 768px) {
+  .dashboard-row {
+    flex-direction: column;
+  }
 }

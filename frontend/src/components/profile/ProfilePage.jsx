@@ -37,6 +37,14 @@ const ProfilePage = () => {
     }
   };
 
+  const formatDisplayValue = (value) => {
+    if (typeof value !== 'string') return value;
+    return value
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
   return (
     <div className="profile-page-container">
       <div className="profile-page">
@@ -120,9 +128,9 @@ const ProfilePage = () => {
                 <p><strong>Age:</strong> {userDetails.age}</p>
                 <p><strong>Weight:</strong> {userDetails.weight} kg</p>
                 <p><strong>Height:</strong> {userDetails.height} cm</p>
-                <p><strong>Gender:</strong> {userDetails.gender}</p>
-                <p><strong>Goal:</strong> {userDetails.goal}</p>
-                <p><strong>Activity Level:</strong> {userDetails.activityLevel}</p>
+                <p><strong>Gender:</strong> {formatDisplayValue(userDetails.gender)}</p>
+                <p><strong>Goal:</strong> {formatDisplayValue(userDetails.goal)}</p>
+                <p><strong>Activity Level:</strong> {formatDisplayValue(userDetails.activityLevel)}</p>
                 <div className="profile-actions">
                   <button onClick={handleEdit}>Edit Profile</button>
                 </div>

@@ -1,6 +1,13 @@
-import React, { createContext, useState, useContext, useCallback, useEffect, useMemo } from "react";
-import axios from "axios"; // Make sure to import axios
-import api from "../services/api"; // Make sure this import is correct
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useCallback,
+  useEffect,
+  useMemo,
+} from "react";
+import axios from "axios";
+import api from "../services/api";
 
 const RecipeContext = createContext();
 
@@ -23,7 +30,7 @@ export const RecipeProvider = ({ children }) => {
   const fetchLikedRecipes = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await api.get('/recipes/saved');
+      const response = await api.get("/recipes/saved");
       const uris = response.data;
       const detailedRecipes = await Promise.all(
         uris.map((uri) => fetchRecipeDetails(uri))
@@ -50,20 +57,32 @@ export const RecipeProvider = ({ children }) => {
     return response.data.hits[0].recipe;
   };
 
-  const toggleLikedRecipe = useCallback(async (recipe) => {
-    try {
-      const isCurrentlyLiked = likedRecipes.some(likedRecipe => likedRecipe.uri === recipe.uri);
-      if (isCurrentlyLiked) {
-        await api.delete(`/recipes/save/${encodeURIComponent(recipe.uri)}`);
-        setLikedRecipes(prevLikedRecipes => prevLikedRecipes.filter(likedRecipe => likedRecipe.uri !== recipe.uri));
-      } else {
-        await api.post(`/recipes/save/${encodeURIComponent(recipe.uri)}`, recipe);
-        setLikedRecipes(prevLikedRecipes => [...prevLikedRecipes, recipe]);
+  const toggleLikedRecipe = useCallback(
+    async (recipe) => {
+      try {
+        const isCurrentlyLiked = likedRecipes.some(
+          (likedRecipe) => likedRecipe.uri === recipe.uri
+        );
+        if (isCurrentlyLiked) {
+          await api.delete(`/recipes/save/${encodeURIComponent(recipe.uri)}`);
+          setLikedRecipes((prevLikedRecipes) =>
+            prevLikedRecipes.filter(
+              (likedRecipe) => likedRecipe.uri !== recipe.uri
+            )
+          );
+        } else {
+          await api.post(
+            `/recipes/save/${encodeURIComponent(recipe.uri)}`,
+            recipe
+          );
+          setLikedRecipes((prevLikedRecipes) => [...prevLikedRecipes, recipe]);
+        }
+      } catch (error) {
+        console.error("Error toggling liked recipe:", error);
       }
-    } catch (error) {
-      console.error("Error toggling liked recipe:", error);
-    }
-  }, [likedRecipes]);
+    },
+    [likedRecipes]
+  );
 
   const fetchRecipes = useCallback(async (term, filters = {}) => {
     setIsLoading(true);
@@ -77,7 +96,7 @@ export const RecipeProvider = ({ children }) => {
 
       Object.entries(filters).forEach(([key, value]) => {
         if (Array.isArray(value)) {
-          value.forEach(item => params.append(key, item));
+          value.forEach((item) => params.append(key, item));
         } else {
           params.append(key, value);
         }
@@ -98,46 +117,71 @@ export const RecipeProvider = ({ children }) => {
   const getRandomRecipes = useCallback(async (count, ingredients = []) => {
     setIsLoading(true);
     try {
-      // Select 2-3 random ingredients
-      const numIngredients = Math.floor(Math.random() * 2) + 2; // 2 or 3
-      const shuffled = ingredients.sort(() => 0.5 - Math.random());
-      const selectedIngredients = shuffled.slice(0, numIngredients);
-      
-      const ingredientQuery = selectedIngredients.join(' ');
-      
-      console.log(`Searching for recipes with ingredients: ${ingredientQuery}`);
+      if (ingredients.length === 0) {
+        const calculateIngredientRange = () => {
+          const minIngr = Math.floor(Math.random() * 5) + 3;
+          const maxIngr = minIngr + Math.floor(Math.random() * 5) + 3;
+          return `${minIngr}-${maxIngr}`;
+        };
 
-      const response = await axios.get(
-        "https://api.edamam.com/api/recipes/v2",
-        {
-          params: {
-            type: "public",
-            app_id: process.env.REACT_APP_EDAMAM_APP_ID,
-            app_key: process.env.REACT_APP_EDAMAM_APP_KEY,
-            q: ingredientQuery,
-            random: true,
-          },
+        const ingredientRange = calculateIngredientRange();
+
+        const response = await axios.get(
+          "https://api.edamam.com/api/recipes/v2",
+          {
+            params: {
+              type: "any",
+              app_id: process.env.REACT_APP_EDAMAM_APP_ID,
+              app_key: process.env.REACT_APP_EDAMAM_APP_KEY,
+              random: true,
+              q: "",
+              ingr: ingredientRange,
+            },
+          }
+        );
+
+        if (response.data && response.data.hits && response.data.hits.length > 0) {
+          const randomRecipes = response.data.hits
+            .slice(0, count)
+            .map((hit) => hit.recipe);
+          return randomRecipes;
         }
-      );
-
-      if (response.data && response.data.hits && response.data.hits.length > 0) {
-        const randomRecipes = response.data.hits
-          .slice(0, count)
-          .map((hit) => hit.recipe);
-        return randomRecipes;
       } else {
-        console.log("No recipes found with the given ingredients");
-        return [];
+        const numIngredients = Math.floor(Math.random() * 2) + 2; // 2 or 3
+        const shuffled = ingredients.sort(() => 0.5 - Math.random());
+        const selectedIngredients = shuffled.slice(0, numIngredients);
+        const ingredientQuery = selectedIngredients.join(" ");
+
+        const response = await axios.get(
+          "https://api.edamam.com/api/recipes/v2",
+          {
+            params: {
+              type: "any",
+              app_id: process.env.REACT_APP_EDAMAM_APP_ID,
+              app_key: process.env.REACT_APP_EDAMAM_APP_KEY,
+              q: ingredientQuery,
+              random: true,
+            },
+          }
+        );
+
+        if (response.data && response.data.hits && response.data.hits.length > 0) {
+          const randomRecipes = response.data.hits
+            .slice(0, count)
+            .map((hit) => hit.recipe);
+          return randomRecipes;
+        }
       }
+
+      return getFallbackRecipes(count);
     } catch (error) {
       console.error("Error fetching random recipes:", error);
-      return [];
+      return getFallbackRecipes(count);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  // Fallback function to provide sample recipes
   const getFallbackRecipes = (count) => {
     const fallbackRecipes = [
       {
@@ -162,22 +206,38 @@ export const RecipeProvider = ({ children }) => {
     return fallbackRecipes.slice(0, count);
   };
 
-  const value = useMemo(() => ({
-    recipes,
-    setRecipes,
-    likedRecipes,
-    isLoading,
-    fetchRecipes,
-    toggleLikedRecipe,
-    searchTerm,
-    setSearchTerm,
-    hasSearched,
-    setHasSearched,
-    showFilters,
-    setShowFilters,
-    fetchLikedRecipes,
-    getRandomRecipes,
-  }), [recipes, likedRecipes, isLoading, fetchRecipes, toggleLikedRecipe, searchTerm, hasSearched, showFilters, fetchLikedRecipes, getRandomRecipes]);
+  const value = useMemo(
+    () => ({
+      recipes,
+      setRecipes,
+      likedRecipes,
+      isLoading,
+      fetchRecipes,
+      toggleLikedRecipe,
+      searchTerm,
+      setSearchTerm,
+      hasSearched,
+      setHasSearched,
+      showFilters,
+      setShowFilters,
+      fetchLikedRecipes,
+      getRandomRecipes,
+    }),
+    [
+      recipes,
+      likedRecipes,
+      isLoading,
+      fetchRecipes,
+      toggleLikedRecipe,
+      searchTerm,
+      hasSearched,
+      showFilters,
+      fetchLikedRecipes,
+      getRandomRecipes,
+    ]
+  );
 
-  return <RecipeContext.Provider value={value}>{children}</RecipeContext.Provider>;
+  return (
+    <RecipeContext.Provider value={value}>{children}</RecipeContext.Provider>
+  );
 };

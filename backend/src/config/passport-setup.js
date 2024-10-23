@@ -2,7 +2,8 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { User } = require("../models");
 const jwt = require("jsonwebtoken");
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BACKEND_URL, JWT_SECRET } = process.env;
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BACKEND_URL, JWT_SECRET } =
+  process.env;
 
 passport.use(
   new GoogleStrategy(

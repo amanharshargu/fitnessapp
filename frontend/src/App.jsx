@@ -26,6 +26,7 @@ const LoginModal = lazy(() => import(/* webpackChunkName: "auth" */ "./component
 const OAuthCallback = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/OAuthCallback"));
 const MealPlanner = lazy(() => import(/* webpackChunkName: "meal-planner" */ "./components/mealplanner/MealPlanner"));
 const ResetPassword = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/ResetPassword"));
+const ProfilePage = lazy(() => import(/* webpackChunkName: "profile" */ "./components/profile/ProfilePage"));
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useAuth();
@@ -135,6 +136,14 @@ function AppRoutes() {
           />
           <Route path="/oauth-callback" element={<OAuthCallback />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <SignupModal

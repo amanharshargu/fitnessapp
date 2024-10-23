@@ -1,0 +1,83 @@
+.profile-page-container {
+  min-height: 100vh;
+  padding-top: 70px;
+  padding-left: 220px;
+  background-color: #fff5e6;
+  background-image: radial-gradient(circle, #ff9800 1px, transparent 1px),
+    radial-gradient(circle, #ff9800 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+}
+
+.profile-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.profile-content {
+  display: flex;
+  gap: 30px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-photo img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile-details {
+  flex: 1;
+}
+
+.profile-details form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-details input,
+.profile-details select {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.profile-actions {
+  margin-top: 20px;
+}
+
+.profile-actions button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #FF9800;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.profile-actions button:hover {
+  background-color: #F57C00;
+}
+
+h1 {
+  color: #FF9800;
+  margin-bottom: 20px;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+strong {
+  color: #FF9800;
+}

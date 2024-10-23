@@ -112,19 +112,25 @@ const logout = async (req, res) => {
 
 const checkAuth = async (req, res) => {
   try {
-    res.status(200).json({
-      isAuthenticated: true,
+    const user = await User.findByPk(req.user.id, {
+      attributes: { exclude: ['password'] }
+    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // Include all user details, including the photo
+    res.json({ 
       user: {
-        id: req.user.id,
-        username: req.user.username,
-        email: req.user.email,
-      },
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        photo: user.photo,
+        // Include other fields as needed
+      }
     });
   } catch (error) {
     console.error("Error in checkAuth:", error);
-    res
-      .status(500)
-      .json({ message: "Error checking authentication", error: error.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

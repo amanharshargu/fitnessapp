@@ -16,6 +16,7 @@ export function UserDetailsProvider({ children }) {
     gender: "",
     goal: "",
     activityLevel: "",
+    photo: "", // Add this line
   });
 
   const updateUserDetails = useCallback((newDetails) => {
@@ -44,6 +45,7 @@ export function UserDetailsProvider({ children }) {
           weight: String(response.data.weight || ''),
           height: String(response.data.height || ''),
           age: String(response.data.age || ''),
+          photo: response.data.photo || '', // Add this line
         };
         setUserDetails(formattedDetails);
         setTempUserDetails(formattedDetails);

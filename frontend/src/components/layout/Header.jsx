@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import LoginModal from "../auth/LoginModal";
@@ -6,9 +6,11 @@ import SignupModal from "../auth/SignupModal";
 import "../../styles/Header.css";
 
 function Header() {
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleCloseAuthModal = () => {
     setShowAuthModal(false);
@@ -19,6 +21,21 @@ function Header() {
     setShowAuthModal(false);
   };
 
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setShowDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const displayName = user?.username || "Account";
+
   return (
     <header className="wisheat-header">
       <div className="wisheat-header__container">
@@ -27,9 +44,34 @@ function Header() {
         </Link>
         <div className="wisheat-header__actions">
           {isLoggedIn ? (
-            <button className="wisheat-header__btn wisheat-header__btn--outline" onClick={logout}>
-              Logout
-            </button>
+            <div className="wisheat-header__dropdown" ref={dropdownRef}>
+              <button
+                className="wisheat-header__btn wisheat-header__btn--outline"
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                {user?.photo && (
+                  <img
+                    src={user.photo}
+                    alt={displayName}
+                    className="wisheat-header__user-photo"
+                  />
+                )}
+                {displayName}
+              </button>
+              {showDropdown && (
+                <div className="wisheat-header__dropdown-content">
+                  <Link to="/profile" className="wisheat-header__dropdown-item">
+                    My Profile
+                  </Link>
+                  <button
+                    className="wisheat-header__dropdown-item"
+                    onClick={logout}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <button
               className="wisheat-header__btn wisheat-header__btn--outline"

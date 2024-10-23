@@ -41,11 +41,65 @@
   border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
 }
 
 .wisheat-header__btn--outline:hover {
   background-color: #FF9800;
   color: #FFF;
+}
+
+.wisheat-header__dropdown {
+  position: relative;
+}
+
+.wisheat-header__dropdown-content {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #FFF;
+  min-width: 150px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.wisheat-header__oauth-details {
+  background-color: #f8f8f8;
+  padding: 10px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.wisheat-header__oauth-details p {
+  margin: 5px 0;
+}
+
+.wisheat-header__dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  text-align: left;
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.wisheat-header__dropdown-item:hover {
+  background-color: #f1f1f1;
+}
+
+.wisheat-header__user-photo {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 8px;
+  object-fit: cover;
 }
 
 @media (max-width: 768px) {

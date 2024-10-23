@@ -23,8 +23,13 @@ passport.use(
             googleId: profile.id,
             email: profile.emails[0].value,
             username: profile.displayName,
+            photo: profile.photos[0].value, 
           });
           isNewUser = true;
+        } else {
+          if (user.photo !== profile.photos[0].value) {
+            await user.update({ photo: profile.photos[0].value });
+          }
         }
 
         const token = jwt.sign({ id: user.id }, JWT_SECRET, {

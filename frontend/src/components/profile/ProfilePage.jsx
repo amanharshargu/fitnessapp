@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useUserDetails } from '../../contexts/UserDetailsContext';
 import UserProfileCard from './UserProfileCard';
+import CardioSpinner from '../common/CardioSpinner';
 import '../../styles/ProfilePage.css';
 
 const ProfilePage = () => {
@@ -19,12 +20,24 @@ const ProfilePage = () => {
     loadUserDetails();
   }, [fetchUserDetails]);
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (loading || !user) {
+    return (
+      <div className="profile-page-container">
+        <div className="profile-content loading">
+          <CardioSpinner size="50" color="#007bff" />
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="profile-page-container">
+        <div className="profile-content">
+          <div>Error: {error}</div>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -6,13 +6,21 @@ import "../../styles/UserProfileCard.css";
 
 function UserProfileCard() {
   const { userDetails, tempUserDetails, updateTempUserDetails, isLoading, fetchUserDetails } = useUserDetails();
-  const { updateUserDetails: updateAuthUserDetails } = useAuth();
+  const { user, updateUserDetails: updateAuthUserDetails } = useAuth();
   const [editingField, setEditingField] = useState(null);
   const [error, setError] = useState("");
   const [localUserDetails, setLocalUserDetails] = useState(userDetails);
 
   useEffect(() => {
-    setLocalUserDetails(userDetails);
+    if (!userDetails || Object.keys(userDetails).length === 0) {
+      fetchUserDetails();
+    }
+  }, [fetchUserDetails, userDetails]);
+
+  useEffect(() => {
+    if (userDetails && Object.keys(userDetails).length > 0) {
+      setLocalUserDetails(userDetails);
+    }
   }, [userDetails]);
 
   const calculateBMI = (weight, height) => {
@@ -79,10 +87,16 @@ function UserProfileCard() {
 
   const formatDisplayValue = (value) => {
     if (!value) return "Not set";
-    return value
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+    if (typeof value === 'string') {
+      if (value.includes('Active')) {
+        return value.replace(/([A-Z])/g, ' $1').replace(/^\w/, c => c.toUpperCase()).trim();
+      }
+      return value
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    }
+    return value;
   };
 
   const renderEditableField = (field, label, options = null, step = null, min = null) => {
@@ -90,7 +104,7 @@ function UserProfileCard() {
     const value = isEditing ? tempUserDetails[field] : userDetails[field];
 
     return (
-      <div className="editable-field">
+      <div className="editable-field" onClick={() => !isEditing && handleEditField(field)}>
         <strong>{label}:</strong>
         {isEditing ? (
           <div className="edit-input">
@@ -126,7 +140,6 @@ function UserProfileCard() {
         ) : (
           <div className="display-value">
             <span>{formatDisplayValue(value)}</span>
-            <button onClick={() => handleEditField(field)}>Edit</button>
           </div>
         )}
       </div>
@@ -165,7 +178,7 @@ function UserProfileCard() {
     }
   }, [editingField]);
 
-  if (isLoading) {
+  if (isLoading || !user || !userDetails) {
     return (
       <div className="user-profile-card loading">
         <CardioSpinner size="50" color="#007bff" />
@@ -181,11 +194,11 @@ function UserProfileCard() {
         <div className="non-editable-fields">
           <div className="non-editable-field">
             <strong>Username:</strong>
-            <span>{localUserDetails.username}</span>
+            <span>{user?.username || 'Not set'}</span>
           </div>
           <div className="non-editable-field">
             <strong>Email:</strong>
-            <span>{localUserDetails.email}</span>
+            <span>{user?.email || 'Not set'}</span>
           </div>
         </div>
         {renderEditableField("weight", "Weight (kg)", null, 1, 0)}

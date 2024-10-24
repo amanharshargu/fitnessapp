@@ -6,6 +6,11 @@
   margin: 0;
   background-color: #fff5e6;
   padding: 20px;
+  background-image: 
+  radial-gradient(circle, #FF9800 1px, transparent 1px),
+  radial-gradient(circle, #FF9800 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
   position: relative;
 }
 

@@ -70,7 +70,6 @@ export function UserDetailsProvider({ children }) {
       });
 
       if (response.data && response.data.message === "Photo uploaded successfully") {
-        // Fetch updated user details to get the new photo
         await fetchUserDetails();
         return true;
       }

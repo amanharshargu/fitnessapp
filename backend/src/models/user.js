@@ -82,18 +82,16 @@ module.exports = (sequelize, DataTypes) => {
         get() {
           const rawValue = this.getDataValue('photo');
           if (rawValue && rawValue.startsWith('http')) {
-            return rawValue; // It's a URL, return as is
+            return rawValue;
           } else if (rawValue) {
-            return `data:image/png;base64,${rawValue}`; // It's already base64
+            return `data:image/png;base64,${rawValue}`;
           }
           return null;
         },
         set(value) {
           if (value && typeof value === 'object' && value.buffer) {
-            // It's a buffer, convert to base64
             this.setDataValue('photo', value.buffer.toString('base64'));
           } else {
-            // It's already a string (URL or base64)
             this.setDataValue('photo', value);
           }
         }

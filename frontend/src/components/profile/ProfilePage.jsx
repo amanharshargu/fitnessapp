@@ -29,7 +29,6 @@ const ProfilePage = () => {
         await uploadPhoto(file);
       } catch (error) {
         console.error("Error uploading photo:", error);
-        // Handle error (e.g., show error message to user)
       } finally {
         setUploading(false);
       }

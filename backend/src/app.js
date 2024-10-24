@@ -10,6 +10,7 @@ const recipeRoutes = require("./routes/recipe");
 const dashboardRoutes = require("./routes/dashboard");
 const { PORT } = require("./config");
 require("./config/passport-setup");
+const path = require('path');
 
 const app = express();
 
@@ -36,6 +37,9 @@ app.use("/api/users", userRoutes);
 app.use("/api/ingredients", ingredientRoutes);
 app.use("/api/recipes", recipeRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+
+// Serve static files from the uploads directory
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use((err, req, res, _next) => {
   // console.error(err.stack);

@@ -45,7 +45,7 @@ export function UserDetailsProvider({ children }) {
           weight: String(response.data.weight || ''),
           height: String(response.data.height || ''),
           age: String(response.data.age || ''),
-          photo: response.data.photo || '', // Add this line
+          photo: response.data.photo || '',
         };
         setUserDetails(formattedDetails);
         setTempUserDetails(formattedDetails);
@@ -58,12 +58,36 @@ export function UserDetailsProvider({ children }) {
     }
   }, []);
 
+  const uploadPhoto = useCallback(async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append('photo', file);
+
+      const response = await api.post("/users/upload-photo", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.data && response.data.message === "Photo uploaded successfully") {
+        // Fetch updated user details to get the new photo
+        await fetchUserDetails();
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error uploading photo:", error);
+      throw error;
+    }
+  }, [fetchUserDetails]);
+
   const value = {
     userDetails,
     updateUserDetails,
     fetchUserDetails,
     tempUserDetails,
     updateTempUserDetails,
+    uploadPhoto,
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useUserDetails } from '../../contexts/UserDetailsContext';
 import UserProfileCard from './UserProfileCard';
@@ -7,8 +7,10 @@ import '../../styles/ProfilePage.css';
 
 const ProfilePage = () => {
   const { user } = useAuth();
-  const { fetchUserDetails, error } = useUserDetails();
+  const { fetchUserDetails, userDetails, uploadPhoto, error } = useUserDetails();
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const loadUserDetails = async () => {
@@ -18,6 +20,25 @@ const ProfilePage = () => {
     };
     loadUserDetails();
   }, [fetchUserDetails]);
+
+  const handlePhotoUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setUploading(true);
+      try {
+        await uploadPhoto(file);
+      } catch (error) {
+        console.error("Error uploading photo:", error);
+        // Handle error (e.g., show error message to user)
+      } finally {
+        setUploading(false);
+      }
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
 
   if (loading || !user) {
     return (
@@ -44,13 +65,24 @@ const ProfilePage = () => {
       <div className="profile-content">
         <div className="profile-layout">
           <div className="profile-photo-container">
-            {user.photo ? (
-              <img src={user.photo} alt={user.username} className="profile-photo" />
-            ) : (
+            {uploading ? (
               <div className="photo-placeholder">
-                <span>No photo available</span>
+                <CardioSpinner size="30" color="#007bff" />
+              </div>
+            ) : userDetails.photo ? (
+              <img src={userDetails.photo} alt={user.username} className="profile-photo" onClick={triggerFileInput} />
+            ) : (
+              <div className="photo-placeholder" onClick={triggerFileInput}>
+                <span>Click to upload photo</span>
               </div>
             )}
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handlePhotoUpload} 
+              style={{ display: 'none' }} 
+              accept="image/*"
+            />
           </div>
           <div className="profile-details">
             <UserProfileCard />

@@ -18,6 +18,7 @@ exports.getUserDetails = async (req, res) => {
         "gender",
         "goal",
         "activityLevel",
+        "photo", // Add this line to include the photo
       ],
     });
 

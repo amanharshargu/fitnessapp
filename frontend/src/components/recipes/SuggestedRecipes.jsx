@@ -18,7 +18,13 @@ function SuggestedRecipes() {
     try {
       const fridgeIngredients = ingredients.map(ing => ing.name);
       const recipes = await getRandomRecipes(12, fridgeIngredients);
-      setSuggestedRecipes(recipes);
+      const validRecipes = recipes.filter(recipe => recipe.ingredientLines && Array.isArray(recipe.ingredientLines));
+      
+      if (validRecipes.length === 0) {
+        setError('No valid recipes found. Try different ingredients.');
+      } else {
+        setSuggestedRecipes(validRecipes);
+      }
     } catch (err) {
       setError('Failed to fetch suggested recipes. Please try again later.');
       console.error('Error fetching suggested recipes:', err);
@@ -40,13 +46,12 @@ function SuggestedRecipes() {
         </button>
         <div className="suggested-recipes">
           {loading ? (
-            <div className="loading-animation"><CardioSpinner/>
-            </div>
+            <div className="loading-animation"><CardioSpinner /></div>
           ) : error ? (
             <div className="error-message">{error}</div>
           ) : suggestedRecipes.length === 0 ? (
             <div className="no-recipes">
-              <p>No suggested recipes available at the moment. Try adding more ingredients to your fridge!</p>
+              <p>No suggested recipes available. Try adding more ingredients to your fridge or use different ingredients!</p>
             </div>
           ) : (
             <div className="recipe-grid">

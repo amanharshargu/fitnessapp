@@ -148,7 +148,7 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
         <input
           type="text"
           className="form-control"
-          placeholder="Ingredient name"
+          placeholder="Enter ingredient name (e.g., Tomatoes)"
           name="name"
           value={ingredient.name}
           onChange={handleInputChange}
@@ -159,7 +159,7 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
         <input
           type="number"
           className="form-control"
-          placeholder="Quantity"
+          placeholder="Enter quantity (e.g., 500)"
           name="quantity"
           value={ingredient.quantity}
           onChange={handleQuantityChange}
@@ -181,7 +181,7 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
         <input
           type="text"
           className="form-control"
-          placeholder="Unit"
+          placeholder="Enter unit (e.g., grams, pieces, ml)"
           name="unit"
           value={ingredient.unit}
           onChange={handleUnitChange}
@@ -211,7 +211,7 @@ function AddIngredientForm({ editingIngredient, onCancel }) {
           onBlur={handleDateBlur}
           required
           min={minDate}
-          placeholder="Expiry date"
+          placeholder="Select expiration date"
         />
       </div>
       <button type="submit" className="btn btn-success me-2">

@@ -43,56 +43,58 @@ function ExpiringIngredients({ ingredients }) {
   return (
     <div className="expiring-ingredients">
       <h3>Expiring Soon...</h3>
-      {Object.values(aggregatedIngredients).length > 0 ? (
-        <>
-          <ul className="expiring-list list-unstyled">
-            {Object.values(aggregatedIngredients).map((group) => (
-              <li key={group.name} className="expiring-group">
-                <div className="ingredient-name">
-                  <input
-                    type="checkbox"
-                    id={`select-${group.name}`}
-                    checked={!!selectedIngredients[group.name]}
-                    onChange={() => handleIngredientSelect(group.name)}
-                  />
-                  <label htmlFor={`select-${group.name}`}>{group.name}</label>
-                </div>
-                <ul className="expiring-items">
-                  {group.items.map((item) => (
-                    <li key={item.id} className="expiring-item">
-                      <div className="ingredient-details">
-                        <span className="ingredient-quantity">
-                          {formatQuantity(item.quantity, item.unit)}
-                        </span>
-                      </div>
-                      <div className="expiration-info">
-                        <span className="expiration-badge">
-                          {formatExpirationDate(item.expirationDate)}
-                        </span>
-                        <button
-                          className="delete-button"
-                          onClick={() => handleDelete(item.id)}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-          <button 
-            className="search-recipes-button" 
-            onClick={handleSearchRecipes}
-            disabled={Object.values(selectedIngredients).filter(Boolean).length === 0}
-          >
-            Search Recipes with Selected Ingredients
-          </button>
-        </>
-      ) : (
-        <p>No ingredients expiring within the next 7 days.</p>
-      )}
+      {ingredients.length > 0 ? (
+        Object.values(aggregatedIngredients).length > 0 ? (
+          <>
+            <ul className="expiring-list list-unstyled">
+              {Object.values(aggregatedIngredients).map((group) => (
+                <li key={group.name} className="expiring-group">
+                  <div className="ingredient-name">
+                    <input
+                      type="checkbox"
+                      id={`select-${group.name}`}
+                      checked={!!selectedIngredients[group.name]}
+                      onChange={() => handleIngredientSelect(group.name)}
+                    />
+                    <label htmlFor={`select-${group.name}`}>{group.name}</label>
+                  </div>
+                  <ul className="expiring-items">
+                    {group.items.map((item) => (
+                      <li key={item.id} className="expiring-item">
+                        <div className="ingredient-details">
+                          <span className="ingredient-quantity">
+                            {formatQuantity(item.quantity, item.unit)}
+                          </span>
+                        </div>
+                        <div className="expiration-info">
+                          <span className="expiration-badge">
+                            {formatExpirationDate(item.expirationDate)}
+                          </span>
+                          <button
+                            className="delete-button"
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+            <button 
+              className="search-recipes-button" 
+              onClick={handleSearchRecipes}
+              disabled={Object.values(selectedIngredients).filter(Boolean).length === 0}
+            >
+              Search Recipes with Selected Ingredients
+            </button>
+          </>
+        ) : (
+          <p>No ingredients expiring within the next 7 days.</p>
+        )
+      ) : null}
     </div>
   );
 }

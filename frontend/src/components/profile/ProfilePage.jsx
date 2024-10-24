@@ -1,32 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useUserDetails } from '../../contexts/UserDetailsContext';
-import UserProfileCard from '../dashboard/UserProfileCard';
-import UserDetailsModal from '../auth/UserDetailsModal';
+import UserProfileCard from './UserProfileCard';
 import '../../styles/ProfilePage.css';
 
 const ProfilePage = () => {
   const { user } = useAuth();
-  const { fetchUserDetails } = useUserDetails();
-  const [showModal, setShowModal] = useState(false);
+  const { fetchUserDetails, error } = useUserDetails();
+  const [loading, setLoading] = useState(true);
 
-  const handleSetUserDetails = () => {
-    setShowModal(true);
-  };
+  useEffect(() => {
+    const loadUserDetails = async () => {
+      setLoading(true);
+      await fetchUserDetails();
+      setLoading(false);
+    };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
+    loadUserDetails();
+  }, [fetchUserDetails]);
 
-  const handleDetailsSubmitted = () => {
-    fetchUserDetails();
-    setShowModal(false);
-  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="profile-page-container">
       <div className="profile-content">
-        <h1>My Profile</h1>
         <div className="profile-layout">
           <div className="profile-photo-container">
             {user.photo ? (
@@ -38,15 +41,10 @@ const ProfilePage = () => {
             )}
           </div>
           <div className="profile-details">
-            <UserProfileCard onSetUserDetails={handleSetUserDetails} />
+            <UserProfileCard />
           </div>
         </div>
       </div>
-      <UserDetailsModal
-        show={showModal}
-        onClose={handleCloseModal}
-        onDetailsSubmitted={handleDetailsSubmitted}
-      />
     </div>
   );
 };

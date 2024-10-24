@@ -15,44 +15,83 @@
   font-size: 1rem;
 }
 
-.user-info p {
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 8px;
+.non-editable-fields {
+  margin-bottom: 20px;
 }
 
-.user-info strong {
+.non-editable-field {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.non-editable-field strong {
   color: #333;
   font-weight: 600;
 }
 
-.set-details-btn {
+.editable-field {
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editable-field strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.display-value {
+  display: flex;
+  align-items: center;
+}
+
+.display-value span {
+  margin-right: 10px;
+}
+
+.edit-input {
+  display: flex;
+  align-items: center;
+}
+
+.edit-input input,
+.edit-input select {
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 150px;
+}
+
+.edit-input input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+.edit-input input[type="number"]::-webkit-inner-spin-button,
+.edit-input input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1; /* Show the steppers */
+}
+
+.edit-input select.wide-dropdown {
+  width: 200px;
+}
+
+.editable-field button {
   background-color: #ff9800;
   color: white;
   border: none;
-  padding: 12px 24px;
-  font-size: 1rem;
+  padding: 5px 10px;
+  font-size: 0.9rem;
   font-weight: bold;
-  border-radius: 30px;
+  border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
-  display: block;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.set-details-btn:hover {
+.editable-field button:hover {
   background-color: #f57c00;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.set-details-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .bmi-info {
@@ -61,10 +100,29 @@
   border-top: 2px solid #eee;
 }
 
-.bmi-info p {
-  margin-bottom: 8px;
-}
-
 .bmi-info strong {
   color: #ff9800;
+}
+
+.error {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+/* Remove the custom number input styles */
+.number-input,
+.number-input-buttons {
+  display: none;
 }

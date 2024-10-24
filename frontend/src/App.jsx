@@ -21,7 +21,6 @@ const Recipes = lazy(() => import(/* webpackChunkName: "recipes" */ "./component
 const LikedRecipes = lazy(() => import(/* webpackChunkName: "liked-recipes" */ "./components/recipes/LikedRecipes"));
 const SuggestedRecipes = lazy(() => import(/* webpackChunkName: "suggested-recipes" */ "./components/recipes/SuggestedRecipes"));
 const SignupModal = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/SignupModal"));
-const UserDetailsModal = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/UserDetailsModal"));
 const LoginModal = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/LoginModal"));
 const OAuthCallback = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/OAuthCallback"));
 const MealPlanner = lazy(() => import(/* webpackChunkName: "meal-planner" */ "./components/mealplanner/MealPlanner"));
@@ -41,14 +40,6 @@ function ConditionalLanding() {
 function AppRoutes() {
   const [showSignup, setShowSignup] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
-  const [showUserDetails, setShowUserDetails] = useState(false);
-  const [userDetailsVersion, setUserDetailsVersion] = useState(0);
-
-  const handleShowUserDetails = useCallback(() => setShowUserDetails(true), []);
-  const handleUserDetailsSubmitted = useCallback(() => {
-    setShowUserDetails(false);
-    setUserDetailsVersion(prev => prev + 1);
-  }, []);
 
   const handleSwitchToLogin = useCallback(() => {
     setShowSignup(false);
@@ -87,10 +78,7 @@ function AppRoutes() {
             path="/dashboard/*"
             element={
               <ProtectedRoute>
-                <Dashboard 
-                  onSetUserDetails={handleShowUserDetails} 
-                  userDetailsVersion={userDetailsVersion}
-                />
+                <Dashboard />
               </ProtectedRoute>
             }
           />
@@ -149,18 +137,12 @@ function AppRoutes() {
         <SignupModal
           show={showSignup}
           onClose={() => setShowSignup(false)}
-          onShowUserDetails={handleShowUserDetails}
           onSwitchToLogin={handleSwitchToLogin}
         />
         <LoginModal
           show={showLogin}
           onClose={() => setShowLogin(false)}
           onSwitchToSignup={handleSwitchToSignup}
-        />
-        <UserDetailsModal
-          show={showUserDetails}
-          onClose={() => setShowUserDetails(false)}
-          onDetailsSubmitted={handleUserDetailsSubmitted}
         />
       </Suspense>
     </Layout>

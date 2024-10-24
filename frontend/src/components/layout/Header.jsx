@@ -67,7 +67,7 @@ function Header() {
               >
                 {user?.photo && (
                   <img
-                    src={user.photo}
+                    src={user?.photo}
                     alt={displayName}
                     className="wisheat-header__user-photo"
                   />

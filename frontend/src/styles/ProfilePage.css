@@ -1,5 +1,5 @@
 .profile-page-container {
-  min-height: 100vh;
+  max-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,10 +14,12 @@
 .profile-content {
   max-width: 1000px;
   width: 100%;
+  height: 90vh;
   background-color: rgba(255, 255, 255, 0.95);
   border-radius: 20px;
-  padding: 40px;
+  padding: 100px 40px 40px 40px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .profile-content h1 {
@@ -31,6 +33,7 @@
 .profile-layout {
   display: flex;
   gap: 40px;
+  overflow-y: auto;
 }
 
 .profile-photo-container {
@@ -60,11 +63,17 @@
 
 .profile-details {
   flex: 1;
+  overflow-y: auto; /* Add scrollbar if content exceeds available space */
 }
 
 @media (max-width: 768px) {
+  .profile-content {
+    height: 90vh; /* Keep 90% height for mobile view as well */
+  }
+
   .profile-layout {
     flex-direction: column;
+    height: calc(100% - 70px);
   }
 
   .profile-photo-container {

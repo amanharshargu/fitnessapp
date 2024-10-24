@@ -75,10 +75,6 @@
   width: 150px;
 }
 
-.edit-input input[type="number"] {
-  -moz-appearance: textfield;
-}
-
 .edit-input input[type="number"]::-webkit-inner-spin-button,
 .edit-input input[type="number"]::-webkit-outer-spin-button {
   opacity: 1;

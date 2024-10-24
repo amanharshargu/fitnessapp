@@ -5,7 +5,7 @@ import "../../styles/Navbar.css";
 
 function Navbar() {
   const location = useLocation();
-  const [hoveredItem, setHoveredItem] = useState(null);
+  const [openDropdown, setOpenDropdown] = useState(null);
 
   const navItems = [
     { path: "/dashboard", name: "Dashboard", icon: FaHome, color: "#4CAF50" },
@@ -23,6 +23,10 @@ function Navbar() {
     { path: "/meal-planner", name: "Meal Planner", icon: FaCalendarAlt, color: "#9C27B0" },
   ];
 
+  const handleDropdownClick = (itemName) => {
+    setOpenDropdown(openDropdown === itemName ? null : itemName);
+  };
+
   return (
     <nav className="navbar">
       <ul className="navbar-nav">
@@ -30,20 +34,19 @@ function Navbar() {
           <li 
             key={item.name} 
             className={`nav-item ${item.dropdown ? 'has-dropdown' : ''}`}
-            onMouseEnter={() => setHoveredItem(item.name)}
-            onMouseLeave={() => setHoveredItem(null)}
           >
             {item.dropdown ? (
               <>
                 <div 
                   className={`nav-link ${location.pathname.startsWith('/recipes') || location.pathname === '/liked-recipes' || location.pathname === '/suggested-recipes' ? "active" : ""}`}
                   style={{ "--nav-color": item.color }}
+                  onClick={() => handleDropdownClick(item.name)}
                 >
                   <item.icon className="nav-icon" />
                   <span>{item.name}</span>
-                  <FaCaretDown className={`dropdown-icon ${hoveredItem === item.name ? 'open' : ''}`} />
+                  <FaCaretDown className={`dropdown-icon ${openDropdown === item.name ? 'open' : ''}`} />
                 </div>
-                <ul className={`dropdown-menu ${hoveredItem === item.name ? 'show' : ''}`}>
+                <ul className={`dropdown-menu ${openDropdown === item.name ? 'show' : ''}`}>
                   {item.dropdown.map((dropdownItem) => (
                     <li key={dropdownItem.path}>
                       <Link

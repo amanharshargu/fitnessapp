@@ -16,7 +16,6 @@ const ProfilePage = () => {
       await fetchUserDetails();
       setLoading(false);
     };
-
     loadUserDetails();
   }, [fetchUserDetails]);
 

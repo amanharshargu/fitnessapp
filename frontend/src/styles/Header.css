@@ -102,6 +102,15 @@
   object-fit: cover;
 }
 
+.wisheat-header__dropdown-icon {
+  margin-left: 5px;
+  transition: transform 0.3s ease;
+}
+
+.wisheat-header__dropdown-icon.open {
+  transform: rotate(180deg);
+}
+
 @media (max-width: 768px) {
   .wisheat-header {
     padding: 10px 0;

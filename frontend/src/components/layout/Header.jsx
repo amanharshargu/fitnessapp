@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import LoginModal from "../auth/LoginModal";
 import SignupModal from "../auth/SignupModal";
+import { FaCaretDown } from "react-icons/fa";
 import "../../styles/Header.css";
 
 function Header() {
@@ -73,6 +74,7 @@ function Header() {
                   />
                 )}
                 {displayName}
+                <FaCaretDown className={`wisheat-header__dropdown-icon ${showDropdown ? 'open' : ''}`} />
               </button>
               {showDropdown && (
                 <div className="wisheat-header__dropdown-content">

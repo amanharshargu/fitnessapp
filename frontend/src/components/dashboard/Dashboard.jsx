@@ -7,7 +7,7 @@ import ContentWrapper from "../layout/ContentWrapper";
 import api from "../../services/api";
 import "../../styles/Dashboard.css";
 
-function Dashboard({ onSetUserDetails, userDetailsVersion }) {
+function Dashboard({ userDetailsVersion }) {
   const { user } = useAuth();
   const { fetchUserDetails, userDetails } = useUserDetails();
   const [loading, setLoading] = useState(true);

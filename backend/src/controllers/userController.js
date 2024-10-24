@@ -1,6 +1,4 @@
 const { User } = require("../models");
-const { calculateCalories } = require("../utils/calorieCalculator");
-const { Op } = require("sequelize");
 
 const getUserById = async (userId) => {
   const user = await User.findByPk(userId, {

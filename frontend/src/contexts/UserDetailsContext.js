@@ -16,7 +16,7 @@ export function UserDetailsProvider({ children }) {
     gender: "",
     goal: "",
     activityLevel: "",
-    photo: "", // Add this line
+    photo: "",
   });
 
   const updateUserDetails = useCallback((newDetails) => {

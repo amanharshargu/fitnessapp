@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useAuth } from "../contexts/AuthContext";
 import { useRecipes } from "../contexts/RecipeContext";
 import LoginModal from "./auth/LoginModal";
 import SignupModal from "./auth/SignupModal";
 import "../styles/LandingPage.css";
 
 function LandingPage() {
-  const { isLoggedIn } = useAuth();
   const { getRandomRecipes } = useRecipes();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isSignup, setIsSignup] = useState(false);

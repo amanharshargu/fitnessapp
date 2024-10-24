@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useIngredients } from "../contexts/IngredientContext";
 import { useAuth } from "../contexts/AuthContext";
-import api from "../services/api";
 
 export function useIngredientForm(editingIngredient) {
   const [ingredient, setIngredient] = useState({

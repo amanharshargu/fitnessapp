@@ -81,7 +81,7 @@
 }
 
 .dropdown-icon {
-  margin-left: auto;
+  margin-left: 10%;
   transition: transform 0.3s ease;
 }
 
@@ -104,6 +104,7 @@
 
 .dropdown-menu.show {
   max-height: 300px;
+  left: 0;
   width: 100%;
   padding: 8px 0;
 }

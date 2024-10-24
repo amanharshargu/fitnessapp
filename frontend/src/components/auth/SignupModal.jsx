@@ -67,7 +67,11 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
       onSignupSuccess();
       navigate("/profile"); // Navigate to profile page after successful signup
     } catch (error) {
-      setError("Failed to create an account");
+      if (error.response && error.response.data && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError("Failed to create an account. Please try again.");
+      }
     }
   };
 

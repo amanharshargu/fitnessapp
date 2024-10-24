@@ -12,7 +12,7 @@ const register = async (req, res) => {
 
     const existingUserEmail = await User.findOne({ where: { email } });
     if (existingUserEmail) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "An account with this email already exists" });
     }
 
     const existingUserUsername = await User.findOne({ where: { username } });

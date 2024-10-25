@@ -181,29 +181,83 @@ export const RecipeProvider = ({ children }) => {
     }
   }, []);
 
-  const getFallbackRecipes = (count) => {
-    const fallbackRecipes = [
+  const getCuratedDishes = useCallback(async (count) => {
+    const curatedRecipes = [
       {
-        uri: "http://www.edamam.com/ontologies/edamam.owl#recipe_1",
-        label: "Grilled Chicken Salad",
-        image: "https://example.com/grilled-chicken-salad.jpg",
-        // ... other recipe properties
+        uri: "recipe_1",
+        label: "Mediterranean Buddha Bowl",
+        image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800",
+        calories: 450,
+        url: "https://unsplash.com/photos/buddha-bowl",
       },
       {
-        uri: "http://www.edamam.com/ontologies/edamam.owl#recipe_2",
-        label: "Vegetarian Pasta",
-        image: "https://example.com/vegetarian-pasta.jpg",
-        // ... other recipe properties
+        uri: "recipe_2",
+        label: "Grilled Salmon with Asparagus",
+        image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800",
+        calories: 380,
+        url: "https://unsplash.com/photos/grilled-salmon",
       },
       {
-        uri: "http://www.edamam.com/ontologies/edamam.owl#recipe_3",
-        label: "Salmon with Roasted Vegetables",
-        image: "https://example.com/salmon-roasted-vegetables.jpg",
-        // ... other recipe properties
+        uri: "recipe_3",
+        label: "Colorful Quinoa Salad",
+        image: "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=800",
+        calories: 320,
+        url: "https://unsplash.com/photos/quinoa-salad",
       },
+      {
+        uri: "recipe_4",
+        label: "Avocado Toast with Eggs",
+        image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800",
+        calories: 280,
+        url: "https://unsplash.com/photos/avocado-toast",
+      },
+      {
+        uri: "recipe_5",
+        label: "Berry Smoothie Bowl",
+        image: "https://images.unsplash.com/photo-1494597564530-871f2b93ac55?w=800",
+        calories: 290,
+        url: "https://unsplash.com/photos/smoothie-bowl",
+      },
+      {
+        uri: "recipe_6",
+        label: "Grilled Chicken & Vegetables",
+        image: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=800",
+        calories: 410,
+        url: "https://unsplash.com/photos/grilled-chicken",
+      },
+      {
+        uri: "recipe_7",
+        label: "Fresh Poke Bowl",
+        image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800",
+        calories: 440,
+        url: "https://unsplash.com/photos/poke-bowl",
+      },
+      {
+        uri: "recipe_8",
+        label: "Mediterranean Mezze Platter",
+        image: "https://images.unsplash.com/photo-1544510808-91bcbee1df55?w=800",
+        calories: 520,
+        url: "https://unsplash.com/photos/mezze-platter",
+      },
+      {
+        uri: "recipe_9",
+        label: "Green Power Salad",
+        image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800",
+        calories: 280,
+        url: "https://unsplash.com/photos/power-salad",
+      },
+      {
+        uri: "recipe_10",
+        label: "Roasted Sweet Potato Bowl",
+        image: "https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?w=800",
+        calories: 390,
+        url: "https://unsplash.com/photos/sweet-potato-bowl",
+      }
     ];
-    return fallbackRecipes.slice(0, count);
-  };
+
+    const shuffled = curatedRecipes.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -221,6 +275,7 @@ export const RecipeProvider = ({ children }) => {
       setShowFilters,
       fetchLikedRecipes,
       getRandomRecipes,
+      getCuratedDishes,
     }),
     [
       recipes,
@@ -233,6 +288,7 @@ export const RecipeProvider = ({ children }) => {
       showFilters,
       fetchLikedRecipes,
       getRandomRecipes,
+      getCuratedDishes,
     ]
   );
 

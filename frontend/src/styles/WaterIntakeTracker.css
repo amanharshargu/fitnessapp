@@ -1,0 +1,138 @@
+.water-tracker {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.water-tracker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.water-tracker h3 {
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.add-water-btn {
+  background: #2196F3;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.add-water-btn:hover:not(:disabled) {
+  background: #1976D2;
+  transform: translateY(-1px);
+}
+
+.add-water-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.add-water-btn.updating {
+  background: #90CAF9;
+  cursor: not-allowed;
+}
+
+.water-stats {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.water-amount {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.water-amount .current { color: #2196F3; }
+.water-amount .separator { color: #ccc; margin: 0 5px; }
+.water-amount .goal { color: #90CAF9; }
+.water-amount .unit {
+  font-size: 1rem;
+  color: #666;
+  margin-left: 5px;
+}
+
+.glasses-info {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.water-progress {
+  background: #E3F2FD;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.water-progress-fill {
+  height: 100%;
+  background: #2196F3;
+  border-radius: 6px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.water-ripple {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: ripple 2s linear infinite;
+}
+
+@keyframes ripple {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.water-feedback {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(33, 150, 243, 0.9);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  animation: fadeInOut 1.5s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, -40%); }
+  20% { opacity: 1; transform: translate(-50%, -50%); }
+  80% { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -60%); }
+}
+
+@media (max-width: 768px) {
+  .water-tracker {
+    padding: 15px;
+  }
+
+  .water-amount {
+    font-size: 1.5rem;
+  }
+
+  .add-water-btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+} 

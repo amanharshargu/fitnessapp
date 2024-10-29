@@ -35,7 +35,6 @@ function LikedRecipes() {
   return (
     <ContentWrapper>
       <div className="liked-recipes-container">
-        <h1 className="liked-recipes-title">Liked Recipes</h1>
         <div className="search-container">
           <input
             type="text"

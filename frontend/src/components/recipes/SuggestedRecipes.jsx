@@ -40,9 +40,12 @@ function SuggestedRecipes() {
   return (
     <div style={{ paddingLeft: '220px', paddingTop: '70px' }}>
       <div className="suggested-recipes-container">
-        <h2 className="suggested-recipes-title">Suggested Recipes</h2>
-        <button onClick={fetchSuggestedRecipes} className="suggest-button">
-          Suggest New Recipes
+        <button 
+          onClick={fetchSuggestedRecipes} 
+          className="suggest-button"
+          disabled={loading}
+        >
+          {loading ? 'Finding Recipes...' : 'Suggest New Recipes'}
         </button>
         <div className="suggested-recipes">
           {loading ? (

@@ -1,0 +1,84 @@
+.daily-motivation {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.motivation-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.greeting-section {
+  text-align: center;
+  padding: 5px 0;
+}
+
+.greeting-section h3 {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.motivational-quote {
+  color: #666;
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.4;
+  padding: 0 15px;
+}
+
+.daily-tip {
+  background: #fff5e6;
+  border-radius: 10px;
+  padding: 15px;
+  border: 1px solid rgba(255, 120, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.daily-tip:hover {
+  transform: translateY(-2px);
+}
+
+.daily-tip h4 {
+  color: #ff7800;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.daily-tip p {
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+@media (max-width: 768px) {
+  .daily-motivation {
+    padding: 15px;
+  }
+
+  .greeting-section h3 {
+    font-size: 1.1rem;
+  }
+
+  .motivational-quote {
+    font-size: 0.9rem;
+    padding: 0 10px;
+  }
+
+  .daily-tip {
+    padding: 12px;
+  }
+
+  .daily-tip p {
+    font-size: 0.85rem;
+  }
+} 

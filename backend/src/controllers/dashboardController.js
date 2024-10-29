@@ -1,4 +1,4 @@
-const { User, EatenDish } = require("../models");
+const { User, EatenDish, Water } = require("../models");
 const { calculateCalories } = require("../utils/calorieCalculator");
 const { Op } = require("sequelize");
 const moment = require('moment');
@@ -235,6 +235,69 @@ exports.getWeeklyCalorieData = async (req, res) => {
     console.error("Error fetching weekly calorie data:", error);
     res.status(500).json({
       message: "Error fetching weekly calorie data",
+      error: error.message
+    });
+  }
+};
+
+exports.getWaterIntake = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const today = moment().startOf('day');
+
+    const waterIntakes = await Water.findAll({
+      where: {
+        userId,
+        date: today.format('YYYY-MM-DD')
+      },
+      attributes: [
+        [sequelize.fn('SUM', sequelize.col('amount')), 'totalAmount']
+      ]
+    });
+
+    const intake = waterIntakes[0].getDataValue('totalAmount') || 0;
+    res.json({ intake });
+  } catch (error) {
+    console.error('Error fetching water intake:', error);
+    res.status(500).json({
+      message: 'Error fetching water intake',
+      error: error.message
+    });
+  }
+};
+
+exports.addWaterIntake = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { amount } = req.body;
+
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ message: 'Invalid amount' });
+    }
+
+    const waterIntake = await Water.create({
+      userId,
+      amount,
+      date: moment().format('YYYY-MM-DD')
+    });
+
+    // Get updated total for today
+    const todayTotal = await Water.findAll({
+      where: {
+        userId,
+        date: moment().format('YYYY-MM-DD')
+      },
+      attributes: [
+        [sequelize.fn('SUM', sequelize.col('amount')), 'totalAmount']
+      ]
+    });
+
+    const intake = todayTotal[0].getDataValue('totalAmount') || 0;
+    res.status(201).json({ intake });
+  } catch (error) {
+    console.error('Error adding water intake:', error);
+    res.status(500).json({
+      message: 'Error adding water intake',
       error: error.message
     });
   }

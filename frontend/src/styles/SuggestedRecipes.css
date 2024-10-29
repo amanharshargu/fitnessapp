@@ -12,13 +12,6 @@
   overflow: hidden;
 }
 
-.suggested-recipes-container .suggested-recipes-title {
-  font-size: 2.5rem;
-  color: #ff9800;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
 .suggested-recipes {
   flex-grow: 1;
   overflow-y: auto;
@@ -31,19 +24,43 @@
 }
 
 .suggest-button {
-  background-color: #FF9800;
+  background: linear-gradient(45deg, #ff9800, #ff7800);
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 16px;
-  margin-bottom: 20px;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto 30px;
 }
 
 .suggest-button:hover {
-  background-color: #F57C00;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+  background: linear-gradient(45deg, #ff7800, #ff6d00);
+}
+
+.suggest-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(255, 152, 0, 0.2);
+}
+
+.suggest-button::before {
+  content: '✨';
+  font-size: 1.2rem;
+}
+
+.suggest-button:disabled {
+  background: linear-gradient(45deg, #ffb74d, #ffa726);
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.7;
 }
 
 .recipe-grid {

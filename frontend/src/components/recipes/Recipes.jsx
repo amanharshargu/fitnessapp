@@ -132,38 +132,38 @@ function Recipes() {
     }
 
     return (
-      <div className={`pagination-container d-flex justify-content-center ${isBottom ? 'pagination-bottom' : ''}`}>
-        <ul className="pagination">
-          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-            <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>
+      <div className={`recipes-pagination-container d-flex justify-content-center ${isBottom ? 'recipes-pagination-bottom' : ''}`}>
+        <ul className="recipes-pagination">
+          <li className={`recipes-page-item ${currentPage === 1 ? 'recipes-disabled' : ''}`}>
+            <button className="recipes-page-link" onClick={() => handlePageChange(currentPage - 1)}>
               &laquo;
             </button>
           </li>
           {startPage > 1 && (
             <>
-              <li className="page-item">
-                <button className="page-link" onClick={() => handlePageChange(1)}>1</button>
+              <li className="recipes-page-item">
+                <button className="recipes-page-link" onClick={() => handlePageChange(1)}>1</button>
               </li>
-              {startPage > 2 && <li className="page-item disabled"><span className="page-link">...</span></li>}
+              {startPage > 2 && <li className="recipes-page-item recipes-disabled"><span className="recipes-page-link">...</span></li>}
             </>
           )}
           {pageNumbers.map(number => (
-            <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
-              <button className="page-link" onClick={() => handlePageChange(number)}>
+            <li key={number} className={`recipes-page-item ${currentPage === number ? 'recipes-active' : ''}`}>
+              <button className="recipes-page-link" onClick={() => handlePageChange(number)}>
                 {number}
               </button>
             </li>
           ))}
           {endPage < totalPages && (
             <>
-              {endPage < totalPages - 1 && <li className="page-item disabled"><span className="page-link">...</span></li>}
-              <li className="page-item">
-                <button className="page-link" onClick={() => handlePageChange(totalPages)}>{totalPages}</button>
+              {endPage < totalPages - 1 && <li className="recipes-page-item recipes-disabled"><span className="recipes-page-link">...</span></li>}
+              <li className="recipes-page-item">
+                <button className="recipes-page-link" onClick={() => handlePageChange(totalPages)}>{totalPages}</button>
               </li>
             </>
           )}
-          <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-            <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>
+          <li className={`recipes-page-item ${currentPage === totalPages ? 'recipes-disabled' : ''}`}>
+            <button className="recipes-page-link" onClick={() => handlePageChange(currentPage + 1)}>
               &raquo;
             </button>
           </li>
@@ -173,7 +173,7 @@ function Recipes() {
   };
 
   const LoadingAnimation = () => (
-    <div className="loading-animation" style={{
+    <div className="recipes-loading-animation" style={{
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -186,13 +186,13 @@ function Recipes() {
       backgroundColor: 'rgba(255, 255, 255, 0)',
       zIndex: 1000
     }}>
-      <div className="spinner" style={{
+      <div className="recipes-spinner" style={{
         width: '60px',
         height: '60px',
         border: '6px solid #ffe290',
         borderTop: '6px solid #ff9800',
         borderRadius: '50%',
-        animation: 'spin 1s linear infinite',
+        animation: 'recipes-spin 1s linear infinite',
         boxShadow: '0 0 10px rgba(255, 152, 0, 0.3)'
       }}></div>
       <p style={{
@@ -203,7 +203,7 @@ function Recipes() {
       }}>Loading...</p>
       <style>
         {`
-          @keyframes spin {
+          @keyframes recipes-spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
           }
@@ -213,21 +213,21 @@ function Recipes() {
   );
 
   return (
-    <div className="recipes-container">
+    <div className="recipes-page">
       <div className="recipes-content">
-        <div className="search-and-filter">
-          <form onSubmit={handleSearchWrapper} className="search-form">
-            <div className="input-group">
+        <div className="recipes-search-section">
+          <form onSubmit={handleSearchWrapper} className="recipes-search-form">
+            <div className="recipes-search-wrapper">
               <input
                 type="text"
-                className="form-control search-input"
+                className="recipes-search-input"
                 placeholder="Search recipes"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <button 
                 type="submit" 
-                className="btn btn-primary search-button"
+                className="recipes-search-button"
                 disabled={!searchTerm.trim()}
               >
                 Search
@@ -236,9 +236,7 @@ function Recipes() {
           </form>
           {hasSearched && (
             <button
-              className={`btn ${
-                showFilters ? "btn-secondary" : "btn-outline-secondary"
-              } show-filters-btn`}
+              className={`recipes-filter-toggle ${showFilters ? "active" : ""}`}
               onClick={() => setShowFilters(!showFilters)}
             >
               {showFilters ? "Hide Filters" : "Show Filters"}
@@ -247,57 +245,46 @@ function Recipes() {
         </div>
 
         {showFilters && (
-          <div className="filters-section mb-1">
-            <div className="d-flex justify-content-start">
+          <div className="recipes-filters-section">
+            <div className="recipes-filter-buttons">
               {Object.keys(filterOptions).map((filterType) => (
                 <button
                   key={filterType}
-                  className={`btn ${
-                    activeFilter === filterType
-                      ? "btn-primary active-filter"
-                      : "btn-outline-primary"
-                  } me-2`}
-                  onClick={() =>
-                    setActiveFilter(
-                      activeFilter === filterType ? null : filterType
-                    )
-                  }
+                  className={`recipes-filter-btn ${
+                    activeFilter === filterType ? "active" : ""
+                  }`}
+                  onClick={() => setActiveFilter(activeFilter === filterType ? null : filterType)}
                 >
                   {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
                 </button>
               ))}
-              <button
-                className="btn btn-outline-secondary me-2"
-                onClick={clearFilters}
-              >
+              <button className="recipes-clear-btn" onClick={clearFilters}>
                 Clear Filters
               </button>
-              <button className="btn btn-success" onClick={handleApplyFilters}>
+              <button className="recipes-apply-btn" onClick={handleApplyFilters}>
                 Apply Filters
               </button>
             </div>
             {activeFilter && (
-              <div className="mb-3">
-                <div className="filter-options">
-                  {filterOptions[activeFilter].map((option) => (
-                    <label key={option} className="custom-checkbox">
-                      <input
-                        type="checkbox"
-                        checked={filters[activeFilter].includes(option)}
-                        onChange={() => handleFilterChange(activeFilter, option)}
-                      />
-                      <span className="checkmark"></span>
-                      <span className="label-text">{option}</span>
-                    </label>
-                  ))}
-                </div>
+              <div className="recipes-filter-options">
+                {filterOptions[activeFilter].map((option) => (
+                  <label key={option} className="recipes-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={filters[activeFilter].includes(option)}
+                      onChange={() => handleFilterChange(activeFilter, option)}
+                    />
+                    <span className="recipes-checkmark"></span>
+                    <span className="recipes-label-text">{option}</span>
+                  </label>
+                ))}
               </div>
             )}
           </div>
         )}
 
         {recipes.length > 0 && (
-          <div className="d-flex justify-content-between align-items-center mb-3">
+          <div className="recipes-pagination">
             {!isLoading && <PaginationControls />}
           </div>
         )}
@@ -306,9 +293,9 @@ function Recipes() {
           <LoadingAnimation />
         ) : recipes.length > 0 ? (
           <>
-            <div className="row">
+            <div className="recipes-grid">
               {currentRecipes.map((recipe, index) => (
-                <div key={`${recipe.uri}-${index}`} className="col-md-3 col-sm-6 mb-4">
+                <div key={`${recipe.uri}-${index}`} className="recipes-grid-item">
                   <RecipeCard
                     recipe={recipe}
                     isLiked={likedRecipes.some(likedRecipe => likedRecipe.uri === recipe.uri)}
@@ -317,10 +304,12 @@ function Recipes() {
                 </div>
               ))}
             </div>
-            <PaginationControls isBottom={true} />
+            <div className="recipes-pagination bottom">
+              <PaginationControls isBottom={true} />
+            </div>
           </>
         ) : (
-          <div className="no-recipes-message">
+          <div className="recipes-no-results">
             <p>No recipes found. Try searching for a recipe or adjusting your filters.</p>
           </div>
         )}

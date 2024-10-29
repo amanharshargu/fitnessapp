@@ -5,6 +5,8 @@ import WeeklyCalorieTracker from "./WeeklyCalorieTracker";
 import DailyCalorieGoal from "./DailyCalorieGoal";
 import ContentWrapper from "../layout/ContentWrapper";
 import api from "../../services/api";
+import WaterIntakeTracker from './WaterIntakeTracker';
+import DailyMotivation from './DailyMotivation';
 import "../../styles/Dashboard.css";
 
 function Dashboard({ userDetailsVersion }) {
@@ -13,12 +15,12 @@ function Dashboard({ userDetailsVersion }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [weeklyData, setWeeklyData] = useState([]);
+  const [waterIntake, setWaterIntake] = useState(0);
 
   const loadUserDetails = useCallback(async () => {
     try {
       await fetchUserDetails();
     } catch (err) {
-      console.error("Failed to fetch user details:", err);
       setError("Failed to load user details. Please try again.");
     } finally {
       setLoading(false);
@@ -30,53 +32,53 @@ function Dashboard({ userDetailsVersion }) {
       const response = await api.get('/dashboard/weekly-calorie-data');
       setWeeklyData(response.data);
     } catch (error) {
-      console.error('Error fetching weekly calorie data:', error);
       setError("Failed to load weekly calorie data. Please try again.");
+    }
+  }, []);
+
+  const fetchWaterIntake = useCallback(async () => {
+    try {
+      const response = await api.get('/dashboard/water-intake');
+      setWaterIntake(response.data.intake);
+    } catch (error) {
+      console.error('Error fetching water intake:', error);
     }
   }, []);
 
   useEffect(() => {
     loadUserDetails();
     fetchWeeklyData();
-  }, [loadUserDetails, fetchWeeklyData, userDetailsVersion]);
+    fetchWaterIntake();
+  }, [loadUserDetails, fetchWeeklyData, fetchWaterIntake, userDetailsVersion]);
 
-  const handleDishesChanged = useCallback(() => {
-    fetchWeeklyData();
-  }, [fetchWeeklyData]);
-
-  if (loading) {
-    return <div className="loading-message">Loading user details...</div>;
-  }
-
-  if (error) {
-    return <div className="error-message">{error}</div>;
-  }
+  if (loading) return <div className="loading-message">Loading user details...</div>;
+  if (error) return <div className="error-message">{error}</div>;
+  if (!user) return <p>User data not available.</p>;
 
   return (
     <ContentWrapper>
       <div className="dashboard-container">
         <div className="dashboard-grid">
-          {user ? (
-            <>
-              <div className="dashboard-row">
-                <div className="dashboard-column">
-                  <DailyCalorieGoal 
-                    key={`calorie-goal-${userDetailsVersion}`} 
-                    userDetails={userDetails} 
-                    onDishesChanged={handleDishesChanged}
-                  />
-                </div>
-                <div className="dashboard-column">
-                  <WeeklyCalorieTracker 
-                    key={`calorie-tracker-${userDetailsVersion}`} 
-                    weeklyData={weeklyData}
-                  />
-                </div>
-              </div>
-            </>
-          ) : (
-            <p>User data not available.</p>
-          )}
+          <div className="dashboard-main-content">
+            <div className="dashboard-left-column">
+              <DailyMotivation />
+              <DailyCalorieGoal 
+                key={`calorie-goal-${userDetailsVersion}`} 
+                userDetails={userDetails} 
+                onDishesChanged={fetchWeeklyData}
+              />
+            </div>
+            <div className="dashboard-right-column">
+              <WeeklyCalorieTracker 
+                key={`calorie-tracker-${userDetailsVersion}`} 
+                weeklyData={weeklyData}
+              />
+              <WaterIntakeTracker 
+                intake={waterIntake} 
+                onUpdate={fetchWaterIntake}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </ContentWrapper>

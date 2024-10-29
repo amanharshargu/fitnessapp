@@ -1,40 +1,23 @@
 .dcg-daily-calorie-goal {
-  background-color: #fff;
-  border-radius: 10px;
+  background: white;
+  border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 4px 6px rgba(255, 120, 0, 0.1);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.dcg-daily-calorie-goal h3 {
-  color: #ff7800;
-  font-size: 1.5rem;
-  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .dcg-goal-content {
   display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  overflow: hidden;
-}
-
-.dcg-goal-chart-container {
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.dcg-goal-chart-wrapper {
-  display: flex;
-  align-items: center;
   gap: 20px;
 }
 
+.dcg-goal-chart-container {
+  flex: 0 0 auto;
+  width: 180px;
+}
+
 .dcg-goal-chart {
-  width: 150px;
-  flex-shrink: 0;
+  width: 120px;
+  margin: 0 auto;
 }
 
 .dcg-circular-chart {
@@ -43,64 +26,41 @@
   height: auto;
 }
 
-.dcg-goal-info {
-  flex-grow: 1;
+/* Progress Circle Styles */
+.dcg-circle-bg {
+  fill: none;
+  stroke: #ffe290;
+  stroke-width: 2.8;
 }
 
-.dcg-calorie-info {
-  font-size: 1rem;
-  color: #ff7800;
-  margin-bottom: 10px;
+.dcg-circle {
+  fill: none;
+  stroke: #ff7800;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.3s ease;
 }
 
-.dcg-goal-reached {
-  background-color: #d4edda;
-  border-color: #c3e6cb;
-  color: #155724;
-  padding: 10px;
-  border-radius: 5px;
-  animation: pulse 2s infinite;
-}
-
-.dcg-calorie-warning {
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-  color: #721c24;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-.dcg-goal-reached p,
-.dcg-calorie-warning p {
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
+.dcg-circle-bg.dcg-goal-reached-bg {
+  stroke: #28a745;
 }
 
 .dcg-percentage {
-  fill: #666;
-  font-family: sans-serif;
-  font-size: 0.35em; /* Reduced from 0.5em */
+  fill: #333;
+  font-size: 0.5em;
   text-anchor: middle;
+  font-weight: bold;
+}
+
+.dcg-calorie-info {
+  font-size: 0.9rem;
+  margin: 10px 0;
+  text-align: center;
 }
 
 .dcg-goal-details {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  overflow: hidden;
+  flex: 1;
+  min-width: 0;
 }
 
 .dcg-form {
@@ -109,168 +69,106 @@
 
 .dcg-form-inputs {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  gap: 8px;
 }
 
 .dcg-form-inputs input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ffe290;
-  border-radius: 5px;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   font-size: 0.9rem;
-}
-
-.dcg-form-inputs input:focus {
-  border-color: #ff9800;
-  outline: none;
 }
 
 .dcg-form-inputs button {
-  background-color: #ffd600;
-  color: #333;
+  padding: 6px 12px;
+  background: #ff7800;
+  color: white;
   border: none;
-  padding: 8px 15px;
-  font-size: 0.9rem;
-  font-weight: bold;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  white-space: nowrap;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
 }
 
 .dcg-form-inputs button:hover {
-  background-color: #ffc107;
-  transform: translateY(-2px);
-}
-
-.dcg-form-button-container {
-  display: none;
+  background: #ff9800;
 }
 
 .dcg-dishes-list-container {
-  flex-grow: 1;
+  max-height: 150px; /* Reduced height */
   overflow-y: auto;
-  max-height: 150px;
-  border-radius: 5px;
-  padding: 5px;
 }
 
 .dcg-dishes-list {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
   margin: 0;
 }
 
 .dcg-dishes-list li {
-  margin-bottom: 5px; /* Reduced margin */
+  margin-bottom: 4px;
 }
 
 .dcg-dish-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 10px; /* Reduced padding */
-  border-bottom: 1px solid #ffe290;
-  background-color: #fff;
-  transition: background-color 0.3s ease;
+  background: #f8f8f8;
+  border-radius: 4px;
+  padding: 4px 8px;
 }
 
-.dcg-dish-content:hover {
-  background-color: #fff9e6; /* Light yellow background on hover */
+.dcg-goal-reached, .dcg-calorie-warning {
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
-.dcg-dishes-list li:last-child .dcg-dish-content {
-  border-bottom: none;
+.dcg-goal-reached {
+  color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
 }
 
-.dcg-dish-info {
-  font-weight: 500; /* Slightly reduced font weight */
-  color: #ff7800;
-  font-size: 0.9rem; /* Reduced font size */
+.dcg-calorie-warning {
+  color: #dc3545;
+  background: rgba(220, 53, 69, 0.1);
 }
 
-.dcg-dish-calories {
-  font-size: 0.8rem; /* Reduced font size */
-  color: #ff7800;
+.dcg-dishes-list-container::-webkit-scrollbar {
+  width: 6px;
 }
 
-.dcg-dish-actions {
-  display: flex;
-  gap: 5px;
+.dcg-dishes-list-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
 }
 
-.dcg-dish-actions button {
-  background-color: transparent;
-  border: none;
-  color: #ff7800;
-  cursor: pointer;
-  font-size: 0.8rem; /* Reduced font size */
-  padding: 2px 5px;
-  transition: color 0.3s ease, background-color 0.3s ease;
+.dcg-dishes-list-container::-webkit-scrollbar-thumb {
+  background: #ddd;
   border-radius: 3px;
 }
 
-.dcg-dish-actions button:hover {
-  color: #fff;
-  background-color: #ff7800;
-}
+@media (max-width: 768px) {
+  .dcg-goal-content {
+    flex-direction: column;
+  }
 
-.dcg-editing-dish {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-}
+  .dcg-goal-chart-container {
+    width: 100%;
+  }
 
-.dcg-editing-dish input {
-  padding: 3px 5px;
-  border: 1px solid #ffe290;
-  border-radius: 3px;
-  font-size: 0.8rem;
-}
+  .dcg-goal-chart {
+    width: 100px;
+    margin: 0 auto;
+  }
 
-.dcg-editing-dish-actions {
-  display: flex;
-  gap: 3px;
-}
+  .dcg-form-inputs {
+    flex-wrap: wrap;
+  }
 
-.dcg-editing-dish-actions button {
-  background-color: #ffd600;
-  color: #333;
-  border: none;
-  padding: 3px 8px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.dcg-editing-dish-actions button:hover {
-  background-color: #ff7800;
-  color: #fff;
-}
-
-.dcg-circle-bg {
-  fill: none;
-  stroke: #ffe290;
-  stroke-width: 3.8;
-  transition: stroke 0.3s ease;
-}
-
-.dcg-circle-bg.dcg-goal-reached-bg {
-  stroke-width: 3.8;
-}
-
-.dcg-circle {
-  fill: none;
-  stroke-width: 2.8;
-  stroke-linecap: round;
-  animation: progress 1s ease-out forwards;
-}
-
-@keyframes progress {
-  0% {
-    stroke-dasharray: 0 100;
+  .dcg-form-inputs input,
+  .dcg-form-inputs button {
+    flex: 1;
   }
 }

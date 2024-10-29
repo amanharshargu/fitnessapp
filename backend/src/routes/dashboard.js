@@ -22,4 +22,8 @@ router.delete(
 
 router.get("/weekly-calorie-data", authMiddleware, dashboardController.getWeeklyCalorieData);
 
+// Water intake routes
+router.get("/water-intake", authMiddleware, dashboardController.getWaterIntake);
+router.post("/water-intake", authMiddleware, dashboardController.addWaterIntake);
+
 module.exports = router;

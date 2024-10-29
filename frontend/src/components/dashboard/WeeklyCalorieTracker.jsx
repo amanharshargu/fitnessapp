@@ -37,7 +37,7 @@ function WeeklyCalorieTracker({ weeklyData }) {
     if (isToday) {
       if (calories > dailyCalorieGoal) return '#ff4444';
       if (calories === dailyCalorieGoal) return '#66BB6A';
-      return '#2196F3';
+      return '#ff7800';
     }
     return '#8e9aaf';
   };

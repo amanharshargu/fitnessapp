@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useIngredients } from "../../contexts/IngredientContext";
 import { useExpiringIngredients, useIngredientList, formatQuantity } from "../../hooks/useIngredientForm";
 import "../../styles/IngredientList.css";
@@ -7,6 +7,73 @@ function IngredientList() {
   const { ingredients, deleteIngredient } = useIngredients();
   const { formatExpirationDate } = useExpiringIngredients(ingredients);
   const { processedIngredients } = useIngredientList(ingredients);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+
+  const handleDelete = (id) => {
+    setDeleteConfirm(id);
+  };
+
+  const confirmDelete = async (id) => {
+    try {
+      setDeletingId(id);
+      await deleteIngredient(id);
+    } finally {
+      setDeletingId(null);
+      setDeleteConfirm(null);
+    }
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirm(null);
+  };
+
+  const renderDeleteButton = (id) => (
+    <>
+      {deleteConfirm === id ? (
+        <div className="delete-confirmation">
+          {deletingId === id ? (
+            <div className="delete-loading">
+              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <span>Deleting...</span>
+            </div>
+          ) : (
+            <>
+              <span>Are you sure?</span>
+              <button
+                className="confirm-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  confirmDelete(id);
+                }}
+              >
+                Yes
+              </button>
+              <button
+                className="cancel-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  cancelDelete();
+                }}
+              >
+                No
+              </button>
+            </>
+          )}
+        </div>
+      ) : (
+        <button
+          className="delete-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDelete(id);
+          }}
+        >
+          <i className="fas fa-trash"></i>
+        </button>
+      )}
+    </>
+  );
 
   const renderExpirationText = (expirationDate) => {
     const now = new Date();
@@ -66,7 +133,7 @@ function IngredientList() {
               <div className="ingredient-info">
                 <div className="ingredient-header">
                   <span className="ingredient-name">
-                    {name} - {formatAggregatedQuantity(items)}
+                    {name} : {formatAggregatedQuantity(items)}
                   </span>
                 </div>
                 {renderNutritionalInfo(items[0])}
@@ -77,12 +144,7 @@ function IngredientList() {
                     <div className="expiration-info">
                       {renderExpirationText(items[0].expirationDate)}
                     </div>
-                    <button
-                      className="delete-button"
-                      onClick={() => deleteIngredient(items[0].id)}
-                    >
-                      <i className="fas fa-trash"></i>
-                    </button>
+                    {renderDeleteButton(items[0].id)}
                   </div>
                 </div>
               ) : (
@@ -97,12 +159,7 @@ function IngredientList() {
                               {renderExpirationText(item.expirationDate)}
                             </span>
                           </div>
-                          <button
-                            className="delete-button"
-                            onClick={() => deleteIngredient(item.id)}
-                          >
-                            <i className="fas fa-trash"></i>
-                          </button>
+                          {renderDeleteButton(item.id)}
                         </div>
                       </div>
                     </li>

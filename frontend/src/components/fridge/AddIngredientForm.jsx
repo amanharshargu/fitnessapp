@@ -12,6 +12,9 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
   const [ingredientSuggestions, setIngredientSuggestions] = useState([]);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
   const [allowSuggestions, setAllowSuggestions] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
   const allUnits = [
     "count", "pieces", "mg", "g", "kg", "ounces", "pounds",
@@ -61,6 +64,13 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
     return true;
   };
 
+  const handleClose = async () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      onCancel();
+    }, 300); // Match the transition duration
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -70,6 +80,7 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
     }
 
     try {
+      setIsSubmitting(true);
       const trimmedIngredient = {
         ...ingredient,
         name: ingredient.name.trim(),
@@ -78,13 +89,22 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
 
       const success = await handleSubmit(e, trimmedIngredient);
       if (success) {
-        await onSuccess();
+        setShowConfirmation(true);
+        setTimeout(async () => {
+          setShowConfirmation(false);
+          setIsClosing(true);
+          setTimeout(async () => {
+            await onSuccess();
+          }, 300); // Match the transition duration
+        }, 1500);
       } else {
         setError("Failed to add ingredient. Please try again.");
       }
     } catch (error) {
       console.error('Error in form submission:', error);
       setError("Failed to add ingredient. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -248,8 +268,14 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
   }, []);
 
   return (
-    <form onSubmit={onSubmit} className="ingredient-form">
+    <form onSubmit={onSubmit} className={`ingredient-form ${isClosing ? 'closing' : ''}`}>
       {error && <div className="alert alert-danger">{error}</div>}
+      {showConfirmation && (
+        <div className="ingredient-form__confirmation">
+          <i className="fas fa-check-circle"></i>
+          {editingIngredient ? "Ingredient Updated!" : "Ingredient Added!"}
+        </div>
+      )}
       <div className="ingredient-form__input-container">
         <input
           type="text"
@@ -335,10 +361,26 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
           placeholder="Select expiration date"
         />
       </div>
-      <button type="submit" className="ingredient-form__button ingredient-form__button--submit">
-        {editingIngredient ? "Update Ingredient" : "Add Ingredient"}
+      <button 
+        type="submit" 
+        className="ingredient-form__button ingredient-form__button--submit"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <span className="ingredient-form__button-content">
+            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            {editingIngredient ? "Updating..." : "Adding..."}
+          </span>
+        ) : (
+          editingIngredient ? "Update Ingredient" : "Add Ingredient"
+        )}
       </button>
-      <button type="button" className="ingredient-form__button ingredient-form__button--cancel" onClick={onCancel}>
+      <button 
+        type="button" 
+        className="ingredient-form__button ingredient-form__button--cancel" 
+        onClick={handleClose}
+        disabled={isSubmitting}
+      >
         Cancel
       </button>
     </form>

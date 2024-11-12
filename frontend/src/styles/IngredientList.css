@@ -39,14 +39,14 @@
 }
 
 .nutritional-info {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding: 12px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  padding: 24px 16px 16px;
   background-color: #f8f9fa;
   border-radius: 8px;
-  padding: 16px;
   margin-top: 8px;
+  position: relative;
 }
 
 .nutritional-item {
@@ -56,21 +56,35 @@
   font-size: 0.95rem;
   color: #4a5568;
   background-color: white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 10px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.nutritional-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.per-100g {
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  color: #718096;
+  font-style: italic;
+  font-size: 0.8rem;
+  background-color: #fff;
+  padding: 4px 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
 }
 
 .nutritional-item i {
   color: #ff7800;
-  font-size: 1rem;
-}
-
-.per-100g {
-  color: #718096;
-  font-style: italic;
-  margin-left: auto;
-  font-size: 0.85rem;
+  font-size: 1.1rem;
 }
 
 .ingredient-footer {
@@ -83,12 +97,13 @@
 }
 
 .expiration-date {
-  color: #718096;
+  color: #4a5568;
+  font-weight: 600;
 }
 
 .expired {
   color: #e53e3e;
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .delete-button {
@@ -154,8 +169,9 @@
 .expiration-info {
   display: flex;
   align-items: center;
-  color: #718096;
-  font-size: 0.9rem;
+  color: #4a5568;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .no-ingredients-message {
@@ -163,7 +179,6 @@
   color: #718096;
   font-style: italic;
   padding: 40px 20px;
-  background-color: #f8f9fa;
   border-radius: 12px;
   margin-top: 20px;
 }
@@ -221,4 +236,67 @@
   .ingredient-name {
     font-size: 1rem;
   }
+}
+
+.delete-confirmation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #fff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.delete-confirmation span {
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+.confirm-button,
+.cancel-button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.confirm-button {
+  background-color: #e53e3e;
+  color: white;
+}
+
+.confirm-button:hover {
+  background-color: #c53030;
+}
+
+.cancel-button {
+  background-color: #e2e8f0;
+  color: #4a5568;
+}
+
+.cancel-button:hover {
+  background-color: #cbd5e0;
+}
+
+.delete-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4a5568;
+  font-size: 0.9rem;
+}
+
+.delete-loading .spinner-border {
+  width: 16px;
+  height: 16px;
+  color: #e53e3e;
+}
+
+.delete-confirmation {
+  min-width: 120px;
+  justify-content: center;
 }

@@ -65,14 +65,18 @@
 .nav-link span {
   position: relative;
   z-index: 1;
+  transition: color 0.3s ease;
 }
 
 .nav-link.active {
   font-weight: bold;
+}
+
+.nav-link.active span {
   color: var(--nav-color);
 }
 
-.nav-link:hover {
+.nav-link:hover span {
   color: var(--nav-color);
 }
 

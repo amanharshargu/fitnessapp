@@ -6,7 +6,7 @@ import { useRecipes } from "../../contexts/RecipeContext";
 import "../../styles/ExpiringIngredients.css";
 
 function ExpiringIngredients({ ingredients }) {
-  const { expiringIngredients, formatExpirationDate } = useExpiringIngredients(ingredients);
+  const { expiringIngredients, formatExpirationDate, loading } = useExpiringIngredients(ingredients);
   const { deleteIngredient } = useIngredients();
   const { setSearchTerm } = useRecipes();
   const navigate = useNavigate();
@@ -43,7 +43,14 @@ function ExpiringIngredients({ ingredients }) {
   return (
     <div className="expiring-ingredients">
       <h3>Expiring Soon...</h3>
-      {ingredients.length > 0 ? (
+      {loading ? (
+        <div className="expiring-loading">
+          <div className="spinner">
+            <span className="spinner-border" role="status" aria-hidden="true"></span>
+            <span className="loading-text">Loading...</span>
+          </div>
+        </div>
+      ) : ingredients.length > 0 ? (
         Object.values(aggregatedIngredients).length > 0 ? (
           <>
             <ul className="expiring-list list-unstyled">

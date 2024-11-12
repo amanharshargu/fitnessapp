@@ -125,7 +125,10 @@ function MealPlanDisplay() {
                       </p>
                     </div>
                   </div>
-                  <button className="view-recipe-btn" onClick={() => handleViewRecipe(mealPlan.selection[selectedDay].sections[mealType].recipeDetails)}>
+                  <button 
+                    className="view-recipe-btn" 
+                    onClick={() => handleViewRecipe(mealPlan.selection[selectedDay].sections[mealType].recipeDetails)}
+                  >
                     View Recipe
                   </button>
                 </div>

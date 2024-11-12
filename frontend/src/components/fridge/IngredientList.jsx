@@ -4,7 +4,7 @@ import { useExpiringIngredients, useIngredientList, formatQuantity } from "../..
 import "../../styles/IngredientList.css";
 
 function IngredientList() {
-  const { ingredients, deleteIngredient } = useIngredients();
+  const { ingredients, deleteIngredient, loading } = useIngredients();
   const { formatExpirationDate } = useExpiringIngredients(ingredients);
   const { processedIngredients } = useIngredientList(ingredients);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
@@ -126,7 +126,14 @@ function IngredientList() {
 
   return (
     <div className="ingredient-list-container">
-      {ingredients.length > 0 ? (
+      {loading ? (
+        <div className="ingredient-list-loading">
+          <div className="spinner">
+            <span className="spinner-border" role="status" aria-hidden="true"></span>
+            <span className="loading-text">Loading ingredients...</span>
+          </div>
+        </div>
+      ) : ingredients.length > 0 ? (
         <ul className="ingredient-list list-unstyled">
           {processedIngredients.map(({ name, items }) => (
             <li key={name} className="ingredient-item">

@@ -5,10 +5,12 @@ const IngredientContext = createContext();
 
 export function IngredientProvider({ children }) {
   const [ingredients, setIngredients] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { token } = useAuth();
 
   const refreshIngredients = useCallback(async () => {
     try {
+      setLoading(true);
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -24,6 +26,8 @@ export function IngredientProvider({ children }) {
       setIngredients(data);
     } catch (error) {
       console.error('Error fetching ingredients:', error);
+    } finally {
+      setLoading(false);
     }
   }, [token]);
 
@@ -87,6 +91,7 @@ export function IngredientProvider({ children }) {
       refreshIngredients,
       addIngredient,
       updateIngredient,
+      loading,
     }}>
       {children}
     </IngredientContext.Provider>

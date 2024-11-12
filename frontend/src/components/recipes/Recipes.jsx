@@ -94,13 +94,6 @@ function Recipes() {
     setCurrentPage(pageNumber);
   };
 
-  useEffect(() => {
-    if (searchTerm.trim()) {
-      handleSearch();
-      setHasSearched(true);
-    }
-  }, [searchTerm, handleSearch, setHasSearched]);
-
   const handleSearchWrapper = useCallback((e) => {
     if (e) e.preventDefault();
     if (searchTerm.trim()) {

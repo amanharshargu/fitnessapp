@@ -11,7 +11,6 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
   const [dateInputType, setDateInputType] = useState("text");
   const [ingredientSuggestions, setIngredientSuggestions] = useState([]);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
-  const [justSelected, setJustSelected] = useState(false);
   const [allowSuggestions, setAllowSuggestions] = useState(true);
 
   const allUnits = [
@@ -23,11 +22,6 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
     const today = new Date();
     setMinDate(today.toISOString().split("T")[0]);
   }, []);
-
-  const validateQuantity = (value) => {
-    const regex = /^\d*\.?\d*$/;
-    return regex.test(value);
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -128,17 +122,6 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
   const handleDateBlur = (e) => {
     if (!e.target.value) {
       setDateInputType("text");
-    }
-  };
-
-  const handleQuantityKeyDown = (e) => {
-    if ([46, 8, 9, 27, 13, 110, 190].indexOf(e.keyCode) !== -1 ||
-      (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
-      (e.keyCode >= 35 && e.keyCode <= 40)) {
-      return;
-    }
-    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-      e.preventDefault();
     }
   };
 

@@ -3,16 +3,21 @@
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  overflow: hidden;
 }
 
 .dcg-goal-content {
   display: flex;
   gap: 20px;
+  width: 100%;
+  min-width: 0;
 }
 
 .dcg-goal-chart-container {
   flex: 0 0 auto;
   width: 180px;
+  min-width: 0;
 }
 
 .dcg-goal-chart {
@@ -61,18 +66,24 @@
 .dcg-goal-details {
   flex: 1;
   min-width: 0;
+  width: 100%;
 }
 
 .dcg-form {
   margin-bottom: 15px;
+  width: 100%;
 }
 
 .dcg-form-inputs {
   display: flex;
   gap: 8px;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .dcg-form-inputs input {
+  flex: 1;
+  min-width: 0;
   padding: 6px 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -80,6 +91,7 @@
 }
 
 .dcg-form-inputs button {
+  white-space: nowrap;
   padding: 6px 12px;
   background: #ff7800;
   color: white;
@@ -95,7 +107,7 @@
 }
 
 .dcg-dishes-list-container {
-  max-height: 150px; /* Reduced height */
+  max-height: 200px;
   overflow-y: auto;
 }
 
@@ -159,16 +171,31 @@
   }
 
   .dcg-goal-chart {
-    width: 100px;
+    width: 120px;
     margin: 0 auto;
   }
 
   .dcg-form-inputs {
-    flex-wrap: wrap;
+    flex-direction: column;
   }
 
   .dcg-form-inputs input,
   .dcg-form-inputs button {
-    flex: 1;
+    width: 100%;
   }
+}
+
+.dcg-daily-calorie-goal h3 {
+  color: #333;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dcg-daily-calorie-goal h3::before {
+  content: "🍽️";
+  font-size: 1.2rem;
 }

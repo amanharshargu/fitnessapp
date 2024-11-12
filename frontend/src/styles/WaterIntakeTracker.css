@@ -1,89 +1,98 @@
 .water-tracker {
   background: white;
   border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
+  height: min-content;
 }
 
 .water-tracker-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
-.water-tracker h3 {
+.water-tracker-header h3 {
   color: #333;
+  font-size: 1.1rem;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.water-tracker-header h3::before {
+  content: "💧";
   font-size: 1.2rem;
-  font-weight: 600;
-  margin: 0;
 }
 
-.add-water-btn {
-  background: #2196F3;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.add-water-btn:hover:not(:disabled) {
-  background: #1976D2;
-  transform: translateY(-1px);
-}
-
-.add-water-btn:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.add-water-btn.updating {
-  background: #90CAF9;
-  cursor: not-allowed;
-}
-
-.water-stats {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.water-amount {
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin-bottom: 5px;
-}
-
-.water-amount .current { color: #2196F3; }
-.water-amount .separator { color: #ccc; margin: 0 5px; }
-.water-amount .goal { color: #90CAF9; }
-.water-amount .unit {
-  font-size: 1rem;
-  color: #666;
-  margin-left: 5px;
-}
-
-.glasses-info {
+.progress-status {
   font-size: 0.9rem;
   color: #666;
 }
 
+.progress-message {
+  display: block;
+  text-align: center;
+  padding: 6px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.water-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.water-amount {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.water-amount .separator {
+  margin: 0 8px;
+  color: #666;
+}
+
+.water-amount .unit {
+  font-size: 1rem;
+  color: #666;
+  margin-left: 4px;
+}
+
+.remaining-info {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.goal-reached {
+  color: #4CAF50;
+  font-weight: 500;
+}
+
+.water-progress-container {
+  margin-bottom: 16px;
+  position: relative;
+}
+
 .water-progress {
-  background: #E3F2FD;
+  background: #f0f0f0;
   height: 12px;
   border-radius: 6px;
   overflow: hidden;
-  position: relative;
 }
 
 .water-progress-fill {
   height: 100%;
-  background: #2196F3;
   border-radius: 6px;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, background-color 0.3s ease;
   position: relative;
 }
 
@@ -92,34 +101,108 @@
   top: 0;
   right: 0;
   bottom: 0;
-  left: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  animation: ripple 2s linear infinite;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: ripple 2s infinite;
 }
 
-@keyframes ripple {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+.progress-percentage {
+  position: absolute;
+  right: 0;
+  top: -20px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.water-actions {
+  margin-top: 16px;
+}
+
+.quick-add-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.quick-add-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quick-add-btn:hover {
+  background: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.quick-add-btn:active {
+  transform: translateY(0);
+}
+
+.quick-add-btn.updating {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.quick-add-btn .icon {
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+}
+
+.quick-add-btn .amount {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.quick-add-btn .size {
+  font-size: 0.8rem;
+  color: #666;
 }
 
 .water-feedback {
-  position: absolute;
-  top: 50%;
+  position: fixed;
+  bottom: 20px;
   left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(33, 150, 243, 0.9);
-  color: white;
-  padding: 8px 16px;
+  transform: translateX(-50%);
+  padding: 10px 20px;
   border-radius: 20px;
-  animation: fadeInOut 1.5s ease forwards;
-  pointer-events: none;
+  color: white;
+  font-weight: 500;
+  animation: slideUp 0.3s ease;
+  z-index: 1000;
 }
 
-@keyframes fadeInOut {
-  0% { opacity: 0; transform: translate(-50%, -40%); }
-  20% { opacity: 1; transform: translate(-50%, -50%); }
-  80% { opacity: 1; transform: translate(-50%, -50%); }
-  100% { opacity: 0; transform: translate(-50%, -60%); }
+@keyframes ripple {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
 }
 
 @media (max-width: 768px) {
@@ -128,11 +211,14 @@
   }
 
   .water-amount {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
 
-  .add-water-btn {
-    padding: 6px 12px;
-    font-size: 0.9rem;
+  .quick-add-btn {
+    padding: 10px;
+  }
+
+  .quick-add-btn .icon {
+    font-size: 1.3rem;
   }
 } 

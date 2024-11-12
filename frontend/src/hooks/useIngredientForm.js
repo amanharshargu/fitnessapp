@@ -2,55 +2,64 @@ import { useState, useEffect, useMemo } from "react";
 import { useIngredients } from "../contexts/IngredientContext";
 import { useAuth } from "../contexts/AuthContext";
 
-export function useIngredientForm(editingIngredient) {
-  const [ingredient, setIngredient] = useState({
-    name: "",
-    quantity: "",
-    unit: "",
-    expirationDate: "",
-  });
-  const { addIngredient, updateIngredient } = useIngredients();
-  const { user } = useAuth();
+const initialState = {
+  name: '',
+  quantity: '',
+  unit: '',
+  expirationDate: '',
+  calories: 0,
+  protein: 0,
+  carbs: 0,
+  fat: 0,
+  servingSize: 100,
+  servingUnit: 'g'
+};
 
-  useEffect(() => {
-    if (editingIngredient) {
-      setIngredient(editingIngredient);
-    }
-  }, [editingIngredient]);
+export const useIngredientForm = (editingIngredient = null) => {
+  const [ingredient, setIngredient] = useState(editingIngredient || initialState);
+  const { token } = useAuth();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setIngredient((prev) => ({
+    setIngredient(prev => ({
       ...prev,
-      [name]: name === "quantity" ? (value === "" ? "" : parseFloat(value)) : value,
+      [name]: value
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, ingredientData) => {
     e.preventDefault();
-    if (!user) {
-      console.error("User not authenticated");
-      return false;
-    }
     try {
-      if (editingIngredient) {
-        await updateIngredient(editingIngredient.id, ingredient);
-      } else {
-        await addIngredient({
-          ...ingredient,
-          userId: user.id
-        });
+      const baseUrl = process.env.REACT_APP_API_BASE_URL;
+      const url = editingIngredient
+        ? `${baseUrl}/ingredients/${editingIngredient.id}`
+        : `${baseUrl}/ingredients`;
+      
+      const method = editingIngredient ? 'PUT' : 'POST';
+      
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(ingredientData),
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to save ingredient');
       }
-      setIngredient({ name: "", quantity: 0, unit: "", expirationDate: "" });
+
       return true;
     } catch (error) {
-      console.error("Error submitting ingredient:", error);
       return false;
     }
   };
 
   return { ingredient, handleInputChange, handleSubmit };
-}
+};
 
 export function useExpiringIngredients(ingredients) {
   const today = new Date();

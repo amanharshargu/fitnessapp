@@ -28,6 +28,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.FLOAT,
       allowNull: true,
     },
+    servingSize: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+      defaultValue: null,
+    },
+    servingUnit: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: null,
+    },
     expirationDate: {
       type: DataTypes.DATE,
       allowNull: true,

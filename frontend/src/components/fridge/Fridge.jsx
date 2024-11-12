@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import IngredientList from "./IngredientList";
 import ExpiringIngredients from "./ExpiringIngredients";
 import AddIngredientForm from "./AddIngredientForm";
@@ -9,7 +9,11 @@ import "../../styles/fridge.css";
 function Fridge() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingIngredient, setEditingIngredient] = useState(null);
-  const { ingredients, deleteIngredient } = useIngredients();
+  const { ingredients, deleteIngredient, refreshIngredients } = useIngredients();
+
+  useEffect(() => {
+    refreshIngredients();
+  }, [refreshIngredients]);
 
   const handleEditIngredient = (ingredient) => {
     setEditingIngredient(ingredient);
@@ -23,6 +27,11 @@ function Fridge() {
 
   const handleDeleteIngredient = (id) => {
     deleteIngredient(id);
+  };
+
+  const handleFormSuccess = async () => {
+    await refreshIngredients();
+    handleCancelForm();
   };
 
   return (
@@ -43,6 +52,7 @@ function Fridge() {
               <AddIngredientForm
                 editingIngredient={editingIngredient}
                 onCancel={handleCancelForm}
+                onSuccess={handleFormSuccess}
               />
             )}
             <IngredientList

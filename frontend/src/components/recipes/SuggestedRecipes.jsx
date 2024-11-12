@@ -12,18 +12,38 @@ function SuggestedRecipes() {
   const { ingredients } = useIngredients();
   const { getRandomRecipes } = useRecipes();
 
+  const fetchRecipesForIngredients = async (ingredientNames) => {
+    try {
+      const recipes = await getRandomRecipes(12, ingredientNames);
+      return recipes.filter(recipe => recipe.ingredientLines && Array.isArray(recipe.ingredientLines));
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+      return [];
+    }
+  };
+
   const fetchSuggestedRecipes = async () => {
     setLoading(true);
     setError(null);
     try {
       const fridgeIngredients = ingredients.map(ing => ing.name);
-      const recipes = await getRandomRecipes(12, fridgeIngredients);
-      const validRecipes = recipes.filter(recipe => recipe.ingredientLines && Array.isArray(recipe.ingredientLines));
+      let recipes = await fetchRecipesForIngredients(fridgeIngredients);
       
-      if (validRecipes.length === 0) {
-        setError('No valid recipes found. Try different ingredients.');
+      if (recipes.length === 0 && fridgeIngredients.length > 0) {
+        const individualRecipesPromises = fridgeIngredients.map(ingredient => 
+          fetchRecipesForIngredients([ingredient])
+        );
+        
+        const individualRecipesResults = await Promise.all(individualRecipesPromises);
+        recipes = Array.from(new Set(
+          individualRecipesResults.flat().map(recipe => JSON.stringify(recipe))
+        )).map(str => JSON.parse(str));
+      }
+
+      if (recipes.length === 0) {
+        setError('No recipes found. Try different ingredients.');
       } else {
-        setSuggestedRecipes(validRecipes);
+        setSuggestedRecipes(recipes.slice(0, 12));
       }
     } catch (err) {
       setError('Failed to fetch suggested recipes. Please try again later.');

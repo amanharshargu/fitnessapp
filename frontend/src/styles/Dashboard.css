@@ -1,9 +1,7 @@
 .dashboard-container {
   min-height: calc(100vh - 75px);
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  margin: 0;
+  margin: 0 auto;
   background-color: #fff5e6;
   padding: 20px;
   background-image: radial-gradient(circle, #ff9800 1px, transparent 1px),
@@ -14,56 +12,76 @@
 }
 
 .dashboard-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-areas: 
+    "motivation calories"
+    "water overview";
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: auto auto;
   gap: 20px;
-  position: relative;
-  z-index: 1;
-  max-width: 1400px;
   margin: 0 auto;
+  padding-right: min(20px, 2vw);
+  max-width: 1300px;
   width: 100%;
+  overflow: hidden;
 }
 
-.dashboard-main-content {
-  display: flex;
-  gap: 20px;
-  flex: 1;
-}
-
-.dashboard-left-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.dashboard-item {
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+  min-height: 0;
   min-width: 0;
+  width: 100%;
+  overflow: hidden;
 }
 
-.dashboard-right-column {
-  width: 40%;
-  min-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.dashboard-item.motivation {
+  grid-area: motivation;
 }
 
-/* Responsive Design */
+.dashboard-item.calories {
+  grid-area: calories;
+}
+
+.dashboard-item.water {
+  grid-area: water;
+}
+
+.dashboard-item.overview {
+  grid-area: overview;
+}
+
 @media (max-width: 1200px) {
-  .dashboard-main-content {
-    flex-direction: column;
-  }
-
-  .dashboard-right-column {
-    width: 100%;
-    min-width: 0;
+  .dashboard-grid {
+    max-width: min(1000px, 95%);
+    gap: 15px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-areas: 
+      "motivation"
+      "calories"
+      "water"
+      "overview";
+    grid-template-columns: minmax(0, 1fr);
+    max-width: min(600px, 95%);
+    gap: 15px;
+  }
+
+  .dashboard-item {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
   .dashboard-container {
-    padding: 15px;
+    padding: 10px;
   }
 
   .dashboard-grid {
-    gap: 15px;
+    gap: 12px;
+    padding-right: 10px;
   }
 }

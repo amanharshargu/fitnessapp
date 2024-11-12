@@ -2,6 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { format, startOfWeek, addDays } from 'date-fns';
 import api from '../../services/api';
 import '../../styles/WeeklyCalorieTracker.css';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Legend,
+  Filler
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Legend,
+  Filler
+);
 
 function WeeklyCalorieTracker({ weeklyData }) {
   const [dailyCalorieGoal, setDailyCalorieGoal] = useState(null);
@@ -26,88 +47,121 @@ function WeeklyCalorieTracker({ weeklyData }) {
     return weeklyData.find(d => d.date === formattedDate)?.calories || 0;
   };
 
-  const maxCalories = Math.max(
-    ...weeklyData.map(d => d.calories || 0),
-    dailyCalorieGoal || 0,
-    2000
-  ) * 1.2;
-
-  const getBarColor = (calories, isToday) => {
-    if (!calories) return '#E0E0E0';
-    if (isToday) {
-      if (calories > dailyCalorieGoal) return '#ff4444';
-      if (calories === dailyCalorieGoal) return '#66BB6A';
-      return '#ff7800';
-    }
-    return '#8e9aaf';
+  const getPointColor = (calories) => {
+    if (!dailyCalorieGoal) return '#ff7800';
+    if (calories > dailyCalorieGoal) return '#FF6666'; // Red for exceeded
+    if (calories === dailyCalorieGoal) return '#66BB6A'; // Green for exact match
+    return '#ff7800'; // Orange for under goal
   };
 
-  const renderBar = (date) => {
-    const calories = getCaloriesForDate(date);
-    const heightPercentage = (calories / maxCalories) * 100;
-    const goalHeightPercentage = dailyCalorieGoal ? (dailyCalorieGoal / maxCalories) * 100 : 0;
-    const isToday = format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
+  const getPointColors = () => {
+    return daysOfWeek.map(date => getPointColor(getCaloriesForDate(date)));
+  };
 
-    return (
-      <div key={date} className="calorie-bar">
-        <div className="bar-container">
-          {dailyCalorieGoal && (
-            <div 
-              className="bar goal" 
-              style={{ height: `${goalHeightPercentage}%` }}
-            />
-          )}
-          <div 
-            className="bar actual"
-            style={{ 
-              height: `${heightPercentage}%`,
-              backgroundColor: getBarColor(calories, isToday)
-            }}
-          >
-            {calories > 0 && (
-              <div className="calories-tooltip">
-                <div className="tooltip-content">
-                  <div className="tooltip-main">{calories} / {dailyCalorieGoal} cal</div>
-                  {dailyCalorieGoal && calories > dailyCalorieGoal && (
-                    <div className="tooltip-excess">
-                      (+{calories - dailyCalorieGoal})
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="day">
-          <span className="day-name">{format(date, 'EEE')}</span>
-          <span className="day-number">{format(date, 'd')}</span>
-        </div>
-      </div>
-    );
+  const chartData = {
+    labels: daysOfWeek.map(date => format(date, 'EEE')),
+    datasets: [
+      {
+        label: 'Daily Calories',
+        data: daysOfWeek.map(date => getCaloriesForDate(date)),
+        borderColor: '#ff7800',
+        backgroundColor: 'rgba(255, 120, 0, 0.1)',
+        tension: 0.4,
+        fill: true,
+        pointBackgroundColor: getPointColors(),
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        segment: {
+          borderColor: (ctx) => {
+            if (!ctx.p0.parsed || !ctx.p1.parsed) return '#ff7800';
+            const curr = ctx.p0.parsed.y;
+            const next = ctx.p1.parsed.y;
+            
+            if (curr > dailyCalorieGoal || next > dailyCalorieGoal) {
+              return '#FF6666';
+            }
+            if (curr === dailyCalorieGoal && next === dailyCalorieGoal) {
+              return '#66BB6A';
+            }
+            return '#ff7800';
+          }
+        }
+      },
+      {
+        label: 'Daily Goal',
+        data: daysOfWeek.map(() => dailyCalorieGoal),
+        borderColor: '#66BB6A',
+        borderDash: [5, 5],
+        tension: 0,
+        fill: false,
+        pointRadius: 0,
+      }
+    ]
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          font: {
+            size: 12,
+            family: "'Poppins', sans-serif"
+          }
+        }
+      },
+      x: {
+        grid: {
+          display: false
+        },
+        ticks: {
+          font: {
+            size: 12,
+            family: "'Poppins', sans-serif"
+          }
+        }
+      }
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index'
+    }
   };
 
   return (
     <div className="weekly-calorie-tracker">
       <h3>Weekly Overview</h3>
-      <div className="calorie-chart">
-        {daysOfWeek.map(renderBar)}
+      <div className="chart-container">
+        <Line data={chartData} options={chartOptions} height={300} />
       </div>
-      <div className="legend">
+      <div className="chart-legend">
         <div className="legend-item">
-          <div className="legend-color past"></div>
-          <span>Past Days</span>
+          <span className="legend-dot" style={{ backgroundColor: '#FF6666' }}></span>
+          <span>Over Goal</span>
         </div>
         <div className="legend-item">
-          <div className="legend-color over"></div>
-          <span>Today (Over)</span>
+          <span className="legend-dot" style={{ backgroundColor: '#66BB6A' }}></span>
+          <span>At Goal</span>
         </div>
         <div className="legend-item">
-          <div className="legend-color at-goal"></div>
-          <span>Today (At Goal)</span>
+          <span className="legend-dot" style={{ backgroundColor: '#ff7800' }}></span>
+          <span>Under Goal</span>
         </div>
         <div className="legend-item">
-          <div className="legend-color under"></div>
-          <span>Today (Under)</span>
+          <span className="legend-line"></span>
+          <span>Daily Goal</span>
         </div>
       </div>
     </div>

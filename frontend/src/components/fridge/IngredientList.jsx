@@ -6,7 +6,7 @@ import "../../styles/IngredientList.css";
 function IngredientList() {
   const { ingredients, deleteIngredient } = useIngredients();
   const { formatExpirationDate } = useExpiringIngredients(ingredients);
-  const { processedIngredients, toggleExpand } = useIngredientList(ingredients);
+  const { processedIngredients } = useIngredientList(ingredients);
 
   const renderExpirationText = (expirationDate) => {
     const now = new Date();
@@ -19,10 +19,28 @@ function IngredientList() {
     return formatExpirationDate(expirationDate);
   };
 
-  const handleItemClick = (e, name) => {
-    if (e.target.className !== "delete-button") {
-      toggleExpand(name);
-    }
+  const renderNutritionalInfo = (item) => {
+    const servingText = item.servingSize && item.servingUnit 
+      ? `per ${item.servingSize}${item.servingUnit}`
+      : 'per serving';
+
+    return (
+      <div className="nutritional-info">
+        <span className="nutritional-item">
+          <i className="fas fa-fire"></i> {item.calories.toFixed(1)} kcal
+        </span>
+        <span className="nutritional-item">
+          <i className="fas fa-drumstick-bite"></i> {item.protein.toFixed(1)}g protein
+        </span>
+        <span className="nutritional-item">
+          <i className="fas fa-bread-slice"></i> {item.carbs.toFixed(1)}g carbs
+        </span>
+        <span className="nutritional-item">
+          <i className="fas fa-cheese"></i> {item.fat.toFixed(1)}g fat
+        </span>
+        <small className="per-100g">({servingText})</small>
+      </div>
+    );
   };
 
   const formatAggregatedQuantity = (items) => {
@@ -43,45 +61,50 @@ function IngredientList() {
     <div className="ingredient-list-container">
       {ingredients.length > 0 ? (
         <ul className="ingredient-list list-unstyled">
-          {processedIngredients.map(({ name, items, isExpanded }) => (
-            <li key={name} className="ingredient-item" onClick={(e) => handleItemClick(e, name)}>
+          {processedIngredients.map(({ name, items }) => (
+            <li key={name} className="ingredient-item">
               <div className="ingredient-info">
-                <span className="ingredient-name">
-                  {name} - {formatAggregatedQuantity(items)}
-                </span>
-                {items.length > 1 && (
-                  <span className="expand-indicator">
-                    {isExpanded ? '▲' : '▼'}
+                <div className="ingredient-header">
+                  <span className="ingredient-name">
+                    {name} - {formatAggregatedQuantity(items)}
                   </span>
-                )}
-                {items.length === 1 && (
-                  <button
-                    className="delete-button"
-                    onClick={() => deleteIngredient(items[0].id)}
-                  >
-                    Remove
-                  </button>
-                )}
+                </div>
+                {renderNutritionalInfo(items[0])}
               </div>
-              {items.length === 1 && (
-                <small className="expiration-date">
-                  {renderExpirationText(items[0].expirationDate)}
-                </small>
-              )}
-              {items.length > 1 && isExpanded && (
+              {items.length === 1 ? (
+                <div className="ingredient-footer">
+                  <div className="footer-content">
+                    <div className="expiration-info">
+                      {renderExpirationText(items[0].expirationDate)}
+                    </div>
+                    <button
+                      className="delete-button"
+                      onClick={() => deleteIngredient(items[0].id)}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              ) : (
                 <ul className="expiration-list">
                   {items.map((item) => (
                     <li key={item.id} className="expiration-item">
-                      <small className="expiration-date">
-                        {`${formatQuantity(item.quantity, item.unit)} - `}
-                        {renderExpirationText(item.expirationDate)}
-                      </small>
-                      <button
-                        className="delete-button"
-                        onClick={() => deleteIngredient(item.id)}
-                      >
-                        Remove
-                      </button>
+                      <div className="expanded-item-info">
+                        <div className="quantity-and-expiration">
+                          <div className="expanded-item-details">
+                            <span className="quantity">{formatQuantity(item.quantity, item.unit)}</span>
+                            <span className="expiration-date">
+                              {renderExpirationText(item.expirationDate)}
+                            </span>
+                          </div>
+                          <button
+                            className="delete-button"
+                            onClick={() => deleteIngredient(item.id)}
+                          >
+                            <i className="fas fa-trash"></i>
+                          </button>
+                        </div>
+                      </div>
                     </li>
                   ))}
                 </ul>

@@ -132,7 +132,7 @@ function DailyCalorieGoal({ onDishesChanged }){
   };
 
   return (
-    <div className="dcg-daily-calorie-goal">
+    <div className="dcg-daily-calorie-goal" role="region" aria-label="Daily Calorie Goal">
       {showConfetti && (
         <Confetti
           width={window.innerWidth}
@@ -142,11 +142,15 @@ function DailyCalorieGoal({ onDishesChanged }){
           gravity={0.1}
         />
       )}
-      <h3>Daily Calorie Goal</h3>
-      <div className="dcg-goal-content">
+      <h3 id="calorie-goal-title">Daily Calorie Goal</h3>
+      <div className="dcg-goal-content" aria-labelledby="calorie-goal-title">
         <div className="dcg-goal-chart-container">
           <div className="dcg-goal-chart-wrapper">
-            <div className="dcg-goal-chart">
+            <div className="dcg-goal-chart" role="progressbar" 
+                 aria-valuenow={totalDailyCalories} 
+                 aria-valuemin="0" 
+                 aria-valuemax={dailyCalorieGoal}
+                 aria-label="Calorie progress">
               <svg viewBox="0 0 36 36" className="dcg-circular-chart">
                 <path
                   className={`dcg-circle-bg ${isGoalExactlyMet || isOverGoal ? 'dcg-goal-reached-bg' : ''}`}
@@ -189,15 +193,21 @@ function DailyCalorieGoal({ onDishesChanged }){
         <div className="dcg-goal-details">
           <form onSubmit={addDish} className="dcg-form">
             <div className="dcg-form-inputs">
+              <label htmlFor="dish-name" className="visually-hidden">Dish name</label>
               <input
+                id="dish-name"
                 type="text"
                 name="name"
                 value={newDish.name}
                 onChange={handleInputChange}
                 placeholder="Dish name"
                 required
+                aria-label="Enter dish name"
               />
+              
+              <label htmlFor="dish-calories" className="visually-hidden">Calories</label>
               <input
+                id="dish-calories"
                 type="text"
                 name="calories"
                 value={newDish.calories}
@@ -205,8 +215,10 @@ function DailyCalorieGoal({ onDishesChanged }){
                 placeholder="Calories"
                 required
                 pattern="\d*"
+                aria-label="Enter calories"
               />
-              <button type="submit">Add Dish</button>
+              
+              <button type="submit" aria-label="Add new dish">Add Dish</button>
             </div>
           </form>
 

@@ -59,25 +59,27 @@ function Dashboard({ userDetailsVersion }) {
     <ContentWrapper>
       <div className="dashboard-container">
         <div className="dashboard-grid">
-          <div className="dashboard-main-content">
-            <div className="dashboard-left-column">
-              <DailyMotivation />
-              <DailyCalorieGoal 
-                key={`calorie-goal-${userDetailsVersion}`} 
-                userDetails={userDetails} 
-                onDishesChanged={fetchWeeklyData}
-              />
-            </div>
-            <div className="dashboard-right-column">
-              <WeeklyCalorieTracker 
-                key={`calorie-tracker-${userDetailsVersion}`} 
-                weeklyData={weeklyData}
-              />
-              <WaterIntakeTracker 
-                intake={waterIntake} 
-                onUpdate={fetchWaterIntake}
-              />
-            </div>
+          <div className="dashboard-item motivation">
+            <DailyMotivation />
+          </div>
+          <div className="dashboard-item calories">
+            <DailyCalorieGoal 
+              key={`calorie-goal-${userDetailsVersion}`} 
+              userDetails={userDetails} 
+              onDishesChanged={fetchWeeklyData}
+            />
+          </div>
+          <div className="dashboard-item water">
+            <WaterIntakeTracker 
+              intake={waterIntake} 
+              onUpdate={fetchWaterIntake}
+            />
+          </div>
+          <div className="dashboard-item overview">
+            <WeeklyCalorieTracker 
+              key={`calorie-tracker-${userDetailsVersion}`} 
+              weeklyData={weeklyData}
+            />
           </div>
         </div>
       </div>

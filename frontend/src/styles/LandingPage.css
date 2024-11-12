@@ -327,7 +327,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0) rotate(0deg);
   }
   50% {
@@ -538,7 +539,7 @@
   .hero-title {
     font-size: clamp(2rem, 4vw, 3.5rem);
   }
-  
+
   .hero-subtitle {
     font-size: clamp(1rem, 1.5vw, 1.25rem);
   }

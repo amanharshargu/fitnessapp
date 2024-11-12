@@ -174,7 +174,7 @@ function UserProfileCard() {
   useEffect(() => {
     if (editingField && selectRef.current) {
       selectRef.current.focus();
-      selectRef.current.click(); // This will open the dropdown
+      selectRef.current.click();
     }
   }, [editingField]);
 

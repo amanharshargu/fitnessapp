@@ -21,7 +21,7 @@ const formatUserResponse = (user) => ({
   gender: user.gender,
   goal: user.goal,
   activityLevel: user.activityLevel,
-  photo: user.photo, // The getter in the model will handle the formatting
+  photo: user.photo,
 });
 
 exports.getProfile = async (req, res) => {
@@ -90,12 +90,10 @@ exports.uploadPhoto = async (req, res) => {
       }
 
       const user = await getUserById(req.user.id);
-      
-      // Convert buffer to base64 and store
+
       const base64Image = req.file.buffer.toString('base64');
       await user.update({ photo: base64Image });
 
-      // Get the full base64 representation of the image
       const fullBase64Image = `data:${req.file.mimetype};base64,${base64Image}`;
 
       res.json({ message: "Photo uploaded successfully", photoUrl: fullBase64Image });

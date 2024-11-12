@@ -118,14 +118,12 @@ const checkAuth = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    // Include all user details, including the photo
     res.json({ 
       user: {
         id: user.id,
         username: user.username,
         email: user.email,
         photo: user.photo,
-        // Include other fields as needed
       }
     });
   } catch (error) {
@@ -195,8 +193,7 @@ const resetPassword = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: 'Password reset token is invalid or has expired' });
     }
-
-    // Password validation
+    
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
     if (!passwordRegex.test(newPassword)) {
       return res.status(400).json({

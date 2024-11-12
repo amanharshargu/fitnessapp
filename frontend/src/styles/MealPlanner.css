@@ -448,7 +448,6 @@
 
 .filter-options.compact.scrollable-list {
   max-height: 200px;
-  /* overflow-y: auto; */
   padding-right: 10px;
   position: relative;
   z-index: 2;

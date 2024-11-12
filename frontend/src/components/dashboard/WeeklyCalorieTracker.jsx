@@ -49,9 +49,9 @@ function WeeklyCalorieTracker({ weeklyData }) {
 
   const getPointColor = (calories) => {
     if (!dailyCalorieGoal) return '#ff7800';
-    if (calories > dailyCalorieGoal) return '#FF6666'; // Red for exceeded
-    if (calories === dailyCalorieGoal) return '#66BB6A'; // Green for exact match
-    return '#ff7800'; // Orange for under goal
+    if (calories > dailyCalorieGoal) return '#FF6666';
+    if (calories === dailyCalorieGoal) return '#66BB6A';
+    return '#ff7800';
   };
 
   const getPointColors = () => {

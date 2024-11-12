@@ -84,13 +84,6 @@ body.modal-open {
   font-size: 1rem;
 }
 
-/* .form-outline.focused .form-label,
-.form-control:not(:placeholder-shown) + .form-label {
-  top: -1.2rem;
-  font-size: 0.85rem;
-  color: white;
-} */
-
 .btn-outline-light {
   background: linear-gradient(135deg, #ff6b6b, #ff4757);
   border: none !important;
@@ -225,7 +218,6 @@ body.modal-open {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Add a divider between regular login and Google login */
 .mt-4::before,
 .mt-4::after {
   display: none;
@@ -262,7 +254,6 @@ body.modal-open {
   color: #2ecc71;
 }
 
-/* Enhanced alert styling */
 .alert {
   border-radius: 12px;
   backdrop-filter: blur(8px);

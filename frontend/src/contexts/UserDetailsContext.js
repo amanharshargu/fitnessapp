@@ -27,7 +27,6 @@ export function UserDetailsProvider({ children }) {
     setTempUserDetails((prevDetails) => {
       const updatedDetails = { ...prevDetails, ...newDetails };
       
-      // Ensure weight, height, and age are always strings
       if ('weight' in newDetails) updatedDetails.weight = String(newDetails.weight);
       if ('height' in newDetails) updatedDetails.height = String(newDetails.height);
       if ('age' in newDetails) updatedDetails.age = String(newDetails.age);

@@ -38,11 +38,9 @@ app.use("/api/ingredients", ingredientRoutes);
 app.use("/api/recipes", recipeRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
-// Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use((err, req, res, _next) => {
-  // console.error(err.stack);
   res.status(500).send("Something broke!");
 });
 

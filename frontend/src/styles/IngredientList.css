@@ -212,7 +212,6 @@
   background: #e66d00;
 }
 
-/* Animation for expand/collapse */
 .expiration-list {
   opacity: 1;
   max-height: 1000px;
@@ -225,7 +224,6 @@
   overflow: hidden;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .nutritional-info {
     gap: 8px;

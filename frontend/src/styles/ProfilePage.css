@@ -63,12 +63,12 @@
 
 .profile-details {
   flex: 1;
-  overflow-y: auto; /* Add scrollbar if content exceeds available space */
+  overflow-y: auto;
 }
 
 @media (max-width: 768px) {
   .profile-content {
-    height: 90vh; /* Keep 90% height for mobile view as well */
+    height: 90vh;
   }
 
   .profile-layout {

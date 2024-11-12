@@ -31,7 +31,6 @@
   height: auto;
 }
 
-/* Progress Circle Styles */
 .dcg-circle-bg {
   fill: none;
   stroke: #ffe290;
@@ -405,7 +404,6 @@
   white-space: nowrap;
 }
 
-/* Update the delete button styles with higher specificity and !important */
 .dcg-daily-calorie-goal .dcg-dish-actions .dcg-delete-button {
   background: none;
   border: none;
@@ -430,7 +428,6 @@
   color: #e53e3e !important;
 }
 
-/* Add at the bottom of the file */
 .dcg-dish-actions {
   display: flex;
   gap: 8px;

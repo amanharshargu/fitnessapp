@@ -106,7 +106,7 @@ export function useIngredientList(ingredients) {
   const processedIngredients = useMemo(() => {
     return Object.entries(groupedIngredients).map(([name, items]) => {
       const totalQuantity = items.reduce((sum, item) => sum + convertToBaseUnit(item.quantity, item.unit), 0);
-      const baseUnit = items[0].unit; // Use the unit of the first item
+      const baseUnit = items[0].unit;
 
       return {
         name,
@@ -167,7 +167,7 @@ export const convertToBaseUnit = (quantity, unit) => {
   if (lowerUnit === 'g') return quantity;
   if (lowerUnit === 'l') return quantity * 1000;
   if (lowerUnit === 'ml') return quantity;
-  return quantity; // for units like 'piece' or 'count'
+  return quantity;
 };
 
 export const formatQuantity = (quantity, unit) => {

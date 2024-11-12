@@ -29,7 +29,6 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "quantity") {
-      // Allow decimal inputs
       if (value === "" || /^\d*\.?\d*$/.test(value)) {
         originalHandleInputChange(e);
       }
@@ -68,7 +67,7 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
     setIsClosing(true);
     setTimeout(() => {
       onCancel();
-    }, 300); // Match the transition duration
+    }, 300);
   };
 
   const onSubmit = async (e) => {
@@ -95,7 +94,7 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
           setIsClosing(true);
           setTimeout(async () => {
             await onSuccess();
-          }, 300); // Match the transition duration
+          }, 300);
         }, 1500);
       } else {
         setError("Failed to add ingredient. Please try again.");
@@ -147,7 +146,6 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
 
   const handleQuantityChange = (e) => {
     let value = e.target.value;
-    // Allow decimal points and numbers
     if (/^\d*\.?\d*$/.test(value) || value === '') {
       originalHandleInputChange({ target: { name: 'quantity', value } });
     }
@@ -214,8 +212,8 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
   const selectIngredientSuggestion = async (name) => {
     try {
       setIsLoadingSuggestions(true);
-      setIngredientSuggestions([]); // Clear suggestions immediately
-      setAllowSuggestions(false); // Disable suggestions after selection
+      setIngredientSuggestions([]);
+      setAllowSuggestions(false);
       
       const capitalizedName = capitalizeWords(name);
       const response = await fetch(
@@ -253,7 +251,6 @@ function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
     }
   };
 
-  // Add click outside handler to close suggestions
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest('.ingredient-form__input-container')) {

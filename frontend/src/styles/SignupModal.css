@@ -45,7 +45,7 @@ body.modal-open {
 .form-outline {
   position: relative;
   margin-bottom: 3rem !important;
-  z-index: 1; /* Add this line */
+  z-index: 1;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
@@ -76,7 +76,7 @@ body.modal-open {
   border-color: white;
   background-color: transparent;
   color: white;
-  opacity: 1; /* Add this line to ensure text is always fully opaque when focused */
+  opacity: 1;
   background-color: rgba(255, 255, 255, 0.05) !important;
   border-color: #ff6b6b !important;
   box-shadow: 0 0 15px rgba(255, 107, 107, 0.15) !important;
@@ -151,19 +151,12 @@ body.modal-open {
 
 .invalid-feedback {
   position: absolute;
-  top: calc(100% + 0.25rem); /* Position below the input */
+  top: calc(100% + 0.25rem);
   left: 0;
   font-size: 0.8rem;
   color: #ff6b6b;
-  z-index: 3; /* Add this line */
+  z-index: 3;
 }
-
-/* Remove or comment out this rule if it exists */
-/* form > div:last-of-type {
-  margin-bottom: 1rem;
-} */
-
-/* Add this new rule to ensure consistent spacing */
 .form-outline:not(:last-child) {
   margin-bottom: 3rem !important;
 }
@@ -175,7 +168,7 @@ body.modal-open {
   transform: translateY(-50%);
   color: #ff4757;
   animation: errorPulse 2s infinite;
-  z-index: 3; /* Add this line */
+  z-index: 3;
 }
 
 @keyframes errorPulse {
@@ -185,11 +178,11 @@ body.modal-open {
 }
 
 .form-control::placeholder {
-  color: rgba(255, 255, 255, 0.6); /* Add this rule to style the placeholder text */
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .form-control:not(:focus)::placeholder {
-  opacity: 0; /* Hide placeholder when not focused */
+  opacity: 0;
 }
 
 .form-control-lg {

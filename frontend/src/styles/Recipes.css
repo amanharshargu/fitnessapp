@@ -109,7 +109,6 @@
   padding: 20px;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .recipes-page {
     padding: 60px 15px 20px;
@@ -197,7 +196,6 @@
   margin-top: 30px;
 }
 
-/* Filter section styles */
 .recipes-filters-section {
   background-color: rgba(255, 224, 130, 0.85);
   border-radius: 15px;
@@ -369,7 +367,6 @@
   margin: 0;
 }
 
-/* Add this for responsive design */
 @media (max-width: 768px) {
   .recipes-no-results {
     padding: 30px 15px;

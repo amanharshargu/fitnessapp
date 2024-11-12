@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: true, // Changed from false to true for oauth purposes
+        allowNull: true,
       },
       weight: {
         type: DataTypes.FLOAT,

@@ -2,8 +2,6 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import api from "../services/api";
 
 const AuthContext = createContext(null);
-
-// In-memory storage fallback
 let inMemoryToken = null;
 
 const getStoredToken = () => {

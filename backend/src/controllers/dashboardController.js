@@ -2,7 +2,7 @@ const { User, EatenDish, Water } = require("../models");
 const { calculateCalories } = require("../utils/calorieCalculator");
 const { Op } = require("sequelize");
 const moment = require('moment');
-const sequelize = require('../models').sequelize; // Add this line
+const sequelize = require('../models').sequelize;
 
 exports.getUserDetails = async (req, res) => {
   try {
@@ -18,7 +18,7 @@ exports.getUserDetails = async (req, res) => {
         "gender",
         "goal",
         "activityLevel",
-        "photo", // Add this line to include the photo
+        "photo",
       ],
     });
 
@@ -193,7 +193,6 @@ exports.getWeeklyCalorieData = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Calculate the daily calorie goal using the same function as in getCalorieGoal
     const { height, weight, age, gender, goal, activityLevel } = user;
     const dailyCalorieGoal = calculateCalories(
       weight,
@@ -281,7 +280,6 @@ exports.addWaterIntake = async (req, res) => {
       date: moment().format('YYYY-MM-DD')
     });
 
-    // Get updated total for today
     const todayTotal = await Water.findAll({
       where: {
         userId,

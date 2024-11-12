@@ -5,8 +5,6 @@ const dashboardController = require("../controllers/dashboardController");
 
 router.get("/user-details", authMiddleware, dashboardController.getUserDetails);
 router.get("/calorie-goal", authMiddleware, dashboardController.getCalorieGoal);
-
-// New routes for eaten dishes
 router.post("/eaten-dishes", authMiddleware, dashboardController.addEatenDish);
 router.get("/eaten-dishes", authMiddleware, dashboardController.getEatenDishes);
 router.put(
@@ -19,10 +17,7 @@ router.delete(
   authMiddleware,
   dashboardController.deleteEatenDish
 );
-
 router.get("/weekly-calorie-data", authMiddleware, dashboardController.getWeeklyCalorieData);
-
-// Water intake routes
 router.get("/water-intake", authMiddleware, dashboardController.getWaterIntake);
 router.post("/water-intake", authMiddleware, dashboardController.addWaterIntake);
 

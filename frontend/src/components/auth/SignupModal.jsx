@@ -65,7 +65,7 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
     try {
       await signup(signupData);
       onSignupSuccess();
-      navigate("/profile"); // Navigate to profile page after successful signup
+      navigate("/profile");
     } catch (error) {
       if (error.response && error.response.data && error.response.data.message) {
         setError(error.response.data.message);

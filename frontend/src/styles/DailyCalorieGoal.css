@@ -52,7 +52,7 @@
 
 .dcg-percentage {
   fill: #333;
-  font-size: 0.5em;
+  font-size: 0.46em;
   text-anchor: middle;
   font-weight: bold;
 }
@@ -67,43 +67,66 @@
   flex: 1;
   min-width: 0;
   width: 100%;
+  overflow: hidden;
 }
 
 .dcg-form {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   width: 100%;
 }
 
 .dcg-form-inputs {
   display: flex;
-  gap: 8px;
-  width: 100%;
+  gap: 12px;
+  align-items: center;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .dcg-form-inputs input {
   flex: 1;
-  min-width: 0;
-  padding: 6px 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  min-width: 120px;
+  padding: 8px 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.dcg-form-inputs input:focus {
+  border-color: #ff7800;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 120, 0, 0.1);
 }
 
 .dcg-form-inputs button {
-  white-space: nowrap;
-  padding: 6px 12px;
+  padding: 6px 14px;
   background: #ff7800;
   color: white;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  border-radius: 20px;
+  font-weight: 500;
   font-size: 0.9rem;
-  transition: background-color 0.2s ease;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: fit-content;
+  box-shadow: 0 2px 4px rgba(255, 120, 0, 0.2);
 }
 
 .dcg-form-inputs button:hover {
   background: #ff9800;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(255, 120, 0, 0.3);
+}
+
+.dcg-form-inputs button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(255, 120, 0, 0.2);
 }
 
 .dcg-dishes-list-container {
@@ -112,25 +135,53 @@
 }
 
 .dcg-dishes-list {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
   list-style: none;
-  padding: 0;
+  padding-left: 0;
   margin: 0;
 }
 
 .dcg-dishes-list li {
-  margin-bottom: 4px;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 0;
+  margin: 0;
+}
+
+.dcg-dishes-list li:last-child {
+  border-bottom: none;
 }
 
 .dcg-dish-content {
+  padding: 12px 16px !important;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f8f8f8;
-  border-radius: 4px;
-  padding: 4px 8px;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.dcg-goal-reached, .dcg-calorie-warning {
+.dcg-dish-content:hover {
+  background-color: #f8f9fa;
+}
+
+.dcg-dish-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem !important;
+}
+
+.dcg-dish-calories {
+  color: #ff7800 !important;
+  font-weight: 500;
+}
+
+.dcg-goal-reached,
+.dcg-calorie-warning {
   font-size: 0.85rem;
   text-align: center;
   margin-top: 8px;
@@ -177,6 +228,7 @@
 
   .dcg-form-inputs {
     flex-direction: column;
+    gap: 8px;
   }
 
   .dcg-form-inputs input,
@@ -198,4 +250,224 @@
 .dcg-daily-calorie-goal h3::before {
   content: "🍽️";
   font-size: 1.2rem;
+}
+
+.dcg-delete-confirmation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(255, 120, 0, 0.15);
+  border: 1px solid rgba(255, 120, 0, 0.1);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.dcg-delete-confirmation span {
+  font-size: 0.85rem;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.dcg-confirm-button,
+.dcg-cancel-button {
+  padding: 4px 12px;
+  border: none;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dcg-confirm-button {
+  background-color: #ff7800;
+  color: white;
+}
+
+.dcg-confirm-button:hover {
+  background-color: #ff9800;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(255, 120, 0, 0.2);
+}
+
+.dcg-cancel-button {
+  background-color: #f3f4f6;
+  color: #4a5568;
+}
+
+.dcg-cancel-button:hover {
+  background-color: #e5e7eb;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.dcg-delete-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4a5568;
+  font-size: 0.85rem;
+}
+
+.dcg-delete-loading .spinner-border {
+  width: 16px;
+  height: 16px;
+  color: #ff7800;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dcg-editing-dish-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.dcg-edit-save-button,
+.dcg-edit-cancel-button {
+  padding: 4px 12px;
+  border: none;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dcg-edit-save-button {
+  background-color: #ff7800;
+  color: white;
+}
+
+.dcg-edit-save-button:hover {
+  background-color: #ff9800;
+  transform: translateY(-1px);
+}
+
+.dcg-edit-cancel-button {
+  background-color: #e2e8f0;
+  color: #4a5568;
+}
+
+.dcg-edit-cancel-button:hover {
+  background-color: #cbd5e0;
+  transform: translateY(-1px);
+}
+
+.dcg-editing-dish {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+  align-items: center;
+}
+
+.dcg-editing-dish form {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+  align-items: center;
+}
+
+.dcg-edit-input {
+  padding: 6px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.dcg-edit-input--name {
+  flex: 2;
+  min-width: 120px;
+}
+
+.dcg-edit-input--calories {
+  flex: 1;
+  min-width: 80px;
+  max-width: 100px;
+}
+
+.dcg-editing-dish-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* Update the delete button styles with higher specificity and !important */
+.dcg-daily-calorie-goal .dcg-dish-actions .dcg-delete-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: #e53e3e !important;
+}
+
+.dcg-daily-calorie-goal .dcg-dish-actions .dcg-delete-button:hover {
+  background-color: rgba(229, 62, 62, 0.1);
+}
+
+.dcg-daily-calorie-goal .dcg-dish-actions .dcg-delete-button i {
+  font-size: 1rem;
+  color: #e53e3e !important;
+}
+
+/* Add at the bottom of the file */
+.dcg-dish-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.dcg-edit-button,
+.dcg-delete-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.dcg-edit-button {
+  color: #ff7800;
+}
+
+.dcg-edit-button:hover {
+  background-color: rgba(255, 120, 0, 0.1);
+}
+
+.dcg-delete-button {
+  color: #e53e3e;
+}
+
+.dcg-delete-button:hover {
+  background-color: rgba(229, 62, 62, 0.1);
+}
+
+.dcg-edit-button i,
+.dcg-delete-button i {
+  font-size: 1rem;
 }

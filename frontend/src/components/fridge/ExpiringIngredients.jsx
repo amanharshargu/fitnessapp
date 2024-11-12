@@ -71,10 +71,10 @@ function ExpiringIngredients({ ingredients }) {
                             {formatExpirationDate(item.expirationDate)}
                           </span>
                           <button
-                            className="delete-button"
+                            className="expiring-delete-button"
                             onClick={() => handleDelete(item.id)}
                           >
-                            Remove
+                            <i className="fas fa-trash"></i>
                           </button>
                         </div>
                       </li>

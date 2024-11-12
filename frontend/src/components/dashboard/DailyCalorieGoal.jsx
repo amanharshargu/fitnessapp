@@ -11,6 +11,8 @@ function DailyCalorieGoal({ onDishesChanged }){
   const [editingDish, setEditingDish] = useState(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [confettiRecycle, setConfettiRecycle] = useState(true);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     const fetchCalorieGoal = async () => {
@@ -116,15 +118,69 @@ function DailyCalorieGoal({ onDishesChanged }){
     }
   };
 
-  const deleteDish = async (id) => {
+  const handleDelete = (id) => {
+    setDeleteConfirm(id);
+  };
+
+  const confirmDelete = async (id) => {
     try {
+      setDeletingId(id);
       await api.delete(`/dashboard/eaten-dishes/${id}`);
       setDishes(prev => prev.filter(dish => dish.id !== id));
       onDishesChanged();
-    } catch (error) {
-      console.error('Error deleting eaten dish:', error);
+    } finally {
+      setDeletingId(null);
+      setDeleteConfirm(null);
     }
   };
+
+  const cancelDelete = () => {
+    setDeleteConfirm(null);
+  };
+
+  const renderDeleteButton = (id) => (
+    <>
+      {deleteConfirm === id ? (
+        <div className="dcg-delete-confirmation">
+          {deletingId === id ? (
+            <div className="dcg-delete-loading">
+              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <span>Deleting...</span>
+            </div>
+          ) : (
+            <>
+              <span>Delete?</span>
+              <button
+                className="dcg-confirm-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  confirmDelete(id);
+                }}
+              >
+                Yes
+              </button>
+              <button
+                className="dcg-cancel-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  cancelDelete();
+                }}
+              >
+                No
+              </button>
+            </>
+          )}
+        </div>
+      ) : (
+        <button
+          className="dcg-delete-button"
+          onClick={() => handleDelete(id)}
+        >
+          <i className="fas fa-trash-alt"></i>
+        </button>
+      )}
+    </>
+  );
 
   const formatPercentage = (value) => {
     if (value === 100) return "100";
@@ -224,34 +280,45 @@ function DailyCalorieGoal({ onDishesChanged }){
 
           {dishes.length > 0 && (
             <div className="dcg-dishes-list-container">
-              <h4 style={{ color: '#ff7800', fontSize: '0.9rem', marginBottom: '5px' }}>Eaten Dishes</h4>
+              <h4 style={{ color: '#ff7800', fontSize: '0.9rem', marginBottom: '5px' }}>Today's Dishes</h4>
               <ul className="dcg-dishes-list">
                 {dishes.map((dish) => (
                   <li key={dish.id}>
                     <div className="dcg-dish-content" style={{ padding: '6px 8px' }}>
                       {editingDish && editingDish.id === dish.id ? (
-                        <div className="dcg-editing-dish" style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-                          <input
-                            type="text"
-                            name="dishName"
-                            value={editingDish.dishName}
-                            onChange={handleEditChange}
-                            placeholder="Dish name"
-                            style={{ fontSize: '0.8rem', padding: '4px' }}
-                          />
-                          <input
-                            type="text"
-                            name="calories"
-                            value={editingDish.calories}
-                            onChange={handleEditChange}
-                            placeholder="Calories"
-                            pattern="\d*"
-                            style={{ fontSize: '0.8rem', padding: '4px', width: '60px' }}
-                          />
-                          <div className="dcg-editing-dish-actions" style={{ display: 'flex', gap: '3px' }}>
-                            <button onClick={saveEdit} style={{ fontSize: '0.7rem', padding: '3px 6px', backgroundColor: '#ffd600', color: '#333', border: 'none', borderRadius: '3px' }}>Save</button>
-                            <button onClick={() => setEditingDish(null)} style={{ fontSize: '0.7rem', padding: '3px 6px', backgroundColor: '#f0f0f0', color: '#333', border: 'none', borderRadius: '3px' }}>Cancel</button>
-                          </div>
+                        <div className="dcg-editing-dish">
+                          <form onSubmit={(e) => {
+                            e.preventDefault();
+                            saveEdit();
+                          }}>
+                            <input
+                              type="text"
+                              name="dishName"
+                              value={editingDish.dishName}
+                              onChange={handleEditChange}
+                              placeholder="Dish name"
+                              className="dcg-edit-input dcg-edit-input--name"
+                            />
+                            <input
+                              type="text"
+                              name="calories"
+                              value={editingDish.calories}
+                              onChange={handleEditChange}
+                              placeholder="Calories"
+                              pattern="\d*"
+                              className="dcg-edit-input dcg-edit-input--calories"
+                            />
+                            <div className="dcg-editing-dish-actions">
+                              <button type="submit" className="dcg-edit-save-button">Save</button>
+                              <button 
+                                type="button" 
+                                className="dcg-edit-cancel-button" 
+                                onClick={() => setEditingDish(null)}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </form>
                         </div>
                       ) : (
                         <>
@@ -259,9 +326,11 @@ function DailyCalorieGoal({ onDishesChanged }){
                             <span>{dish.dishName}</span>
                             <span className="dcg-dish-calories" style={{ color: '#ff7800' }}> • {dish.calories} cal</span>
                           </div>
-                          <div className="dcg-dish-actions" style={{ display: 'flex', gap: '3px' }}>
-                            <button onClick={() => startEditing(dish)} style={{ fontSize: '0.7rem', padding: '3px 6px', backgroundColor: '#ffd600', color: '#333', border: 'none', borderRadius: '3px' }}>Edit</button>
-                            <button onClick={() => deleteDish(dish.id)} style={{ fontSize: '0.7rem', padding: '3px 6px', backgroundColor: '#f0f0f0', color: '#333', border: 'none', borderRadius: '3px' }}>Delete</button>
+                          <div className="dcg-dish-actions">
+                            <button onClick={() => startEditing(dish)} className="dcg-edit-button">
+                              <i className="fas fa-pencil-alt"></i>
+                            </button>
+                            {renderDeleteButton(dish.id)}
                           </div>
                         </>
                       )}

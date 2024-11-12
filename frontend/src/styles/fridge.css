@@ -91,7 +91,7 @@
 
 .add-ingredient-btn {
   padding: 10px 20px;
-  background-color: #FFD600;
+  background-color: #ff9800;
   color: #333;
   border: none;
   border-radius: 30px;
@@ -105,7 +105,7 @@
 }
 
 .add-ingredient-btn:hover {
-  background-color: #FFC107;
+  background-color: #f57c00;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }

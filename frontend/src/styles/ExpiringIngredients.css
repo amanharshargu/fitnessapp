@@ -58,27 +58,42 @@
 .expiration-info {
   display: flex;
   align-items: center;
+  gap: 12px;
 }
 
 .expiration-badge {
   background-color: #FFD600;
   color: #333;
-  padding: 4px 8px;
+  padding: 4px 12px;
   border-radius: 20px;
   font-size: 0.8rem;
-  margin-right: 10px;
+  font-weight: 500;
 }
 
-.delete-button {
-  background-color: transparent;
+.expiring-delete-button {
+  background: none;
   border: none;
-  color: #FF9800;
+  padding: 8px;
+  border-radius: 50%;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: #ff7800;
+  opacity: 0.7;
 }
 
-.delete-button:hover {
-  color: #F57C00;
+.expiring-delete-button:hover {
+  background-color: rgba(255, 120, 0, 0.1);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.expiring-delete-button i {
+  font-size: 0.9rem;
 }
 
 .search-recipes-button {

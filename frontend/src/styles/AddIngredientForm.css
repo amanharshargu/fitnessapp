@@ -62,7 +62,6 @@
 }
 
 .ingredient-form__input--number {
-  -moz-appearance: textfield;
   padding-right: 35px;
 }
 

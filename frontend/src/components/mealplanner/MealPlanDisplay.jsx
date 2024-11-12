@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useMealPlanner } from '../../contexts/MealPlannerContext';
+import LoadingSpinner from '../common/LoadingSpinner';
 import '../../styles/MealPlanDisplay.css';
 
 function MealPlanDisplay() {
@@ -28,6 +29,12 @@ function MealPlanDisplay() {
       ...prev,
       [dayIndex]: { ...prev[dayIndex], [mealType]: true }
     }));
+  };
+
+  const handleImageError = (mealType, dayIndex) => {
+    if (mealImages[dayIndex]?.[mealType]) {
+      mealImages[dayIndex][mealType] = 'path/to/fallback/image.jpg';
+    }
   };
 
   // Memoize the image URLs
@@ -95,13 +102,12 @@ function MealPlanDisplay() {
               mealPlan.selection[selectedDay].sections[mealType].recipeDetails ? (
                 <div className="recipe-card">
                   <div className="recipe-image-container">
-                    {!loadedImages[selectedDay]?.[mealType] && <div className="loading-spinner"></div>}
                     <img 
-                      className={`recipe-image ${!loadedImages[selectedDay]?.[mealType] ? 'loading' : ''}`}
                       src={mealImages[selectedDay][mealType]}
                       alt={mealPlan.selection[selectedDay].sections[mealType].recipeDetails.label}
                       onLoad={() => handleImageLoad(mealType, selectedDay)}
                     />
+                    {!loadedImages[selectedDay]?.[mealType] && <LoadingSpinner />}
                   </div>
                   <div className="recipe-info">
                     <div>

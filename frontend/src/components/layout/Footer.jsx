@@ -7,16 +7,16 @@ function Footer() {
 
   return (
     <>
-      <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-brand">
-            <h4>WishEat</h4>
-            <span className="footer-divider">|</span>
-            <p>&copy; 2024 All rights reserved</p>
+      <footer className="wisheat-footer">
+        <div className="wisheat-footer-content">
+          <div className="wisheat-footer-brand">
+            <h4 className="wisheat-footer-title">WishEat</h4>
+            <span className="wisheat-footer-divider">|</span>
+            <p className="wisheat-footer-copyright">&copy; 2024 All rights reserved</p>
           </div>
-          <nav className="footer-links">
+          <nav className="wisheat-footer-nav">
             <button 
-              className="contact-link"
+              className="wisheat-footer-contact-btn"
               onClick={() => setShowContactModal(true)}
             >
               Contact Us

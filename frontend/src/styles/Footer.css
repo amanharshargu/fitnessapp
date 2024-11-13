@@ -1,4 +1,4 @@
-.footer {
+.wisheat-footer {
   background: #2c3e50;
   color: white;
   padding: 1rem 0;
@@ -9,7 +9,7 @@
   z-index: 100;
 }
 
-.footer-content {
+.wisheat-footer-content {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
@@ -18,45 +18,34 @@
   align-items: center;
 }
 
-.footer-brand {
+.wisheat-footer-brand {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.footer-brand h4 {
+.wisheat-footer-title {
   color: #e67e22;
   margin: 0;
   font-size: 1.1rem;
 }
 
-.footer-brand p {
+.wisheat-footer-copyright {
   margin: 0;
   color: #ecf0f1;
   font-size: 0.9rem;
 }
 
-.footer-divider {
+.wisheat-footer-divider {
   color: #4a5568;
 }
 
-.footer-links {
+.wisheat-footer-nav {
   display: flex;
   gap: 1.5rem;
 }
 
-.footer-links a {
-  color: #ecf0f1;
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: color 0.2s ease;
-}
-
-.footer-links a:hover {
-  color: #e67e22;
-}
-
-.contact-link {
+.wisheat-footer-contact-btn {
   background: none;
   border: none;
   color: #ecf0f1;
@@ -67,6 +56,6 @@
   padding: 0;
 }
 
-.contact-link:hover {
+.wisheat-footer-contact-btn:hover {
   color: #e67e22;
 }

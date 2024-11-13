@@ -74,7 +74,7 @@ function LandingPage() {
             </div>
           </div>
 
-          <div className="recipe-showcase">
+          <div className="landing-recipe-showcase">
             {isLoading ? (
               <div className="loading-spinner">
                 <div className="spinner"></div>
@@ -84,19 +84,21 @@ function LandingPage() {
               randomRecipes.map((recipe, index) => (
                 <div 
                   key={recipe.uri} 
-                  className={`showcase-item ${index === activeIndex ? 'active' : ''}`}
+                  className={`landing-showcase-item ${index === activeIndex ? 'active' : ''}`}
                 >
-                  <div className="recipe-card">
-                    <div className="recipe-image-wrapper">
+                  <div className="landing-recipe-card">
+                    <div className="landing-recipe-image-wrapper">
                       <img
                         src={recipe.image}
                         alt={recipe.label}
-                        className="recipe-image"
+                        className="landing-recipe-image"
                       />
                     </div>
-                    <div className="recipe-details">
+                    <div className="landing-recipe-details">
                       <h4>{recipe.label}</h4>
-                      <span className="calorie-badge">{recipe.calories.toFixed(0)} cal</span>
+                      <span className="landing-calorie-badge">
+                        {recipe.calories.toFixed(0)} cal
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -129,21 +131,6 @@ function LandingPage() {
           </div>
         </div>
       </div>
-
-      <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-brand">
-            <h4>WishEat</h4>
-            <span className="footer-divider">|</span>
-            <p>&copy; 2024 All rights reserved</p>
-          </div>
-          <nav className="footer-links">
-            <a href="#">Terms</a>
-            <a href="#">Privacy</a>
-            <a href="#">Contact</a>
-          </nav>
-        </div>
-      </footer>
 
       {showAuthModal && (
         isSignup ? (

@@ -13,6 +13,7 @@ import { RecipeProvider } from "./contexts/RecipeContext";
 import { UserDetailsProvider } from "./contexts/UserDetailsContext";
 import Layout from "./components/Layout";
 import { MealPlannerProvider } from './contexts/MealPlannerContext';
+import Footer from './components/layout/Footer';
 
 const LandingPage = lazy(() => import(/* webpackChunkName: "landing-page" */ "./components/LandingPage"));
 const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ "./components/dashboard/Dashboard"));
@@ -26,6 +27,7 @@ const OAuthCallback = lazy(() => import(/* webpackChunkName: "auth" */ "./compon
 const MealPlanner = lazy(() => import(/* webpackChunkName: "meal-planner" */ "./components/mealplanner/MealPlanner"));
 const ResetPassword = lazy(() => import(/* webpackChunkName: "auth" */ "./components/auth/ResetPassword"));
 const ProfilePage = lazy(() => import(/* webpackChunkName: "profile" */ "./components/profile/ProfilePage"));
+const Contact = lazy(() => import(/* webpackChunkName: "contact" */ "./components/profile/Contact"));
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useAuth();
@@ -34,7 +36,14 @@ function ProtectedRoute({ children }) {
 
 function ConditionalLanding() {
   const { isLoggedIn } = useAuth();
-  return isLoggedIn ? <Navigate to="/dashboard" replace /> : <LandingPage />;
+  return isLoggedIn ? (
+    <Navigate to="/dashboard" replace />
+  ) : (
+    <Layout isLandingPage>
+      <LandingPage />
+      <Footer />
+    </Layout>
+  );
 }
 
 function AppRoutes() {
@@ -70,7 +79,7 @@ function AppRoutes() {
   }, [location, handleOAuthCallback, navigate]);
 
   return (
-    <Layout>
+    <>
       <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<ConditionalLanding />} />
@@ -78,7 +87,9 @@ function AppRoutes() {
             path="/dashboard/*"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <Layout>
+                  <Dashboard />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -86,7 +97,9 @@ function AppRoutes() {
             path="/fridge"
             element={
               <ProtectedRoute>
-                <Fridge />
+                <Layout>
+                  <Fridge />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -94,7 +107,9 @@ function AppRoutes() {
             path="/recipes"
             element={
               <ProtectedRoute>
-                <Recipes />
+                <Layout>
+                  <Recipes />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -102,7 +117,9 @@ function AppRoutes() {
             path="/liked-recipes"
             element={
               <ProtectedRoute>
-                <LikedRecipes />
+                <Layout>
+                  <LikedRecipes />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -110,7 +127,9 @@ function AppRoutes() {
             path="/suggested-recipes"
             element={
               <ProtectedRoute>
-                <SuggestedRecipes />
+                <Layout>
+                  <SuggestedRecipes />
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -118,18 +137,44 @@ function AppRoutes() {
             path="/meal-planner"
             element={
               <ProtectedRoute>
-                <MealPlanner />
+                <Layout>
+                  <MealPlanner />
+                </Layout>
               </ProtectedRoute>
             }
           />
-          <Route path="/oauth-callback" element={<OAuthCallback />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route
             path="/profile"
             element={
               <ProtectedRoute>
-                <ProfilePage />
+                <Layout>
+                  <ProfilePage />
+                </Layout>
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/oauth-callback"
+            element={
+              <Layout>
+                <OAuthCallback />
+              </Layout>
+            }
+          />
+          <Route
+            path="/reset-password/:token"
+            element={
+              <Layout>
+                <ResetPassword />
+              </Layout>
+            }
+          />
+          <Route
+            path="/contact"
+            element={
+              <Layout>
+                <Contact />
+              </Layout>
             }
           />
           <Route path="*" element={<Navigate to="/" replace />} />
@@ -145,7 +190,7 @@ function AppRoutes() {
           onSwitchToSignup={handleSwitchToSignup}
         />
       </Suspense>
-    </Layout>
+    </>
   );
 }
 

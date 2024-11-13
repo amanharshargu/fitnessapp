@@ -31,12 +31,6 @@ function MealPlanDisplay() {
     }));
   };
 
-  const handleImageError = (mealType, dayIndex) => {
-    if (mealImages[dayIndex]?.[mealType]) {
-      mealImages[dayIndex][mealType] = 'path/to/fallback/image.jpg';
-    }
-  };
-
   // Memoize the image URLs
   const mealImages = useMemo(() => {
     if (!mealPlan.selection) return {};

@@ -14,10 +14,10 @@
 .dashboard-grid {
   display: grid;
   grid-template-areas: 
-    "motivation calories"
-    "water overview";
+    "motivation water"
+    "calories overview";
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  grid-template-rows: auto auto;
+  grid-template-rows: 300px 1fr;
   gap: 20px;
   margin: 0 auto;
   padding-right: min(20px, 2vw);
@@ -32,11 +32,13 @@
   min-height: 0;
   min-width: 0;
   width: 100%;
+  height: 100%;
   overflow: hidden;
 }
 
 .dashboard-item.motivation {
   grid-area: motivation;
+  display: flex;
 }
 
 .dashboard-item.calories {
@@ -51,6 +53,13 @@
   grid-area: overview;
 }
 
+.dashboard-item.motivation > div {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 @media (max-width: 1200px) {
   .dashboard-grid {
     max-width: min(1000px, 95%);
@@ -62,8 +71,8 @@
   .dashboard-grid {
     grid-template-areas: 
       "motivation"
-      "calories"
       "water"
+      "calories"
       "overview";
     grid-template-columns: minmax(0, 1fr);
     max-width: min(600px, 95%);

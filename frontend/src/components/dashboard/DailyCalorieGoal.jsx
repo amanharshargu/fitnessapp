@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import '../../styles/DailyCalorieGoal.css';
 import api from "../../services/api";
 import Confetti from 'react-confetti';
+import { useRecipes } from "../../contexts/RecipeContext";
+import { debounce } from 'lodash';
 
 function DailyCalorieGoal({ onDishesChanged }){
   const [dailyCalorieGoal, setDailyCalorieGoal] = useState(null);
@@ -13,6 +15,10 @@ function DailyCalorieGoal({ onDishesChanged }){
   const [confettiRecycle, setConfettiRecycle] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const { fetchRecipes, recipes, isLoading } = useRecipes();
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchCalorieGoal = async () => {
@@ -52,20 +58,65 @@ function DailyCalorieGoal({ onDishesChanged }){
     }
   }, [dishes, dailyCalorieGoal]);
 
+  useEffect(() => {
+    if (recipes && recipes.length > 0) {
+      const formattedResults = recipes.map(recipe => ({
+        uri: recipe.uri,
+        label: recipe.label,
+        image: recipe.image,
+        calories: recipe.calories,
+        yield: recipe.yield
+      }));
+      setSearchResults(formattedResults.slice(0, 5));
+    } else {
+      setSearchResults([]);
+    }
+  }, [recipes]);
+
   const percentage = dailyCalorieGoal > 0 ? Math.min((totalDailyCalories / dailyCalorieGoal) * 100, 100) : 0;
   const isGoalExactlyMet = totalDailyCalories === dailyCalorieGoal;
   const isOverGoal = dailyCalorieGoal > 0 && totalDailyCalories > dailyCalorieGoal;
   const progressColor = isOverGoal ? "#FF6666" : (isGoalExactlyMet ? "#28a745" : "#ff7800");
   const caloriesExceeded = isOverGoal ? totalDailyCalories - dailyCalorieGoal : 0;
 
+  const debouncedSearch = useCallback(
+    debounce(async (searchTerm) => {
+      if (searchTerm.length < 2) {
+        setSearchResults([]);
+        return;
+      }
+      
+      try {
+        await fetchRecipes(searchTerm);
+      } catch (error) {
+        console.error('Error searching recipes:', error);
+        setSearchResults([]);
+      }
+    }, 300),
+    [fetchRecipes]
+  );
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'calories') {
+    if (name === 'name') {
+      setNewDish(prev => ({ ...prev, [name]: value }));
+      if (value.length >= 2) {
+        debouncedSearch(value);
+      } else {
+        setSearchResults([]);
+      }
+    } else {
       const numericValue = value.replace(/\D/g, '');
       setNewDish(prev => ({ ...prev, [name]: numericValue }));
-    } else {
-      setNewDish(prev => ({ ...prev, [name]: value }));
     }
+  };
+
+  const handleRecipeSelect = (recipe) => {
+    setNewDish({
+      name: recipe.label,
+      calories: Math.round(recipe.calories / recipe.yield)
+    });
+    setSearchResults([]);
   };
 
   const addDish = async (e) => {
@@ -249,30 +300,67 @@ function DailyCalorieGoal({ onDishesChanged }){
         <div className="dcg-goal-details">
           <form onSubmit={addDish} className="dcg-form">
             <div className="dcg-form-inputs">
-              <label htmlFor="dish-name" className="visually-hidden">Dish name</label>
-              <input
-                id="dish-name"
-                type="text"
-                name="name"
-                value={newDish.name}
-                onChange={handleInputChange}
-                placeholder="Dish name"
-                required
-                aria-label="Enter dish name"
-              />
-              
-              <label htmlFor="dish-calories" className="visually-hidden">Calories</label>
-              <input
-                id="dish-calories"
-                type="text"
-                name="calories"
-                value={newDish.calories}
-                onChange={handleInputChange}
-                placeholder="Calories"
-                required
-                pattern="\d*"
-                aria-label="Enter calories"
-              />
+              <div className="dcg-input-row">
+                <div className="dcg-search-container">
+                  <label htmlFor="dish-name" className="visually-hidden">Dish name</label>
+                  <input
+                    id="dish-name"
+                    type="text"
+                    name="name"
+                    value={newDish.name}
+                    onChange={handleInputChange}
+                    placeholder="Search or enter dish name"
+                    required
+                    aria-label="Enter dish name"
+                    autoComplete="off"
+                  />
+                  
+                  {isLoading && (
+                    <div className="dcg-search-loading">
+                      <div className="dcg-spinner"></div>
+                    </div>
+                  )}
+
+                  {searchResults.length > 0 && (
+                    <div className="dcg-search-results">
+                      {searchResults.map((recipe) => (
+                        <div
+                          key={recipe.uri}
+                          className="dcg-search-result-item"
+                          onClick={() => handleRecipeSelect(recipe)}
+                        >
+                          <img 
+                            src={recipe.image} 
+                            alt={recipe.label}
+                            className="dcg-result-image"
+                          />
+                          <div className="dcg-result-info">
+                            <div className="dcg-result-name">{recipe.label}</div>
+                            <div className="dcg-result-calories">
+                              {Math.round(recipe.calories / recipe.yield)} cal per serving
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                
+                <div className="dcg-calories-input">
+                  <label htmlFor="dish-calories" className="visually-hidden">Calories</label>
+                  <input
+                    id="dish-calories"
+                    type="text"
+                    name="calories"
+                    value={newDish.calories}
+                    onChange={handleInputChange}
+                    placeholder="Calories"
+                    required
+                    pattern="\d*"
+                    aria-label="Enter calories"
+                  />
+                </div>
+              </div>
               
               <button type="submit" aria-label="Add new dish">Add Dish</button>
             </div>

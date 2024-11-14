@@ -136,16 +136,16 @@
 
 .dcg-form-inputs button[type="submit"] {
   align-self: flex-end;
-  padding: 10px 24px;
+  padding: 6px 16px;
   background: #ff7800;
   color: white;
   border: none;
   border-radius: 8px;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  width: 140px;
+  width: 100px;
   box-shadow: 0 2px 4px rgba(255, 120, 0, 0.2);
 }
 

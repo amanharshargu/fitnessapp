@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import '../../styles/DailyCalorieGoal.css';
 import api from "../../services/api";
 import Confetti from 'react-confetti';
@@ -16,9 +16,8 @@ function DailyCalorieGoal({ onDishesChanged }){
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
   const { fetchRecipes, recipes, isLoading } = useRecipes();
-  const [searchTerm, setSearchTerm] = useState('');
+  const searchContainerRef = useRef(null);
 
   useEffect(() => {
     const fetchCalorieGoal = async () => {
@@ -72,6 +71,19 @@ function DailyCalorieGoal({ onDishesChanged }){
       setSearchResults([]);
     }
   }, [recipes]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+        setSearchResults([]);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const percentage = dailyCalorieGoal > 0 ? Math.min((totalDailyCalories / dailyCalorieGoal) * 100, 100) : 0;
   const isGoalExactlyMet = totalDailyCalories === dailyCalorieGoal;
@@ -301,7 +313,7 @@ function DailyCalorieGoal({ onDishesChanged }){
           <form onSubmit={addDish} className="dcg-form">
             <div className="dcg-form-inputs">
               <div className="dcg-input-row">
-                <div className="dcg-search-container">
+                <div className="dcg-search-container" ref={searchContainerRef}>
                   <label htmlFor="dish-name" className="visually-hidden">Dish name</label>
                   <input
                     id="dish-name"

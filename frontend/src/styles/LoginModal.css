@@ -105,8 +105,20 @@ body.modal-open {
 }
 
 .password-toggle-btn {
-  margin-right: 22px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
   color: rgba(255, 255, 255, 0.6);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  z-index: 2;
 }
 
 .password-toggle-btn:hover {
@@ -225,21 +237,22 @@ body.modal-open {
 
 .password-input-wrapper {
   position: relative;
+  width: 100%;
 }
 
-.password-toggle-btn {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: #fff;
-  cursor: pointer;
+.password-input-wrapper.is-invalid .form-control {
+  border-color: #dc3545;
 }
 
-.password-toggle-btn:focus {
-  outline: none;
+.invalid-feedback {
+  display: none;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+
+.invalid-feedback.d-block {
+  display: block;
 }
 
 .alert-danger {
@@ -269,4 +282,8 @@ body.modal-open {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.password-input-wrapper input {
+  padding-right: 40px !important;
 }

@@ -224,9 +224,9 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
                   focusedInput === "password" || loginData.password
                     ? "focused"
                     : ""
-                } ${errors.password ? "is-invalid" : ""}`}
+                }`}
               >
-                <div className="password-input-wrapper">
+                <div className={`password-input-wrapper ${errors.password ? "is-invalid" : ""}`}>
                   <input
                     type={showPassword ? "text" : "password"}
                     id="loginPassword"
@@ -242,7 +242,7 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
                   />
                   <button
                     type="button"
-                    className="btn btn-outline-secondary password-toggle-btn"
+                    className="password-toggle-btn"
                     onClick={togglePasswordVisibility}
                   >
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -252,7 +252,7 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
                   Password
                 </label>
                 {errors.password && (
-                  <div className="invalid-feedback">{errors.password}</div>
+                  <div className="invalid-feedback d-block">{errors.password}</div>
                 )}
               </div>
               <p className="" style={{ marginTop: '10px', marginBottom: '20px' }}>

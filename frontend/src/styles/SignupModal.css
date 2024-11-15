@@ -188,3 +188,48 @@ body.modal-open {
 .form-control-lg {
   color: white !important;
 }
+
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-input-wrapper.is-invalid .form-control {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  display: none;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+
+.invalid-feedback.d-block {
+  display: block;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  z-index: 2;
+}
+
+.password-toggle-btn:hover {
+  color: #ff6b6b;
+}
+
+.password-input-wrapper input {
+  padding-right: 40px !important;
+}

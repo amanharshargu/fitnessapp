@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import "../../styles/SignupModal.css";
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
   const { signup } = useAuth();
@@ -14,6 +15,7 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
   const [error, setError] = useState("");
   const [focusedInput, setFocusedInput] = useState(null);
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateField = (name, value) => {
     let error = "";
@@ -86,6 +88,10 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
     setErrors(prev => ({ ...prev, [name]: error }));
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   useEffect(() => {
     if (show) {
       document.body.classList.add('modal-open');
@@ -152,24 +158,36 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
               )}
             </div>
 
-            <div className={`form-outline form-white mb-4 ${focusedInput === 'password' || signupData.password ? 'focused' : ''} ${errors.password ? 'is-invalid' : ''}`}>
-              <input
-                type="password"
-                id="signupPassword"
-                className={`form-control form-control-lg ${errors.password ? 'is-invalid' : ''}`}
-                name="password"
-                value={signupData.password}
-                onChange={handleSignupInputChange}
-                onFocus={() => handleInputFocus('password')}
-                onBlur={handleInputBlur}
-                required
-              />
+            <div
+              className={`form-outline form-white mb-4 ${
+                focusedInput === 'password' || signupData.password ? 'focused' : ''
+              }`}
+            >
+              <div className={`password-input-wrapper ${errors.password ? "is-invalid" : ""}`}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="signupPassword"
+                  className={`form-control form-control-lg ${
+                    errors.password ? 'is-invalid' : ''
+                  }`}
+                  name="password"
+                  value={signupData.password}
+                  onChange={handleSignupInputChange}
+                  onFocus={() => handleInputFocus('password')}
+                  onBlur={handleInputBlur}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
               <label className="form-label" htmlFor="signupPassword">Password</label>
               {errors.password && (
-                <>
-                  <div className="error-icon">!</div>
-                  <div className="invalid-feedback">{errors.password}</div>
-                </>
+                <div className="invalid-feedback d-block">{errors.password}</div>
               )}
             </div>
 

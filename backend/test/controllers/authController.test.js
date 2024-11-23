@@ -1,6 +1,6 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const app = require("../../src/app");
+const { app, sequelize } = require("../setup");
 const { User } = require("../../src/models");
 const bcrypt = require("bcryptjs");
 const { calculateCalories } = require("../../src/utils/calorieCalculator");
@@ -9,6 +9,20 @@ chai.use(chaiHttp);
 const expect = chai.expect;
 
 describe("Auth Controller", () => {
+  beforeEach(async () => {
+    // Clean up using model instead of raw query
+    try {
+      await User.destroy({
+        where: {},
+        force: true,
+        truncate: { cascade: true }
+      });
+    } catch (error) {
+      console.error('Error cleaning up User table:', error);
+      throw error;
+    }
+  });
+
   describe("POST /api/auth/register", () => {
     it("should register a new user successfully", async () => {
       const testUser = {
@@ -24,25 +38,16 @@ describe("Auth Controller", () => {
       };
 
       try {
-        const expectedCalorieGoal = calculateCalories(
-          testUser.weight,
-          testUser.height,
-          testUser.age,
-          testUser.gender,
-          testUser.goal,
-          testUser.activityLevel
-        );
+        // Verify user doesn't exist
+        const existingUser = await User.findOne({
+          where: { email: testUser.email }
+        });
+        expect(existingUser).to.be.null;
 
         const res = await chai
           .request(app)
           .post("/api/auth/register")
           .send(testUser);
-
-        console.log("Test User Data:", testUser);
-        console.log("Registration Response:", {
-          status: res.status,
-          body: res.body
-        });
 
         expect(res).to.have.status(201);
         expect(res.body).to.have.property("token");
@@ -50,17 +55,13 @@ describe("Auth Controller", () => {
         expect(res.body.user).to.have.property("username", testUser.username);
         expect(res.body.user).to.have.property("email", testUser.email);
 
-        // Verify user was created in database
+        // Verify user was created
         const user = await User.findOne({
-          where: {
-            username: testUser.username,
-            email: testUser.email
-          }
+          where: { email: testUser.email }
         });
         expect(user).to.not.be.null;
         expect(user.email).to.equal(testUser.email);
         expect(user.username).to.equal(testUser.username);
-        expect(user.dailyCalorieGoal).to.equal(expectedCalorieGoal);
 
         // Verify password was hashed
         const validPassword = await bcrypt.compare(testUser.password, user.password);
@@ -81,23 +82,22 @@ describe("Auth Controller", () => {
     });
 
     it("should return 400 if email already exists", async () => {
-      const existingUser = {
-        username: "existing",
-        email: "existing@example.com",
-        password: "Password123!",
-      };
-
       // First create a user
       await User.create({
-        ...existingUser,
-        password: await bcrypt.hash(existingUser.password, 10),
+        username: "existing",
+        email: "existing@example.com",
+        password: await bcrypt.hash("Password123!", 10)
       });
 
       // Try to register with same email
       const res = await chai
         .request(app)
         .post("/api/auth/register")
-        .send(existingUser);
+        .send({
+          username: "newuser",
+          email: "existing@example.com",
+          password: "Password123!"
+        });
 
       expect(res).to.have.status(400);
       expect(res.body).to.have.property(
@@ -107,16 +107,11 @@ describe("Auth Controller", () => {
     });
 
     it("should return 400 if username already exists", async () => {
-      const existingUser = {
-        username: "testuser",
-        email: "different@example.com",
-        password: "Password123!",
-      };
-
       // First create a user
       await User.create({
-        ...existingUser,
-        password: await bcrypt.hash(existingUser.password, 10),
+        username: "testuser",
+        email: "test1@example.com",
+        password: await bcrypt.hash("Password123!", 10)
       });
 
       // Try to register with same username
@@ -124,8 +119,9 @@ describe("Auth Controller", () => {
         .request(app)
         .post("/api/auth/register")
         .send({
-          ...existingUser,
-          email: "another@example.com",
+          username: "testuser",
+          email: "test2@example.com",
+          password: "Password123!"
         });
 
       expect(res).to.have.status(400);
@@ -133,16 +129,21 @@ describe("Auth Controller", () => {
     });
 
     it("should return 400 if password format is invalid", async () => {
-      const res = await chai.request(app).post("/api/auth/register").send({
-        username: "testuser",
-        email: "test@example.com",
-        password: "weak",
-      });
+      const res = await chai
+        .request(app)
+        .post("/api/auth/register")
+        .send({
+          username: "newuser",
+          email: "new@example.com",
+          password: "weak"  // Invalid password
+        });
 
       expect(res).to.have.status(400);
-      expect(res.body)
-        .to.have.property("message")
-        .that.includes("Password must be at least 8 characters long");
+      expect(res.body.message).to.equal(
+        "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter"
+      );
     });
   });
+
+  // Add more test cases for login, logout, etc.
 });

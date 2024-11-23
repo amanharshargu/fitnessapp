@@ -14,6 +14,7 @@ const path = require("path");
 
 const app = express();
 
+// Middleware setup
 app.use(
   cors({
     origin: true,
@@ -32,17 +33,17 @@ app.use(helmet());
 app.use(express.json());
 app.use(passport.initialize());
 
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/ingredients", ingredientRoutes);
 app.use("/api/recipes", recipeRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
+// Error handling
 app.use((err, req, res, _next) => {
   console.error("Error:", err);
-
   if (process.env.NODE_ENV === "test") {
     res.status(500).json({
       message: "Internal Server Error",
@@ -54,6 +55,7 @@ app.use((err, req, res, _next) => {
   }
 });
 
+// Start server only in non-test environment
 if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

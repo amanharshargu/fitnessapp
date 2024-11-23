@@ -1,36 +1,77 @@
 const fs = require("fs");
 const path = require("path");
 const Sequelize = require("sequelize");
+require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 const basename = path.basename(__filename);
-const { DB_URL } = require("../config");
+const env = process.env.NODE_ENV || "development";
 const db = {};
 
-const sequelize = new Sequelize(DB_URL, {
-  dialect: 'postgres',
+// Choose database URL based on environment
+const dbUrl = env === "test" ? process.env.TEST_DB_URL : process.env.DB_URL;
+
+// Add error handling for missing database URL
+if (!dbUrl) {
+  throw new Error(
+    `Database URL not found for environment: ${env}\n` +
+      `Make sure ${
+        env === "test" ? "TEST_DB_URL" : "DB_URL"
+      } is set in your .env file`
+  );
+}
+
+console.log(`Connecting to ${env} database...`);
+
+const sequelize = new Sequelize(dbUrl, {
+  dialect: "postgres",
   dialectOptions: {
     ssl: {
       require: true,
-      rejectUnauthorized: false
-    }
-  }
+      rejectUnauthorized: false,
+    },
+  },
+  logging: env === "test" ? false : console.log,
+  define: {
+    timestamps: true,
+    underscored: false, // Don't use snake_case
+    freezeTableName: true, // Prevent Sequelize from pluralizing table names
+  },
 });
 
-fs.readdirSync(__dirname)
+// Load models
+const modelsDir = path.join(__dirname);
+fs.readdirSync(modelsDir)
   .filter(
     (file) =>
       file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js"
   )
   .forEach((file) => {
-    const model = require(path.join(__dirname, file))(
+    const model = require(path.join(modelsDir, file))(
       sequelize,
       Sequelize.DataTypes
     );
     db[model.name] = model;
+    console.log(`Loaded model: ${model.name}`);
   });
 
-Object.values(db)
-  .filter((model) => typeof model.associate === "function")
-  .forEach((model) => model.associate(db));
+// Associate models
+Object.keys(db).forEach((modelName) => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+    console.log(`Associated model: ${modelName}`);
+  }
+});
+
+// Add connection error handler
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log(
+      `Connection to ${env} database has been established successfully.`
+    );
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

@@ -1,25 +1,37 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
-const { JWT_SECRET } = require("../config");
 
 module.exports = async (req, res, next) => {
   try {
-    const token = req.header("Authorization").replace("Bearer ", "");
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findByPk(decoded.id);
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
 
-    if (!user) {
-      throw new Error("User not found");
+    if (!token) {
+      return res.status(401).json({ message: 'No token provided' });
     }
 
-    console.log("User authenticated:", user.id);
-    req.token = token;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // Add user info to request
+    const user = await User.findByPk(decoded.id);
+    
+    // For dashboard routes, we want to pass through to the controller
+    // to handle the 404 case
+    if (req.path.startsWith('/user-details') && !user) {
+      req.user = { id: decoded.id }; // Pass the decoded id
+      return next();
+    }
+
+    // For other routes, maintain existing behavior
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+
     req.user = user;
+    console.log('User authenticated:', req.user.id);
     next();
   } catch (error) {
-    console.error("Authentication error:", error);
-    res
-      .status(401)
-      .json({ message: "Please authenticate", error: error.message });
+    console.error('Authentication error:', error);
+    return res.status(401).json({ message: 'Invalid token' });
   }
 };

@@ -2,10 +2,10 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "test": "NODE_ENV=test JWT_SECRET=test_secret mocha",
-    "test:watch": "NODE_ENV=test JWT_SECRET=test_secret mocha --watch", 
-    "test:single": "NODE_ENV=test JWT_SECRET=test_secret mocha",
-    "test:debug": "NODE_ENV=test JWT_SECRET=test_secret mocha --inspect-brk",
+    "test": "cross-env NODE_ENV=test JWT_SECRET=test_secret mocha",
+    "test:watch": "cross-env NODE_ENV=test JWT_SECRET=test_secret mocha --watch",
+    "test:single": "cross-env NODE_ENV=test JWT_SECRET=test_secret mocha",
+    "test:debug": "cross-env NODE_ENV=test JWT_SECRET=test_secret mocha --inspect-brk",
     "lint": "eslint **/*.js"
   },
   "name": "backend",
@@ -37,6 +37,7 @@
   "devDependencies": {
     "chai": "^4.3.7",
     "chai-http": "^4.4.0",
+    "cross-env": "^7.0.3",
     "mocha": "^10.8.2",
     "nodemon": "^3.1.4",
     "sinon": "^19.0.2"

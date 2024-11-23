@@ -2,7 +2,10 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "test": "jest",
+    "test": "NODE_ENV=test JWT_SECRET=test_secret mocha",
+    "test:watch": "NODE_ENV=test JWT_SECRET=test_secret mocha --watch", 
+    "test:single": "NODE_ENV=test JWT_SECRET=test_secret mocha",
+    "test:debug": "NODE_ENV=test JWT_SECRET=test_secret mocha --inspect-brk",
     "lint": "eslint **/*.js"
   },
   "name": "backend",
@@ -32,6 +35,10 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "chai": "^4.3.7",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.8.2",
+    "nodemon": "^3.1.4",
+    "sinon": "^19.0.2"
   }
 }

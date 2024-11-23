@@ -10,7 +10,7 @@ const recipeRoutes = require("./routes/recipe");
 const dashboardRoutes = require("./routes/dashboard");
 const { PORT } = require("./config");
 require("./config/passport-setup");
-const path = require('path');
+const path = require("path");
 
 const app = express();
 
@@ -38,20 +38,26 @@ app.use("/api/ingredients", ingredientRoutes);
 app.use("/api/recipes", recipeRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use((err, req, res, _next) => {
-  res.status(500).send("Something broke!");
-});
+  console.error("Error:", err);
 
-app.listen(PORT, async () => {
-  console.log(`Server is running on port ${PORT}`);
-  try {
-    await sequelize.authenticate();
-    console.log("Database connection has been established successfully.");
-    await sequelize.sync({ alter: true });
-    console.log("All models were synchronized successfully.");
-  } catch (error) {
-    console.error("Unable to connect to the database:", error);
+  if (process.env.NODE_ENV === "test") {
+    res.status(500).json({
+      message: "Internal Server Error",
+      error: err.message,
+      stack: err.stack,
+    });
+  } else {
+    res.status(500).send("Something broke!");
   }
 });
+
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+module.exports = app;

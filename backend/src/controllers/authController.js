@@ -1,18 +1,21 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
-const { calculateDailyCalorieGoal } = require("../utils/calorieCalculator");
+const { calculateCalories } = require("../utils/calorieCalculator");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
 const { Op } = require("sequelize");
 
 const register = async (req, res) => {
   try {
-    const { username, email, password, weight, height, age, gender, goal } = req.body;
+    const { username, email, password, weight, height, age, gender, goal, activityLevel } =
+      req.body;
 
     const existingUserEmail = await User.findOne({ where: { email } });
     if (existingUserEmail) {
-      return res.status(400).json({ message: "An account with this email already exists" });
+      return res
+        .status(400)
+        .json({ message: "An account with this email already exists" });
     }
 
     const existingUserUsername = await User.findOne({ where: { username } });
@@ -23,7 +26,8 @@ const register = async (req, res) => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
-        message: "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter",
+        message:
+          "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter",
       });
     }
 
@@ -40,14 +44,16 @@ const register = async (req, res) => {
     if (age) userFields.age = age;
     if (gender) userFields.gender = gender;
     if (goal) userFields.goal = goal;
+    if (activityLevel) userFields.activityLevel = activityLevel;
 
-    if (weight && height && age && gender && goal) {
-      userFields.dailyCalorieGoal = calculateDailyCalorieGoal(
+    if (weight && height && age && gender && goal && activityLevel) {
+      userFields.dailyCalorieGoal = calculateCalories(
         weight,
         height,
         age,
         gender,
-        goal
+        goal,
+        activityLevel
       );
     }
 
@@ -62,7 +68,9 @@ const register = async (req, res) => {
       user: { id: user.id, username: user.username, email: user.email },
     });
   } catch (error) {
-    res.status(500).json({ message: "Error registering user", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error registering user", error: error.message });
   }
 };
 
@@ -113,18 +121,18 @@ const logout = async (req, res) => {
 const checkAuth = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
-      attributes: { exclude: ['password'] }
+      attributes: { exclude: ["password"] },
     });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json({ 
+    res.json({
       user: {
         id: user.id,
         username: user.username,
         email: user.email,
         photo: user.photo,
-      }
+      },
     });
   } catch (error) {
     console.error("Error in checkAuth:", error);
@@ -135,9 +143,7 @@ const checkAuth = async (req, res) => {
 const googleAuthCallback = async (req, res) => {
   try {
     const { user, isNewUser, token } = req.user;
-    res.redirect(
-      `${process.env.FRONTEND_URL}/dashboard?token=${token}`
-    );
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard?token=${token}`);
   } catch (error) {
     console.error("Google auth callback error:", error);
     res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
@@ -186,18 +192,21 @@ const resetPassword = async (req, res) => {
     const user = await User.findOne({
       where: {
         resetPasswordToken: token,
-        resetPasswordExpires: { [Op.gt]: Date.now() }
-      }
+        resetPasswordExpires: { [Op.gt]: Date.now() },
+      },
     });
 
     if (!user) {
-      return res.status(400).json({ message: 'Password reset token is invalid or has expired' });
+      return res
+        .status(400)
+        .json({ message: "Password reset token is invalid or has expired" });
     }
-    
+
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
     if (!passwordRegex.test(newPassword)) {
       return res.status(400).json({
-        message: "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter"
+        message:
+          "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter",
       });
     }
 
@@ -206,10 +215,12 @@ const resetPassword = async (req, res) => {
     user.resetPasswordExpires = null;
     await user.save();
 
-    res.json({ message: 'Password has been reset successfully' });
+    res.json({ message: "Password has been reset successfully" });
   } catch (error) {
-    console.error('Reset password error:', error);
-    res.status(500).json({ message: 'Error resetting password', error: error.message });
+    console.error("Reset password error:", error);
+    res
+      .status(500)
+      .json({ message: "Error resetting password", error: error.message });
   }
 };
 

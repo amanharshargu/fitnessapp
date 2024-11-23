@@ -7,7 +7,7 @@ function WaterIntakeTracker({ intake, onUpdate }) {
   const [showFeedback, setShowFeedback] = useState(false);
   const dailyGoal = 2000;
   const glassSize = 250;
-  const bottleSize = 500;
+  const bottleSize = 750;
 
   const handleAddWater = async (amount) => {
     if (isUpdating) return;

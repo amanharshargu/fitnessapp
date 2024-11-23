@@ -69,7 +69,7 @@ const ProfilePage = () => {
                 <CardioSpinner size="30" color="#007bff" />
               </div>
             ) : userDetails.photo ? (
-              <img src={userDetails.photo} alt={user.username} className="profile-photo" onClick={triggerFileInput} />
+              <img src={userDetails.photo} className="profile-photo" onClick={triggerFileInput} />
             ) : (
               <div className="photo-placeholder" onClick={triggerFileInput}>
                 <span>Click to upload photo</span>

@@ -15,9 +15,11 @@ function ExpiringIngredients({ ingredients }) {
   const aggregatedIngredients = useMemo(() => {
     return aggregateIngredients(expiringIngredients, {
       quantityConverter: convertToBaseUnit,
-      unitNormalizer: (unit) => 
-        unit.startsWith('m') || unit === 'l' ? 'ml' : 
-        (unit === 'kg' || unit === 'g' ? 'g' : unit),
+      unitNormalizer: (unit) => {
+        if (unit === 'ml' || unit === 'l') return 'ml';
+        if (unit === 'kg' || unit === 'g' || unit === 'mg') return unit;
+        return unit;
+      },
       sorter: (a, b) => new Date(a.expirationDate) - new Date(b.expirationDate)
     });
   }, [expiringIngredients]);

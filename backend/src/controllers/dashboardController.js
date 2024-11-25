@@ -244,17 +244,14 @@ exports.getWaterIntake = async (req, res) => {
     const userId = req.user.id;
     const today = moment().startOf('day');
 
-    const waterIntakes = await Water.findAll({
+    const waterIntake = await Water.findOne({
       where: {
         userId,
         date: today.format('YYYY-MM-DD')
-      },
-      attributes: [
-        [sequelize.fn('SUM', sequelize.col('amount')), 'totalAmount']
-      ]
+      }
     });
 
-    const intake = waterIntakes[0].getDataValue('totalAmount') || 0;
+    const intake = waterIntake ? waterIntake.amount : 0;
     res.json({ intake });
   } catch (error) {
     console.error('Error fetching water intake:', error);
@@ -274,24 +271,22 @@ exports.addWaterIntake = async (req, res) => {
       return res.status(400).json({ message: 'Invalid amount' });
     }
 
-    const waterIntake = await Water.create({
-      userId,
-      amount,
-      date: moment().format('YYYY-MM-DD')
-    });
+    const today = moment().format('YYYY-MM-DD');
 
-    const todayTotal = await Water.findAll({
+    const [waterIntake, created] = await Water.findOrCreate({
       where: {
         userId,
-        date: moment().format('YYYY-MM-DD')
+        date: today
       },
-      attributes: [
-        [sequelize.fn('SUM', sequelize.col('amount')), 'totalAmount']
-      ]
+      defaults: {
+        amount: 0
+      }
     });
 
-    const intake = todayTotal[0].getDataValue('totalAmount') || 0;
-    res.status(201).json({ intake });
+    const updatedAmount = waterIntake.amount + amount;
+    await waterIntake.update({ amount: updatedAmount });
+
+    res.status(200).json({ intake: updatedAmount });
   } catch (error) {
     console.error('Error adding water intake:', error);
     res.status(500).json({

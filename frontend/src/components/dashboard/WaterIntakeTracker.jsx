@@ -107,7 +107,7 @@ function WaterIntakeTracker({ intake, onUpdate }) {
           >
             <span className="icon">🥤</span>
             <span className="amount">Glass</span>
-            <span className="size">250ml</span>
+            <span className="size">{glassSize}ml</span>
           </button>
           <button 
             onClick={() => handleAddWater(bottleSize)} 
@@ -116,7 +116,7 @@ function WaterIntakeTracker({ intake, onUpdate }) {
           >
             <span className="icon">🍶</span>
             <span className="amount">Bottle</span>
-            <span className="size">500ml</span>
+            <span className="size">{bottleSize}ml</span>
           </button>
         </div>
       </div>

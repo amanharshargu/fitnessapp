@@ -111,7 +111,7 @@ function IngredientList() {
         <span className="nutritional-item">
           <i className="fas fa-cheese"></i> {formatNumber(item.fat)}g fat
         </span>
-        <small className="per-100g">({servingText})</small>
+        <small className="per-serving">({servingText})</small>
       </div>
     );
   };

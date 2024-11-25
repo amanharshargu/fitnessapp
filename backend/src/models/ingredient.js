@@ -1,52 +1,74 @@
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-  const Ingredient = sequelize.define('Ingredient', {
+  class Ingredient extends Model {
+    static associate(models) {
+      Ingredient.belongsTo(models.User, {
+        foreignKey: 'UserId',
+        onDelete: 'CASCADE'
+      });
+    }
+  }
+
+  Ingredient.init({
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     quantity: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false
     },
     unit: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     calories: {
-      type: DataTypes.FLOAT,
-      allowNull: true,
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true
     },
     protein: {
-      type: DataTypes.FLOAT,
-      allowNull: true,
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true
     },
     carbs: {
-      type: DataTypes.FLOAT,
-      allowNull: true,
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true
     },
     fat: {
-      type: DataTypes.FLOAT,
-      allowNull: true,
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true
     },
     servingSize: {
-      type: DataTypes.FLOAT,
-      allowNull: true,
-      defaultValue: null,
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true
     },
     servingUnit: {
       type: DataTypes.STRING,
-      allowNull: true,
-      defaultValue: null,
+      allowNull: true
     },
     expirationDate: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: true
     },
+    UserId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'User',
+        key: 'id'
+      }
+    }
+  }, {
+    sequelize,
+    modelName: 'Ingredient',
+    timestamps: true
   });
-
-  Ingredient.associate = (models) => {
-    Ingredient.belongsTo(models.User);
-  };
 
   return Ingredient;
 };

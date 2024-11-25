@@ -605,3 +605,30 @@
 .dcg-search-results::-webkit-scrollbar-thumb:hover {
   background: #ff9800;
 }
+
+.dcg-button-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dcg-button-loading .dcg-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: dcg-spin 1s linear infinite;
+}
+
+.dcg-button-loading span {
+  font-size: 0.85rem;
+}
+
+.dcg-form-inputs button[type="submit"]:disabled {
+  background: #ffa64d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}

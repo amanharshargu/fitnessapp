@@ -5,7 +5,7 @@
 }
 
 .ingredient-item {
-  background-color: #fff;
+  background-color: #fff5e6;
   border-radius: 12px;
   margin-bottom: 16px;
   padding: 20px;
@@ -43,7 +43,7 @@
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 12px;
   padding: 24px 16px 16px;
-  background-color: #f8f9fa;
+  background-color: #ffcb7e;
   border-radius: 8px;
   margin-top: 8px;
   position: relative;
@@ -55,7 +55,7 @@
   gap: 8px;
   font-size: 0.95rem;
   color: #4a5568;
-  background-color: white;
+  background-color: #fff5e6;
   padding: 10px 16px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);

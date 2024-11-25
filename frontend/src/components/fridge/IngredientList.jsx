@@ -91,19 +91,25 @@ function IngredientList() {
       ? `per ${item.servingSize}${item.servingUnit}`
       : 'per serving';
 
+    // Helper function to safely format numbers
+    const formatNumber = (value) => {
+      const num = Number(value);
+      return isNaN(num) ? '0.0' : num.toFixed(1);
+    };
+
     return (
       <div className="nutritional-info">
         <span className="nutritional-item">
-          <i className="fas fa-fire"></i> {item.calories.toFixed(1)} kcal
+          <i className="fas fa-fire"></i> {formatNumber(item.calories)} kcal
         </span>
         <span className="nutritional-item">
-          <i className="fas fa-drumstick-bite"></i> {item.protein.toFixed(1)}g protein
+          <i className="fas fa-drumstick-bite"></i> {formatNumber(item.protein)}g protein
         </span>
         <span className="nutritional-item">
-          <i className="fas fa-bread-slice"></i> {item.carbs.toFixed(1)}g carbs
+          <i className="fas fa-bread-slice"></i> {formatNumber(item.carbs)}g carbs
         </span>
         <span className="nutritional-item">
-          <i className="fas fa-cheese"></i> {item.fat.toFixed(1)}g fat
+          <i className="fas fa-cheese"></i> {formatNumber(item.fat)}g fat
         </span>
         <small className="per-100g">({servingText})</small>
       </div>

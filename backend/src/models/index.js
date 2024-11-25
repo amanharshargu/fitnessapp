@@ -77,3 +77,12 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 module.exports = db;
+
+// After loading and associating models
+if (env !== 'production') {
+  sequelize.sync({ alter: true }).then(() => {
+    console.log('Database synced');
+  }).catch(err => {
+    console.error('Error syncing database:', err);
+  });
+}

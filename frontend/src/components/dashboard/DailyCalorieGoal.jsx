@@ -18,6 +18,7 @@ function DailyCalorieGoal({ onDishesChanged }){
   const [searchResults, setSearchResults] = useState([]);
   const { fetchRecipes, recipes, isLoading } = useRecipes();
   const searchContainerRef = useRef(null);
+  const [isAddingDish, setIsAddingDish] = useState(false);
 
   useEffect(() => {
     const fetchCalorieGoal = async () => {
@@ -134,6 +135,7 @@ function DailyCalorieGoal({ onDishesChanged }){
   const addDish = async (e) => {
     e.preventDefault();
     if (newDish.name && newDish.calories) {
+      setIsAddingDish(true);
       try {
         const response = await api.post('/dashboard/eaten-dishes', {
           dishName: newDish.name,
@@ -145,6 +147,8 @@ function DailyCalorieGoal({ onDishesChanged }){
         onDishesChanged();
       } catch (error) {
         console.error('Error adding eaten dish:', error);
+      } finally {
+        setIsAddingDish(false);
       }
     }
   };
@@ -374,7 +378,20 @@ function DailyCalorieGoal({ onDishesChanged }){
                 </div>
               </div>
               
-              <button type="submit" aria-label="Add new dish">Add Dish</button>
+              <button 
+                type="submit" 
+                disabled={isAddingDish}
+                aria-label={isAddingDish ? "Adding dish..." : "Add new dish"}
+              >
+                {isAddingDish ? (
+                  <div className="dcg-button-loading">
+                    <div className="dcg-spinner"></div>
+                    <span>Adding...</span>
+                  </div>
+                ) : (
+                  'Add Dish'
+                )}
+              </button>
             </div>
           </form>
 

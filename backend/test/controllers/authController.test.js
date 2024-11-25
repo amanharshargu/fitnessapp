@@ -1,9 +1,8 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const { app, sequelize } = require("../setup");
+const { app } = require("../setup");
 const { User } = require("../../src/models");
 const bcrypt = require("bcryptjs");
-const { calculateCalories } = require("../../src/utils/calorieCalculator");
 
 chai.use(chaiHttp);
 const expect = chai.expect;

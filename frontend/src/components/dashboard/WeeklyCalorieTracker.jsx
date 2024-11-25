@@ -26,7 +26,7 @@ ChartJS.register(
 
 function WeeklyCalorieTracker({ weeklyData }) {
   const [dailyCalorieGoal, setDailyCalorieGoal] = useState(null);
-  const startOfCurrentWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const startOfCurrentWeek = startOfWeek(new Date(), { weekStartsOn: 0 });
   const daysOfWeek = [...Array(7)].map((_, index) => addDays(startOfCurrentWeek, index));
 
   useEffect(() => {
@@ -44,7 +44,7 @@ function WeeklyCalorieTracker({ weeklyData }) {
 
   const getCaloriesForDate = (date) => {
     const formattedDate = format(date, 'yyyy-MM-dd');
-    return weeklyData.find(d => d.date === formattedDate)?.calories || 0;
+    return weeklyData.find(d => d.date === formattedDate)?.calories+500 || 0;
   };
 
   const getPointColor = (calories) => {

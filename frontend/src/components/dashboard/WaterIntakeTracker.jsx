@@ -3,16 +3,16 @@ import api from '../../services/api';
 import '../../styles/WaterIntakeTracker.css';
 
 function WaterIntakeTracker({ intake, onUpdate }) {
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [updatingButton, setUpdatingButton] = useState(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const dailyGoal = 2000;
   const glassSize = 250;
   const bottleSize = 750;
 
-  const handleAddWater = async (amount) => {
-    if (isUpdating) return;
+  const handleAddWater = async (amount, buttonType) => {
+    if (updatingButton) return;
     
-    setIsUpdating(true);
+    setUpdatingButton(buttonType);
     try {
       await api.post('/dashboard/water-intake', { amount });
       onUpdate();
@@ -20,7 +20,7 @@ function WaterIntakeTracker({ intake, onUpdate }) {
     } catch (error) {
       console.error('Error updating water intake:', error);
     } finally {
-      setIsUpdating(false);
+      setUpdatingButton(null);
     }
   };
 
@@ -101,22 +101,30 @@ function WaterIntakeTracker({ intake, onUpdate }) {
       <div className="water-actions">
         <div className="quick-add-buttons">
           <button 
-            onClick={() => handleAddWater(glassSize)} 
-            className={`quick-add-btn glass ${isUpdating ? 'updating' : ''}`}
-            disabled={isUpdating}
+            onClick={() => handleAddWater(glassSize, 'glass')} 
+            className={`quick-add-btn glass ${updatingButton === 'glass' ? 'updating' : ''}`}
+            disabled={updatingButton !== null}
           >
-            <span className="icon">🥤</span>
-            <span className="amount">Glass</span>
-            <span className="size">{glassSize}ml</span>
+            {updatingButton !== 'glass' && (
+              <>
+                <span className="icon">🥤</span>
+                <span className="amount">Glass</span>
+                <span className="size">{glassSize}ml</span>
+              </>
+            )}
           </button>
           <button 
-            onClick={() => handleAddWater(bottleSize)} 
-            className={`quick-add-btn bottle ${isUpdating ? 'updating' : ''}`}
-            disabled={isUpdating}
+            onClick={() => handleAddWater(bottleSize, 'bottle')} 
+            className={`quick-add-btn bottle ${updatingButton === 'bottle' ? 'updating' : ''}`}
+            disabled={updatingButton !== null}
           >
-            <span className="icon">🍶</span>
-            <span className="amount">Bottle</span>
-            <span className="size">{bottleSize}ml</span>
+            {updatingButton !== 'bottle' && (
+              <>
+                <span className="icon">🍶</span>
+                <span className="amount">Bottle</span>
+                <span className="size">{bottleSize}ml</span>
+              </>
+            )}
           </button>
         </div>
       </div>

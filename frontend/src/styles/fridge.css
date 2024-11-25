@@ -49,7 +49,7 @@
 }
 
 .fridge-left {
-  background-color: #fafafa;
+  background-color: #fff;
   border-radius: 15px;
   padding: 30px;
   flex: 3;
@@ -58,11 +58,6 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow-y: auto;
   border: 1px solid rgba(255, 140, 0, 0.1);
-}
-
-.fridge-left:hover {
-  box-shadow: 0 12px 25px rgba(255, 120, 0, 0.15);
-  transform: translateY(-2px);
 }
 
 .fridge-right {

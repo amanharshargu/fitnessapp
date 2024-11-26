@@ -44,7 +44,7 @@ function WeeklyCalorieTracker({ weeklyData }) {
 
   const getCaloriesForDate = (date) => {
     const formattedDate = format(date, 'yyyy-MM-dd');
-    return weeklyData.find(d => d.date === formattedDate)?.calories+500 || 0;
+    return weeklyData.find(d => d.date === formattedDate)?.calories || 0;
   };
 
   const getPointColor = (calories) => {

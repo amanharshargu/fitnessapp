@@ -67,13 +67,14 @@
 
 .per-serving {
   position: absolute;
-  top: -10px;
-  right: 16px;
+  top: -16px;
+  right: 8px;
   color: #718096;
   font-style: italic;
   font-size: 0.8rem;
+  font-weight: bold;
   background-color: #fff5e6;
-  padding: 4px 12px;
+  padding: 3px 8px;
   border-radius: 12px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid #e2e8f0;

@@ -91,6 +91,7 @@ function Recipes() {
   const totalPages = Math.ceil(recipes.length / recipesPerPage);
 
   const handlePageChange = (pageNumber) => {
+    if (pageNumber < 1 || pageNumber > totalPages) return;
     setCurrentPage(pageNumber);
   };
 
@@ -128,7 +129,11 @@ function Recipes() {
       <div className={`recipes-pagination-container d-flex justify-content-center ${isBottom ? 'recipes-pagination-bottom' : ''}`}>
         <ul className="recipes-pagination">
           <li className={`recipes-page-item ${currentPage === 1 ? 'recipes-disabled' : ''}`}>
-            <button className="recipes-page-link" onClick={() => handlePageChange(currentPage - 1)}>
+            <button 
+              className="recipes-page-link" 
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
               &laquo;
             </button>
           </li>
@@ -156,7 +161,11 @@ function Recipes() {
             </>
           )}
           <li className={`recipes-page-item ${currentPage === totalPages ? 'recipes-disabled' : ''}`}>
-            <button className="recipes-page-link" onClick={() => handlePageChange(currentPage + 1)}>
+            <button 
+              className="recipes-page-link" 
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
               &raquo;
             </button>
           </li>

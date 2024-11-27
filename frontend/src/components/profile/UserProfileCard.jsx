@@ -80,8 +80,8 @@ function UserProfileCard() {
       // Max value validation
       const maxValues = {
         weight: 500,
-        height: 250,
-        age: 120
+        height: 350,
+        age: 150
       };
 
       if (numValue > maxValues[field]) {

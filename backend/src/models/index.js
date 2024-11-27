@@ -23,7 +23,7 @@ console.log(`Connecting to ${env} database...`);
 
 const sequelize = new Sequelize(dbUrl, {
   dialect: "postgres",
-  dialectOptions: {
+  dialectOptions: env === "test" ? {} : {
     ssl: {
       require: true,
       rejectUnauthorized: false,

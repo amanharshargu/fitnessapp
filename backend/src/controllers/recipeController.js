@@ -94,30 +94,18 @@ exports.saveRecipe = async (req, res) => {
       return res.status(400).json({ message: "User ID is missing" });
     }
 
-    const [recipe, created] = await Recipe.findOrCreate({
+    const [recipe] = await Recipe.findOrCreate({
       where: { uri },
-      defaults: { uri },
+      defaults: { uri }
     });
 
-    if (!recipe) {
-      return res
-        .status(404)
-        .json({ message: "Recipe not found or could not be created" });
-    }
-
-    const [userRecipe, userRecipeCreated] = await UserRecipe.findOrCreate({
+    const [userRecipe, created] = await UserRecipe.findOrCreate({
       where: { UserId: userId, RecipeId: recipe.id }
     });
 
-    if (!userRecipe) {
-      return res
-        .status(500)
-        .json({ message: "Failed to save recipe for user" });
-    }
-
     res.status(201).json({ 
-      message: userRecipeCreated ? "Recipe saved successfully" : "Recipe was already saved",
-      uri: uri,
+      message: created ? "Recipe saved successfully" : "Recipe was already saved",
+      uri: uri
     });
   } catch (error) {
     console.error("Error in saveRecipe:", error);

@@ -1,5 +1,5 @@
 const { User } = require("../models");
-const multer = require('multer');
+const multer = require("multer");
 
 const getUserById = async (userId) => {
   const user = await User.findByPk(userId, {
@@ -30,9 +30,12 @@ exports.getProfile = async (req, res) => {
     res.json(formatUserResponse(user));
   } catch (error) {
     console.error("Error in getProfile:", error);
-    res.status(error.message === "User not found" ? 404 : 500).json({ 
-      message: error.message === "User not found" ? "User not found" : "Error fetching user profile", 
-      error: error.message 
+    res.status(error.message === "User not found" ? 404 : 500).json({
+      message:
+        error.message === "User not found"
+          ? "User not found"
+          : "Error fetching user profile",
+      error: error.message,
     });
   }
 };
@@ -51,25 +54,18 @@ exports.updateUser = async (req, res) => {
       activityLevel,
     });
 
-    res.json({ message: "User updated successfully", user: formatUserResponse(user) });
+    res.json({
+      message: "User updated successfully",
+      user: formatUserResponse(user),
+    });
   } catch (error) {
     console.error("Error updating user:", error);
-    res.status(error.message === "User not found" ? 404 : 500).json({ 
-      message: error.message === "User not found" ? "User not found" : "Error updating user", 
-      error: error.message 
-    });
-  }
-};
-
-exports.getUserDetails = async (req, res) => {
-  try {
-    const user = await getUserById(req.user.id);
-    res.json(formatUserResponse(user));
-  } catch (error) {
-    console.error("Error fetching user details:", error);
-    res.status(error.message === "User not found" ? 404 : 500).json({ 
-      message: error.message === "User not found" ? "User not found" : "Internal server error", 
-      error: error.message 
+    res.status(error.message === "User not found" ? 404 : 500).json({
+      message:
+        error.message === "User not found"
+          ? "User not found"
+          : "Error updating user",
+      error: error.message,
     });
   }
 };
@@ -77,11 +73,15 @@ exports.getUserDetails = async (req, res) => {
 const upload = multer();
 
 exports.uploadPhoto = async (req, res) => {
-  upload.single('photo')(req, res, async function (err) {
+  upload.single("photo")(req, res, async function (err) {
     if (err instanceof multer.MulterError) {
-      return res.status(500).json({ message: "Error uploading file", error: err.message });
+      return res
+        .status(500)
+        .json({ message: "Error uploading file", error: err.message });
     } else if (err) {
-      return res.status(500).json({ message: "Unknown error", error: err.message });
+      return res
+        .status(500)
+        .json({ message: "Unknown error", error: err.message });
     }
 
     try {
@@ -91,15 +91,20 @@ exports.uploadPhoto = async (req, res) => {
 
       const user = await getUserById(req.user.id);
 
-      const base64Image = req.file.buffer.toString('base64');
+      const base64Image = req.file.buffer.toString("base64");
       await user.update({ photo: base64Image });
 
       const fullBase64Image = `data:${req.file.mimetype};base64,${base64Image}`;
 
-      res.json({ message: "Photo uploaded successfully", photoUrl: fullBase64Image });
+      res.json({
+        message: "Photo uploaded successfully",
+        photoUrl: fullBase64Image,
+      });
     } catch (error) {
       console.error("Error uploading photo:", error);
-      res.status(500).json({ message: "Error uploading photo", error: error.message });
+      res
+        .status(500)
+        .json({ message: "Error uploading photo", error: error.message });
     }
   });
 };

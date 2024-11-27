@@ -244,15 +244,15 @@ exports.getWaterIntake = async (req, res) => {
     const userId = req.user.id;
     const today = moment().startOf('day');
 
-    const waterIntake = await Water.findOne({
+    const waterIntakes = await Water.findAll({
       where: {
         userId,
         date: today.format('YYYY-MM-DD')
       }
     });
 
-    const intake = waterIntake ? waterIntake.amount : 0;
-    res.json({ intake });
+    const totalIntake = waterIntakes.reduce((sum, record) => sum + record.amount, 0);
+    res.json({ intake: totalIntake });
   } catch (error) {
     console.error('Error fetching water intake:', error);
     res.status(500).json({
@@ -286,7 +286,7 @@ exports.addWaterIntake = async (req, res) => {
     const updatedAmount = waterIntake.amount + amount;
     await waterIntake.update({ amount: updatedAmount });
 
-    res.status(200).json({ intake: updatedAmount });
+    res.status(201).json({ intake: updatedAmount });
   } catch (error) {
     console.error('Error adding water intake:', error);
     res.status(500).json({

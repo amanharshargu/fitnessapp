@@ -15,9 +15,12 @@ module.exports = async (req, res, next) => {
     // Add user info to request
     const user = await User.findByPk(decoded.id);
     
-    // For dashboard routes, we want to pass through to the controller
+    // For certain routes, we want to pass through to the controller
     // to handle the 404 case
-    if (req.path.startsWith('/user-details') && !user) {
+    if ((req.path.startsWith('/user-details') || 
+         req.path === '/profile' || 
+         req.path === '/update' ||
+         req.path === '/upload-photo') && !user) {
       req.user = { id: decoded.id }; // Pass the decoded id
       return next();
     }

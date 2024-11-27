@@ -9,7 +9,6 @@ const expect = chai.expect;
 
 describe("Auth Controller", () => {
   beforeEach(async () => {
-    // Clean up using model instead of raw query
     try {
       await User.destroy({
         where: {},
@@ -37,7 +36,6 @@ describe("Auth Controller", () => {
       };
 
       try {
-        // Verify user doesn't exist
         const existingUser = await User.findOne({
           where: { email: testUser.email }
         });
@@ -54,7 +52,6 @@ describe("Auth Controller", () => {
         expect(res.body.user).to.have.property("username", testUser.username);
         expect(res.body.user).to.have.property("email", testUser.email);
 
-        // Verify user was created
         const user = await User.findOne({
           where: { email: testUser.email }
         });
@@ -62,7 +59,6 @@ describe("Auth Controller", () => {
         expect(user.email).to.equal(testUser.email);
         expect(user.username).to.equal(testUser.username);
 
-        // Verify password was hashed
         const validPassword = await bcrypt.compare(testUser.password, user.password);
         expect(validPassword).to.be.true;
       } catch (error) {
@@ -81,14 +77,12 @@ describe("Auth Controller", () => {
     });
 
     it("should return 400 if email already exists", async () => {
-      // First create a user
       await User.create({
         username: "existing",
         email: "existing@example.com",
         password: await bcrypt.hash("Password123!", 10)
       });
 
-      // Try to register with same email
       const res = await chai
         .request(app)
         .post("/api/auth/register")
@@ -106,14 +100,12 @@ describe("Auth Controller", () => {
     });
 
     it("should return 400 if username already exists", async () => {
-      // First create a user
       await User.create({
         username: "testuser",
         email: "test1@example.com",
         password: await bcrypt.hash("Password123!", 10)
       });
 
-      // Try to register with same username
       const res = await chai
         .request(app)
         .post("/api/auth/register")
@@ -134,7 +126,7 @@ describe("Auth Controller", () => {
         .send({
           username: "newuser",
           email: "new@example.com",
-          password: "weak"  // Invalid password
+          password: "weak"
         });
 
       expect(res).to.have.status(400);
@@ -143,6 +135,4 @@ describe("Auth Controller", () => {
       );
     });
   });
-
-  // Add more test cases for login, logout, etc.
 });

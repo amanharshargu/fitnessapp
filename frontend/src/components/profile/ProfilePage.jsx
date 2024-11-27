@@ -7,10 +7,31 @@ import '../../styles/ProfilePage.css';
 
 const ProfilePage = () => {
   const { user } = useAuth();
-  const { fetchUserDetails, userDetails, uploadPhoto, error } = useUserDetails();
+  const { fetchUserDetails, userDetails, uploadPhoto, error, updateUserDetails } = useUserDetails();
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
+
+  const validateUserInput = (field, value) => {
+    const maxValues = {
+      weight: 500, // max weight in kg
+      height: 250, // max height in cm
+      age: 120,    // max age in years
+    };
+
+    if (field in maxValues && value > maxValues[field]) {
+      return false;
+    }
+    return true;
+  };
+
+  const handleUserDetailsUpdate = async (field, value) => {
+    if (!validateUserInput(field, value)) {
+      alert(`Invalid ${field}. Please enter a value less than ${maxValues[field]}`);
+      return false;
+    }
+    return await updateUserDetails({ [field]: value });
+  };
 
   useEffect(() => {
     const loadUserDetails = async () => {

@@ -39,6 +39,11 @@ function UserProfileCard() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const numValue = name === 'weight' || name === 'height' || name === 'age' 
+      ? parseFloat(value) 
+      : value;
+
+    // Update the temporary state immediately for UI responsiveness
     updateTempUserDetails({ [name]: value });
   };
 
@@ -59,18 +64,38 @@ function UserProfileCard() {
 
   const handleSaveField = useCallback(async (field) => {
     setError("");
-    const validationError = validateField(field, tempUserDetails[field]);
-    if (validationError) {
-      setError(validationError);
-      return;
+    const value = tempUserDetails[field];
+    
+    // For numeric fields, validate before saving
+    if (field === 'weight' || field === 'height' || field === 'age') {
+      const numValue = parseFloat(value);
+      
+      // Basic validation
+      const validationError = validateField(field, numValue);
+      if (validationError) {
+        setError(validationError);
+        return;
+      }
+
+      // Max value validation
+      const maxValues = {
+        weight: 500,
+        height: 250,
+        age: 120
+      };
+
+      if (numValue > maxValues[field]) {
+        setError(`${field.charAt(0).toUpperCase() + field.slice(1)} must be less than ${maxValues[field]}`);
+        return;
+      }
     }
 
     try {
-      await updateAuthUserDetails({ [field]: tempUserDetails[field] });
+      await updateAuthUserDetails({ [field]: value });
       setEditingField(null);
       setLocalUserDetails(prevDetails => ({
         ...prevDetails,
-        [field]: tempUserDetails[field]
+        [field]: value
       }));
       fetchUserDetails();
     } catch (error) {

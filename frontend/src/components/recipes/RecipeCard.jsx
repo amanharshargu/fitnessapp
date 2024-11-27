@@ -5,12 +5,12 @@ import '../../styles/RecipeCard.css';
 function RecipeCard({ recipe, isLiked: initialIsLiked, onLikeToggle }) {
   const [showDetails, setShowDetails] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
-  const { likedRecipes } = useRecipes();
+  const { toggleLikedRecipe } = useRecipes();
   const [isLiked, setIsLiked] = useState(initialIsLiked);
 
   useEffect(() => {
-    setIsLiked(likedRecipes.some(likedRecipe => likedRecipe.uri === recipe.uri) || initialIsLiked);
-  }, [likedRecipes, recipe.uri, initialIsLiked]);
+    setIsLiked(initialIsLiked);
+  }, [initialIsLiked]);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
@@ -20,9 +20,16 @@ function RecipeCard({ recipe, isLiked: initialIsLiked, onLikeToggle }) {
     setImageLoading(false);
   };
 
-  const handleLikeToggle = () => {
-    onLikeToggle(recipe);
-    setIsLiked(!isLiked);
+  const handleLikeToggle = async () => {
+    try {
+      await toggleLikedRecipe(recipe);
+      setIsLiked(!isLiked);
+      if (onLikeToggle) {
+        onLikeToggle(recipe);
+      }
+    } catch (error) {
+      console.error('Error toggling recipe like:', error);
+    }
   };
 
   const caloriesPerServing = Math.round(recipe.calories / recipe.yield);

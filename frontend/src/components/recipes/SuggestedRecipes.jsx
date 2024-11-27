@@ -12,38 +12,17 @@ function SuggestedRecipes() {
   const { ingredients } = useIngredients();
   const { getRandomRecipes } = useRecipes();
 
-  const fetchRecipesForIngredients = async (ingredientNames) => {
-    try {
-      const recipes = await getRandomRecipes(12, ingredientNames);
-      return recipes.filter(recipe => recipe.ingredientLines && Array.isArray(recipe.ingredientLines));
-    } catch (error) {
-      console.error('Error fetching recipes:', error);
-      return [];
-    }
-  };
-
   const fetchSuggestedRecipes = async () => {
     setLoading(true);
     setError(null);
     try {
       const fridgeIngredients = ingredients.map(ing => ing.name);
-      let recipes = await fetchRecipesForIngredients(fridgeIngredients);
+      const recipes = await getRandomRecipes(12, fridgeIngredients);
       
-      if (recipes.length === 0 && fridgeIngredients.length > 0) {
-        const individualRecipesPromises = fridgeIngredients.map(ingredient => 
-          fetchRecipesForIngredients([ingredient])
-        );
-        
-        const individualRecipesResults = await Promise.all(individualRecipesPromises);
-        recipes = Array.from(new Set(
-          individualRecipesResults.flat().map(recipe => JSON.stringify(recipe))
-        )).map(str => JSON.parse(str));
-      }
-
       if (recipes.length === 0) {
-        setError('No recipes found. Try different ingredients.');
+        setError('No recipes found. Try adding different ingredients to your fridge!');
       } else {
-        setSuggestedRecipes(recipes.slice(0, 12));
+        setSuggestedRecipes(recipes);
       }
     } catch (err) {
       setError('Failed to fetch suggested recipes. Please try again later.');
@@ -69,12 +48,14 @@ function SuggestedRecipes() {
         </button>
         <div className="suggested-recipes">
           {loading ? (
-            <div className="loading-animation"><CardioSpinner /></div>
+            <div className="loading-animation">
+              <CardioSpinner size="50" color="#ff9800" />
+            </div>
           ) : error ? (
             <div className="error-message">{error}</div>
           ) : suggestedRecipes.length === 0 ? (
             <div className="no-recipes">
-              <p>No suggested recipes available. Try adding more ingredients to your fridge or use different ingredients!</p>
+              <p>No suggested recipes available. Try adding more ingredients to your fridge!</p>
             </div>
           ) : (
             <div className="recipe-grid">

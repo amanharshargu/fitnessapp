@@ -23,6 +23,7 @@
   flex-direction: column;
   gap: 8px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .day-button {
@@ -44,10 +45,9 @@
 }
 
 .day-button.selected {
-  background-color: #ff7800;
+  background-color: #ff6600;
   color: white;
   border-color: #ff7800;
-  transform: translateX(5px);
 }
 
 .meal-display {

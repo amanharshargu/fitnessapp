@@ -228,11 +228,6 @@
   gap: 8px;
 }
 
-.back-button:hover {
-  background-color: #ff9800;
-  transform: translateX(-5px);
-}
-
 .no-meal {
   height: 420px;
   display: flex;

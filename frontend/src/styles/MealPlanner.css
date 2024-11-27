@@ -158,6 +158,7 @@
 
 .meal-planner button:hover {
   background-color: #f57c00;
+  color: white;
 }
 
 .meal-planner button.btn-secondary {

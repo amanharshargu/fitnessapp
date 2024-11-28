@@ -3,6 +3,7 @@ import RecipeCard from "../../components/recipes/RecipeCard";
 import { useRecipeSearch } from "../../hooks/useRecipeSearch";
 import { useRecipes } from "../../contexts/RecipeContext";
 import "../../styles/Recipes.css";
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 const filterOptions = {
   diet: [
@@ -72,6 +73,7 @@ function Recipes() {
   const {
     recipes,
     isLoading,
+    fetchRecipes,
     filters,
     activeFilter,
     setActiveFilter,
@@ -213,6 +215,19 @@ function Recipes() {
       </style>
     </div>
   );
+
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+
+  useEffect(() => {
+    const searchQuery = searchParams.get('search');
+    if (searchQuery) {
+      setSearchTerm(searchQuery);
+      setCurrentPage(1);
+      handleSearch();
+      setHasSearched(true);
+    }
+  }, [location.search]);
 
   return (
     <div className="recipes-page">

@@ -61,6 +61,11 @@ function DailyCalorieGoal({ onDishesChanged }) {
   }, [dishes, dailyCalorieGoal]);
 
   useEffect(() => {
+    if (!newDish.name) {
+      setSearchResults([]);
+      return;
+    }
+
     if (recipes && recipes.length > 0) {
       const formattedResults = recipes.map(recipe => ({
         uri: recipe.uri,
@@ -73,7 +78,7 @@ function DailyCalorieGoal({ onDishesChanged }) {
     } else {
       setSearchResults([]);
     }
-  }, [recipes]);
+  }, [recipes, newDish.name]);
 
   useEffect(() => {
     function handleClickOutside(event) {

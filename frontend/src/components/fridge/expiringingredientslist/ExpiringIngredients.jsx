@@ -34,8 +34,7 @@ function ExpiringIngredients({ ingredients }) {
   const handleSearchRecipes = () => {
     const selectedIngredientNames = Object.keys(selectedIngredients).filter(name => selectedIngredients[name]);
     const searchTerms = selectedIngredientNames.join(" ");
-    setSearchTerm(searchTerms);
-    navigate("/recipes");
+    navigate(`/recipes?search=${encodeURIComponent(searchTerms)}`);
   };
 
   return (

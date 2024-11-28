@@ -1,15 +1,26 @@
+@keyframes fr-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .fridge-container {
-  padding: 20px 20px 0px 20px;
-  height: calc(100vh - 80px);
-  display: flex;
-  flex-direction: column;
+  min-height: calc(100vh - 75px);
+  width: 100%;
+  margin: 0 auto;
   background-color: #fff5e6;
+  padding: 20px;
   background-image: radial-gradient(circle, #ff9800 1px, transparent 1px),
     radial-gradient(circle, #ff9800 1px, transparent 1px);
   background-size: 40px 40px;
   background-position: 0 0, 20px 20px;
   position: relative;
-  overflow: hidden;
+  animation: fr-fade-in 0.1s ease-out forwards;
 }
 
 .fridge-container::before {
@@ -40,20 +51,21 @@
 
 .fridge-content {
   display: flex;
-  justify-content: space-between;
-  gap: 50px;
-  position: relative;
-  z-index: 1;
-  height: 100%;
-  overflow: hidden;
+  gap: 20px;
+  max-width: 1300px;
+  margin: 0 auto;
+  opacity: 0;
+  animation: fr-fade-in 0.4s ease-out forwards;
 }
 
 .fridge-left {
+  flex: 2;
+  opacity: 0;
+  animation: fr-fade-in 0.4s ease-out forwards;
+  animation-delay: 0.1s;
   background-color: #fff;
   border-radius: 15px;
   padding: 30px;
-  flex: 3;
-  max-width: 65%;
   box-shadow: 0 8px 20px rgba(255, 120, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow-y: auto;
@@ -61,10 +73,12 @@
 }
 
 .fridge-right {
+  flex: 1;
+  opacity: 0;
+  animation: fr-fade-in 0.4s ease-out forwards;
+  animation-delay: 0.2s;
   border-radius: 15px;
   padding: 30px;
-  flex: 2;
-  max-width: 35%;
 }
 
 .ingredients-header {

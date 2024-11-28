@@ -1,4 +1,4 @@
-.suggested-recipes-container {
+.sr-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -12,18 +12,18 @@
   overflow: hidden;
 }
 
-.suggested-recipes {
+.sr-content {
   flex-grow: 1;
   overflow-y: auto;
   padding-right: 10px;
 }
 
-.suggested-recipes h2 {
+.sr-heading {
   margin-bottom: 20px;
   color: #333;
 }
 
-.suggest-button {
+.sr-button {
   background: linear-gradient(45deg, #ff9800, #ff7800);
   color: white;
   border: none;
@@ -40,89 +40,85 @@
   margin: 0 auto 30px;
 }
 
-.suggest-button:hover {
+.sr-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
   background: linear-gradient(45deg, #ff7800, #ff6d00);
 }
 
-.suggest-button:active {
+.sr-button:active {
   transform: translateY(0);
   box-shadow: 0 2px 6px rgba(255, 152, 0, 0.2);
 }
 
-.suggest-button::before {
+.sr-button::before {
   content: '✨';
   font-size: 1.2rem;
 }
 
-.suggest-button:disabled {
+.sr-button:disabled {
   background: linear-gradient(45deg, #ffb74d, #ffa726);
   cursor: not-allowed;
   transform: none;
   opacity: 0.7;
 }
 
-.recipe-grid {
+.sr-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
   padding: 15px;
 }
 
-.error-message {
+.sr-error {
   color: #d32f2f;
   font-weight: bold;
   text-align: center;
   margin-top: 20px;
 }
 
-.loading, .error, .no-recipes {
+.sr-loading, .sr-error-message, .sr-no-recipes {
   text-align: center;
   font-size: 1.2rem;
   margin-top: 50px;
   color: #666;
 }
 
-.loading-animation {
+.sr-loading-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 200px;
 }
 
-.spinner {
+.sr-spinner {
   border: 4px solid #ffe290;
   border-top: 4px solid #ff9800;
   border-radius: 50%;
   width: 50px;
   height: 50px;
-  animation: suggested-recipes-spin 1s linear infinite;
+  animation: sr-spin 1s linear infinite;
 }
 
-@keyframes suggested-recipes-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+@keyframes sr-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @media (max-width: 1200px) {
-  .recipe-grid {
+  .sr-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 992px) {
-  .recipe-grid {
+  .sr-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .recipe-grid {
+  .sr-grid {
     grid-template-columns: 1fr;
   }
 }

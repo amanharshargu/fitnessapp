@@ -38,27 +38,27 @@ function SuggestedRecipes() {
 
   return (
     <div style={{ paddingLeft: '220px', paddingTop: '70px' }}>
-      <div className="suggested-recipes-container">
+      <div className="sr-container">
         <button 
           onClick={fetchSuggestedRecipes} 
-          className="suggest-button"
+          className="sr-button"
           disabled={loading}
         >
           {loading ? 'Finding Recipes...' : 'Suggest New Recipes'}
         </button>
-        <div className="suggested-recipes">
+        <div className="sr-content">
           {loading ? (
-            <div className="loading-animation">
+            <div className="sr-loading-wrapper">
               <CardioSpinner size="50" color="#ff9800" />
             </div>
           ) : error ? (
-            <div className="error-message">{error}</div>
+            <div className="sr-error">{error}</div>
           ) : suggestedRecipes.length === 0 ? (
-            <div className="no-recipes">
+            <div className="sr-no-recipes">
               <p>No suggested recipes available. Try adding more ingredients to your fridge!</p>
             </div>
           ) : (
-            <div className="recipe-grid">
+            <div className="sr-grid">
               {suggestedRecipes.map((recipe) => (
                 <RecipeCard key={recipe.uri} recipe={recipe} />
               ))}

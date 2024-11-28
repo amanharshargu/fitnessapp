@@ -1,10 +1,26 @@
+@keyframes mp-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .meal-planner {
-  height: 90vh;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  min-height: calc(100vh - 75px);
+  width: 100%;
+  margin: 0 auto;
+  background-color: #fff5e6;
   padding: 20px;
+  background-image: radial-gradient(circle, #ff9800 1px, transparent 1px),
+    radial-gradient(circle, #ff9800 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  position: relative;
+  animation: mp-fade-in 0.1s ease-out forwards;
 }
 
 .meal-planner-background {
@@ -31,6 +47,9 @@
   overflow: auto;
   margin: 0 auto;
   width: 95%;
+  max-width: 1300px;
+  opacity: 0;
+  animation: mp-fade-in 0.4s ease-out forwards;
 }
 
 .filters-container {
@@ -38,6 +57,9 @@
   flex-direction: column;
   height: 100%;
   gap: 20px;
+  opacity: 0;
+  animation: mp-fade-in 0.4s ease-out forwards;
+  animation-delay: 0.1s;
 }
 
 .filters-container h4 {
@@ -138,7 +160,7 @@
 }
 
 .button-group {
-  padding: 0;
+  padding: 80px 0 0 0;
   display: flex;
   gap: 12px;
   justify-content: center;
@@ -424,6 +446,9 @@
   padding-top: 40px;
   height: 100%;
   overflow-y: auto;
+  opacity: 0;
+  animation: mp-fade-in 0.4s ease-out forwards;
+  animation-delay: 0.1s;
 }
 
 .calorie-slider {
@@ -445,6 +470,9 @@
   overflow-x: hidden;
   padding-right: 10px;
   flex: 1;
+  opacity: 0;
+  animation: mp-fade-in 0.4s ease-out forwards;
+  animation-delay: 0.2s;
 }
 
 .filters-checkboxes {
@@ -516,6 +544,9 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   max-width: 500px;
   margin: 2rem auto;
+  opacity: 0;
+  animation: mp-fade-in 0.4s ease-out forwards;
+  animation-delay: 0.1s;
 }
 
 .no-meal-plan-fallback h2 {

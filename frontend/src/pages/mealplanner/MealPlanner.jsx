@@ -39,7 +39,7 @@ const capitalizeWords = (str) => {
 };
 
 function MealPlanner() {
-  const { ingredients } = useIngredients();
+  const { ingredients, refreshIngredients } = useIngredients();
   const { processedIngredients } = useIngredientList(ingredients);
   const {
     filters,
@@ -55,6 +55,10 @@ function MealPlanner() {
     handleBackToFilters,
     setProcessedIngredients,
   } = useMealPlanner();
+
+  useEffect(() => {
+    refreshIngredients();
+  }, [refreshIngredients]);
 
   useEffect(() => {
     fetchCalorieGoal();

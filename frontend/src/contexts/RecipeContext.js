@@ -41,40 +41,58 @@ function recipeReducer(state, action) {
 
 const FALLBACK_RECIPES = [
   {
-    uri: '1',
+    uri: 'http://www.foodnetwork.com/recipes/food-network-kitchen/mediterranean-salad-recipe-2103228',
     label: 'Mediterranean Salad',
     image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80',
-    calories: 350
+    calories: 350,
+    healthLabels: ['Vegetarian', 'Mediterranean', 'Low-Carb'],
+    totalTime: 20,
+    yield: 4
   },
   {
-    uri: '2',
+    uri: 'https://www.allrecipes.com/recipe/8932/grilled-chicken-with-herbs/',
     label: 'Grilled Chicken Bowl',
     image: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=800&q=80',
-    calories: 450
+    calories: 450,
+    healthLabels: ['High-Protein', 'Low-Carb', 'Gluten-Free'],
+    totalTime: 30,
+    yield: 4
   },
   {
-    uri: '3',
+    uri: 'https://www.epicurious.com/recipes/food/views/vegetable-stir-fry-with-ginger',
     label: 'Vegetable Stir-Fry',
     image: 'https://images.unsplash.com/photo-1572453800999-e8d2d1589b7c?w=800&q=80',
-    calories: 300
+    calories: 300,
+    healthLabels: ['Vegan', 'Low-Calorie', 'Dairy-Free'],
+    totalTime: 25,
+    yield: 4
   },
   {
-    uri: '4',
+    uri: 'https://cookieandkate.com/buddha-bowl-recipe/',
     label: 'Quinoa Buddha Bowl',
     image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80',
-    calories: 400
+    calories: 400,
+    healthLabels: ['Vegan', 'Whole Grain', 'High-Fiber'],
+    totalTime: 20,
+    yield: 4
   },
   {
-    uri: '5',
+    uri: 'https://www.simplyrecipes.com/recipes/easy_grilled_salmon/',
     label: 'Salmon with Vegetables',
     image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80',
-    calories: 500
+    calories: 500,
+    healthLabels: ['High-Protein', 'Omega-3', 'Pescatarian'],
+    totalTime: 25,
+    yield: 4
   },
   {
-    uri: '6',
+    uri: 'https://www.bonappetit.com/recipe/fresh-spring-rolls',
     label: 'Fresh Spring Rolls',
     image: 'https://images.unsplash.com/photo-1541014741259-de529411b96a?w=800&q=80',
-    calories: 250
+    calories: 250,
+    healthLabels: ['Low-Calorie', 'Gluten-Free', 'Fresh'],
+    totalTime: 30,
+    yield: 4
   }
 ];
 

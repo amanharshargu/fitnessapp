@@ -3,6 +3,7 @@ import { useRecipes } from "../contexts/RecipeContext";
 import LoginModal from "../components/auth/LoginModal";
 import SignupModal from "../components/auth/SignupModal";
 import HowItWorksModal from '../components/modals/HowItWorksModal';
+import RecipeOfDayModal from '../components/modals/RecipeOfDayModal';
 import "../styles/LandingPage.css";
 
 function LandingPage() {
@@ -13,6 +14,8 @@ function LandingPage() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [showHowItWorks, setShowHowItWorks] = useState(false);
+  const [showRecipeOfDay, setShowRecipeOfDay] = useState(false);
+  const [recipeOfDay, setRecipeOfDay] = useState(null);
 
   const fetchRandomRecipes = useCallback(async () => {
     try {
@@ -34,6 +37,12 @@ function LandingPage() {
     }, 3000);
     return () => clearInterval(interval);
   }, [fetchRandomRecipes]);
+
+  useEffect(() => {
+    if (randomRecipes.length > 0) {
+      setRecipeOfDay(randomRecipes[0]);
+    }
+  }, [randomRecipes]);
 
   const handleCloseAuthModal = () => {
     setShowAuthModal(false);
@@ -74,6 +83,10 @@ function LandingPage() {
               >
                 See How It Works <i className="fas fa-arrow-right"></i>
               </button>
+            </div>
+            <div className="recipe-of-day-button" onClick={() => setShowRecipeOfDay(true)}>
+              <i className="fas fa-star"></i>
+              <span>Recipe of the Day</span>
             </div>
             <div className="trust-badges">
               <div className="badge">
@@ -165,6 +178,12 @@ function LandingPage() {
         show={showHowItWorks} 
         onClose={() => setShowHowItWorks(false)}
         onGetStarted={handleGetStarted}
+      />
+
+      <RecipeOfDayModal
+        show={showRecipeOfDay}
+        onClose={() => setShowRecipeOfDay(false)}
+        recipe={recipeOfDay}
       />
 
       {showAuthModal && (

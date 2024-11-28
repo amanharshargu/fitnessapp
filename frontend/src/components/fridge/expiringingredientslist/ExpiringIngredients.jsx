@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useExpiringIngredients, aggregateIngredients, convertToBaseUnit, formatQuantity } from "../../hooks/useIngredientForm";
-import { useIngredients } from "../../contexts/IngredientContext";
-import { useRecipes } from "../../contexts/RecipeContext";
-import "../../styles/ExpiringIngredients.css";
+import { useExpiringIngredients, aggregateIngredients, convertToBaseUnit, formatQuantity } from "../../../hooks/useIngredientForm";
+import { useIngredients } from "../../../contexts/IngredientContext";
+import { useRecipes } from "../../../contexts/RecipeContext";
+import "../../../styles/ExpiringIngredients.css";
 
 function ExpiringIngredients({ ingredients }) {
   const { expiringIngredients, formatExpirationDate, loading } = useExpiringIngredients(ingredients);

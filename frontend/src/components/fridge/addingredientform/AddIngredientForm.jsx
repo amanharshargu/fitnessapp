@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useIngredientForm } from "../../hooks/useIngredientForm";
-import "../../styles/AddIngredientForm.css";
+import { useIngredientForm } from "../../../hooks/useIngredientForm";
+import "../../../styles/AddIngredientForm.css";
 
 function AddIngredientForm({ editingIngredient, onCancel, onSuccess }) {
   const { ingredient, handleInputChange: originalHandleInputChange, handleSubmit } = useIngredientForm(editingIngredient);

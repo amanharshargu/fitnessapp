@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUserDetails } from "../../contexts/UserDetailsContext";
-import WeeklyCalorieTracker from "./WeeklyCalorieTracker";
-import DailyCalorieGoal from "./DailyCalorieGoal";
-import ContentWrapper from "../layout/ContentWrapper";
+import WeeklyCalorieTracker from "../../components/dashboard/weeklycalorietracker/WeeklyCalorieTracker";
+import DailyCalorieGoal from "../../components/dashboard/dailycaloriegoal/DailyCalorieGoal";
+import ContentWrapper from "../../components/layout/ContentWrapper";
 import api from "../../services/api";
-import WaterIntakeTracker from './WaterIntakeTracker';
-import DailyMotivation from './DailyMotivation';
+import WaterIntakeTracker from '../../components/dashboard/waterintaketracker/WaterIntakeTracker';
+import DailyMotivation from '../../components/dashboard/dailymotivation/DailyMotivation';
 import "../../styles/Dashboard.css";
 
 function Dashboard({ userDetailsVersion }) {

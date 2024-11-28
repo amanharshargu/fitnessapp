@@ -4,13 +4,19 @@ import { useAuth } from './AuthContext';
 const IngredientContext = createContext();
 
 export function IngredientProvider({ children }) {
-  const [ingredients, setIngredients] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState({
+    ingredients: [],
+    loading: false,
+    error: null
+  });
+  
   const { token } = useAuth();
 
   const refreshIngredients = useCallback(async () => {
+    if (!token) return;
+    
+    setState(prev => ({ ...prev, loading: true }));
     try {
-      setLoading(true);
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -23,18 +29,26 @@ export function IngredientProvider({ children }) {
       }
 
       const data = await response.json();
-      setIngredients(data);
+      setState(prev => ({
+        ...prev,
+        ingredients: data,
+        error: null,
+        loading: false
+      }));
     } catch (error) {
+      setState(prev => ({
+        ...prev,
+        error: 'Failed to fetch ingredients',
+        loading: false
+      }));
       console.error('Error fetching ingredients:', error);
-    } finally {
-      setLoading(false);
     }
   }, [token]);
 
-  const addIngredient = async (newIngredient) => {
+  const addIngredient = useCallback(async (newIngredient) => {
     if (!token) return;
     try {
-      await fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -43,16 +57,26 @@ export function IngredientProvider({ children }) {
         credentials: 'include',
         body: JSON.stringify(newIngredient),
       });
-      await refreshIngredients();
+      
+      if (!response.ok) {
+        throw new Error('Failed to add ingredient');
+      }
+      
+      const addedIngredient = await response.json();
+      setState(prev => ({
+        ...prev,
+        ingredients: [...prev.ingredients, addedIngredient]
+      }));
     } catch (error) {
       console.error('Error adding ingredient:', error);
+      throw error;
     }
-  };
+  }, [token]);
 
-  const updateIngredient = async (id, updatedIngredient) => {
+  const updateIngredient = useCallback(async (id, updatedIngredient) => {
     if (!token) return;
     try {
-      await fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -61,38 +85,61 @@ export function IngredientProvider({ children }) {
         credentials: 'include',
         body: JSON.stringify(updatedIngredient),
       });
-      await refreshIngredients();
+
+      if (!response.ok) {
+        throw new Error('Failed to update ingredient');
+      }
+
+      const updated = await response.json();
+      setState(prev => ({
+        ...prev,
+        ingredients: prev.ingredients.map(ingredient =>
+          ingredient.id === id ? updated : ingredient
+        )
+      }));
     } catch (error) {
       console.error('Error updating ingredient:', error);
+      throw error;
     }
-  };
+  }, [token]);
 
-  const deleteIngredient = async (id) => {
+  const deleteIngredient = useCallback(async (id) => {
     if (!token) return;
     try {
-      await fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
         },
         credentials: 'include',
       });
-      await refreshIngredients();
+
+      if (!response.ok) {
+        throw new Error('Failed to delete ingredient');
+      }
+
+      setState(prev => ({
+        ...prev,
+        ingredients: prev.ingredients.filter(ingredient => ingredient.id !== id)
+      }));
     } catch (error) {
       console.error('Error deleting ingredient:', error);
+      throw error;
     }
+  }, [token]);
+
+  const value = {
+    ingredients: state.ingredients,
+    loading: state.loading,
+    setIngredients: ingredients => setState(prev => ({ ...prev, ingredients })),
+    deleteIngredient,
+    refreshIngredients,
+    addIngredient,
+    updateIngredient,
   };
 
   return (
-    <IngredientContext.Provider value={{
-      ingredients,
-      setIngredients,
-      deleteIngredient,
-      refreshIngredients,
-      addIngredient,
-      updateIngredient,
-      loading,
-    }}>
+    <IngredientContext.Provider value={value}>
       {children}
     </IngredientContext.Provider>
   );

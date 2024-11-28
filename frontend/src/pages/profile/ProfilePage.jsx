@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useUserDetails } from '../../contexts/UserDetailsContext';
-import UserProfileCard from './UserProfileCard';
-import CardioSpinner from '../common/CardioSpinner';
+import UserProfileCard from '../../components/profile/UserProfileCard';
+import CardioSpinner from '../../components/common/CardioSpinner';
 import '../../styles/ProfilePage.css';
 
 const ProfilePage = () => {

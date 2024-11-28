@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { format, startOfWeek, addDays } from 'date-fns';
-import api from '../../services/api';
-import '../../styles/WeeklyCalorieTracker.css';
+import api from '../../../services/api';
+import '../../../styles/WeeklyCalorieTracker.css';
 import {
   Chart as ChartJS,
   CategoryScale,

@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import '../../styles/DailyMotivation.css';
+import '../../../styles/DailyMotivation.css';
 
 const DailyMotivation = React.memo(() => {
   const [tip, setTip] = useState(null);

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import RecipeCard from "./RecipeCard";
-import ContentWrapper from "../layout/ContentWrapper";
+import RecipeCard from "../../components/recipes/RecipeCard";
+import ContentWrapper from "../../components/layout/ContentWrapper";
 import { useNavigate } from "react-router-dom";
 import { useRecipes } from "../../contexts/RecipeContext";
-import CardioSpinner from "../common/CardioSpinner";
+import CardioSpinner from "../../components/common/CardioSpinner";
 import "../../styles/Recipes.css";
 import "../../styles/LikedRecipes.css";
 

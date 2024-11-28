@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect, useCallback, useMemo } from "react";
 import api from "../services/api";
 
 const AuthContext = createContext(null);
@@ -27,136 +27,155 @@ const setStoredToken = (token) => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(getStoredToken());
-  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState({
+    isLoggedIn: false,
+    user: null,
+    token: getStoredToken(),
+    loading: true
+  });
 
-  useEffect(() => {
+  const updateState = useCallback((updates) => {
+    setState(prev => ({ ...prev, ...updates }));
+  }, []);
+
+  const updateAuthHeaders = useCallback((token) => {
     if (token) {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      setIsLoggedIn(true);
-      checkAuth();
     } else {
       delete api.defaults.headers.common["Authorization"];
-      setIsLoggedIn(false);
     }
-    setLoading(false);
-  }, [token]);
+  }, []);
 
-  const login = async (email, password) => {
+  const checkAuth = useCallback(async () => {
+    if (state.token) {
+      try {
+        const response = await api.get("/auth/check");
+        updateState({
+          user: response.data.user,
+          isLoggedIn: true,
+          loading: false
+        });
+      } catch (error) {
+        console.error("Token invalid:", error);
+        handleLogout();
+      }
+    } else {
+      updateState({ loading: false });
+    }
+  }, [state.token]);
+
+  useEffect(() => {
+    updateAuthHeaders(state.token);
+    updateState({ isLoggedIn: !!state.token });
+    checkAuth();
+  }, [state.token, updateAuthHeaders, checkAuth]);
+
+  const handleLogin = useCallback(async (email, password) => {
     try {
       const response = await api.post(
         "/auth/login",
         { email, password },
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
       const { token: newToken, user: newUser } = response.data;
       setStoredToken(newToken);
-      setToken(newToken);
-      setUser(newUser);
-      setIsLoggedIn(true);
+      updateState({
+        token: newToken,
+        user: newUser,
+        isLoggedIn: true
+      });
       return response.data;
     } catch (error) {
       console.error("Login error:", error);
       throw error;
     }
-  };
+  }, []);
 
-  const logout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       await api.post("/auth/logout");
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
       setStoredToken(null);
-      setToken(null);
-      setIsLoggedIn(false);
-      setUser(null);
-      delete api.defaults.headers.common["Authorization"];
+      updateState({
+        token: null,
+        isLoggedIn: false,
+        user: null
+      });
+      updateAuthHeaders(null);
     }
-  };
+  }, [updateAuthHeaders]);
 
-  const signup = async (signupData) => {
+  const handleSignup = useCallback(async (signupData) => {
     try {
       const response = await api.post("/auth/register", signupData);
       const { token: newToken, user: newUser } = response.data;
       setStoredToken(newToken);
-      setToken(newToken);
-      setUser(newUser);
-      setIsLoggedIn(true);
+      updateState({
+        token: newToken,
+        user: newUser,
+        isLoggedIn: true
+      });
       return response.data;
     } catch (error) {
       console.error("Signup failed:", error);
       throw error;
     }
-  };
+  }, []);
 
-  const updateUserDetails = async (userDetails) => {
+  const handleUpdateUserDetails = useCallback(async (userDetails) => {
     try {
       const response = await api.put("/users/update", userDetails, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${state.token}`,
         },
         withCredentials: true,
       });
 
-      if (response.data && response.data.user) {
-        setUser(response.data.user);
+      if (response.data?.user) {
+        updateState({ user: response.data.user });
       }
-
       return response.data;
     } catch (error) {
       console.error("Error updating user details:", error);
       throw error;
     }
-  };
+  }, [state.token]);
 
-  const checkAuth = async () => {
-    if (token) {
-      try {
-        const response = await api.get("/auth/check");
-        setUser(response.data.user);
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.error("Token invalid:", error);
-        logout();
-      }
-    }
-    setLoading(false);
-  };
+  const handleOAuthCallback = useCallback(async (token) => {
+    setStoredToken(token);
+    updateState({ token, isLoggedIn: true });
+    await checkAuth();
+  }, [checkAuth]);
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
+  const value = useMemo(() => ({
+    isLoggedIn: state.isLoggedIn,
+    user: state.user,
+    token: state.token,
+    login: handleLogin,
+    signup: handleSignup,
+    logout: handleLogout,
+    updateUserDetails: handleUpdateUserDetails,
+    handleOAuthCallback
+  }), [
+    state.isLoggedIn,
+    state.user,
+    state.token,
+    handleLogin,
+    handleSignup,
+    handleLogout,
+    handleUpdateUserDetails,
+    handleOAuthCallback
+  ]);
 
-  if (loading) {
-    return <div>Loading...</div>; //change later
+  if (state.loading) {
+    return null; // Changed from div to null for better integration
   }
 
-  const handleOAuthCallback = async (token) => {
-    setStoredToken(token);
-    setToken(token);
-    setIsLoggedIn(true);
-    await checkAuth();
-  };
-
   return (
-    <AuthContext.Provider
-      value={{
-        isLoggedIn,
-        user,
-        token,
-        login,
-        signup,
-        logout,
-        updateUserDetails,
-        handleOAuthCallback,
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

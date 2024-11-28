@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import CalorieSlider from "../dashboard/CalorieSlider";
-import ContentWrapper from "../layout/ContentWrapper";
-import MealPlanDisplay from "./MealPlanDisplay";
+import CalorieSlider from "../../components/mealplanner/CalorieSlider";
+import ContentWrapper from "../../components/layout/ContentWrapper";
+import MealPlanDisplay from "../../components/mealplanner/MealPlanDisplay";
 import { useIngredients } from "../../contexts/IngredientContext";
 import { useIngredientList, formatQuantity, convertToBaseUnit } from "../../hooks/useIngredientForm";
-import CardioSpinner from "../common/CardioSpinner";
+import CardioSpinner from "../../components/common/CardioSpinner";
 import { useMealPlanner } from "../../contexts/MealPlannerContext";
 import "../../styles/MealPlanner.css";
 

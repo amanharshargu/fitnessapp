@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useIngredients } from '../../contexts/IngredientContext';
 import { useRecipes } from '../../contexts/RecipeContext';
-import RecipeCard from './RecipeCard';
-import CardioSpinner from '../common/CardioSpinner';
+import RecipeCard from '../../components/recipes/RecipeCard';
+import CardioSpinner from '../../components/common/CardioSpinner';
 import '../../styles/SuggestedRecipes.css';
 
 function SuggestedRecipes() {

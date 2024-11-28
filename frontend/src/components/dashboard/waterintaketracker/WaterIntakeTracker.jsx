@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import api from '../../services/api';
-import '../../styles/WaterIntakeTracker.css';
+import api from '../../../services/api';
+import '../../../styles/WaterIntakeTracker.css';
 
 function WaterIntakeTracker({ intake, onUpdate }) {
   const [updatingButton, setUpdatingButton] = useState(null);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useIngredients } from "../../contexts/IngredientContext";
-import { useExpiringIngredients, useIngredientList, formatQuantity } from "../../hooks/useIngredientForm";
-import "../../styles/IngredientList.css";
+import { useIngredients } from "../../../contexts/IngredientContext";
+import { useExpiringIngredients, useIngredientList, formatQuantity } from "../../../hooks/useIngredientForm";
+import "../../../styles/IngredientList.css";
 
 function IngredientList() {
   const { ingredients, deleteIngredient, loading } = useIngredients();

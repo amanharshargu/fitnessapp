@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import IngredientList from "./IngredientList";
-import ExpiringIngredients from "./ExpiringIngredients";
-import AddIngredientForm from "./AddIngredientForm";
+import IngredientList from "../../components/fridge/ingredientlist/IngredientList";
+import ExpiringIngredients from "../../components/fridge/expiringingredientslist/ExpiringIngredients";
+import AddIngredientForm from "../../components/fridge/addingredientform/AddIngredientForm";
 import { useIngredients } from "../../contexts/IngredientContext";
-import ContentWrapper from "../layout/ContentWrapper";
+import ContentWrapper from "../../components/layout/ContentWrapper";
 import "../../styles/fridge.css";
 
 function Fridge() {

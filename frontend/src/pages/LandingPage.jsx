@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRecipes } from "../contexts/RecipeContext";
-import LoginModal from "./auth/LoginModal";
-import SignupModal from "./auth/SignupModal";
+import LoginModal from "../components/auth/LoginModal";
+import SignupModal from "../components/auth/SignupModal";
 import "../styles/LandingPage.css";
 
 function LandingPage() {

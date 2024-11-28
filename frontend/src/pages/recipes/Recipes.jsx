@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import RecipeCard from "./RecipeCard";
+import RecipeCard from "../../components/recipes/RecipeCard";
 import { useRecipeSearch } from "../../hooks/useRecipeSearch";
 import { useRecipes } from "../../contexts/RecipeContext";
 import "../../styles/Recipes.css";

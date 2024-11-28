@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRecipes } from "../contexts/RecipeContext";
 import LoginModal from "../components/auth/LoginModal";
 import SignupModal from "../components/auth/SignupModal";
+import HowItWorksModal from '../components/modals/HowItWorksModal';
 import "../styles/LandingPage.css";
 
 function LandingPage() {
@@ -11,6 +12,7 @@ function LandingPage() {
   const [randomRecipes, setRandomRecipes] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
 
   const fetchRandomRecipes = useCallback(async () => {
     try {
@@ -66,9 +68,12 @@ function LandingPage() {
               <button className="primary-cta" onClick={handleGetStarted}>
                 Get Started Free
               </button>
-              <a href="#how-it-works" className="secondary-cta">
+              <button 
+                className="secondary-cta"
+                onClick={() => setShowHowItWorks(true)}
+              >
                 See How It Works <i className="fas fa-arrow-right"></i>
-              </a>
+              </button>
             </div>
             <div className="trust-badges">
               <div className="badge">
@@ -155,6 +160,12 @@ function LandingPage() {
           </div>
         </div>
       </section>
+
+      <HowItWorksModal 
+        show={showHowItWorks} 
+        onClose={() => setShowHowItWorks(false)}
+        onGetStarted={handleGetStarted}
+      />
 
       {showAuthModal && (
         isSignup ? (

@@ -90,12 +90,27 @@
   align-items: center;
   gap: 8px;
   color: var(--primary-color);
-  text-decoration: none;
   font-weight: 600;
+  padding: 16px 32px;
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
 }
 
 .landing-container .secondary-cta:hover {
-  color: var(--primary-dark);
+  background-color: var(--primary-light);
+  transform: translateY(-2px);
+}
+
+.landing-container .secondary-cta i {
+  transition: transform 0.3s ease;
+}
+
+.landing-container .secondary-cta:hover i {
+  transform: translateX(4px);
 }
 
 .landing-container .trust-badges {

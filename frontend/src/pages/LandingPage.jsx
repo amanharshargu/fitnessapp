@@ -50,87 +50,111 @@ function LandingPage() {
   return (
     <div className="landing-container">
       <div className="hero-section">
-        <div className="floating-shapes">
-          <div className="shape shape-1"></div>
-          <div className="shape shape-2"></div>
-          <div className="shape shape-3"></div>
-        </div>
-        
         <div className="hero-content">
           <div className="hero-left">
             <div className="title-wrapper">
+              <span className="pre-title">Welcome to WishEat</span>
               <h1 className="hero-title">
-                Your Journey to <span className="highlight">Healthier</span> Eating
+                Discover the Joy of <br />
+                <span className="highlight">Healthy Eating</span>
               </h1>
-              <div className="emoji-accent">🥗</div>
+              <p className="hero-subtitle">
+                Personalized recipes, nutrition tracking, and meal planning tools to help you live your healthiest life.
+              </p>
             </div>
-            <p className="hero-subtitle">
-              Discover, track, and transform your relationship with food
-            </p>
-            <div className="cta-buttons">
-              <button className="get-started-btn pulse-animation" onClick={handleGetStarted}>
-                Start Your Journey
+            <div className="cta-group">
+              <button className="primary-cta" onClick={handleGetStarted}>
+                Get Started Free
               </button>
+              <a href="#how-it-works" className="secondary-cta">
+                See How It Works <i className="fas fa-arrow-right"></i>
+              </a>
             </div>
-          </div>
-
-          <div className="landing-recipe-showcase">
-            {isLoading ? (
-              <div className="loading-spinner">
-                <div className="spinner"></div>
-                <p>Finding delicious recipes...</p>
+            <div className="trust-badges">
+              <div className="badge">
+                <span className="number">10k+</span>
+                <span className="label">Active Users</span>
               </div>
-            ) : (
-              randomRecipes.map((recipe, index) => (
-                <div 
-                  key={recipe.uri} 
-                  className={`landing-showcase-item ${index === activeIndex ? 'active' : ''}`}
-                >
-                  <div className="landing-recipe-card">
-                    <div className="landing-recipe-image-wrapper">
-                      <img
-                        src={recipe.image}
-                        alt={recipe.label}
-                        className="landing-recipe-image"
-                      />
-                    </div>
-                    <div className="landing-recipe-details">
-                      <h4>{recipe.label}</h4>
-                      <span className="landing-calorie-badge">
-                        {recipe.calories.toFixed(0)} cal
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
+              <div className="badge">
+                <span className="number">5k+</span>
+                <span className="label">Recipes</span>
+              </div>
+              <div className="badge">
+                <span className="number">4.8</span>
+                <span className="label">User Rating</span>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="journey-steps">
-          <div className="step">
-            <div className="step-icon">
-              <i className="fas fa-search"></i>
+          <div className="hero-right">
+            <div className="recipe-showcase">
+              {isLoading ? (
+                <div className="loading-spinner">
+                  <div className="spinner"></div>
+                  <p>Finding delicious recipes...</p>
+                </div>
+              ) : (
+                <div className="recipe-carousel">
+                  {randomRecipes.map((recipe, index) => (
+                    <div 
+                      key={recipe.uri} 
+                      className={`recipe-card ${index === activeIndex ? 'active' : ''}`}
+                    >
+                      <div className="recipe-image-container">
+                        <img
+                          src={recipe.image}
+                          alt={recipe.label}
+                          className="recipe-image"
+                        />
+                        <div className="recipe-overlay">
+                          <span className="recipe-category">Featured</span>
+                          <h4 className="recipe-title">{recipe.label}</h4>
+                          <div className="recipe-stats">
+                            <span className="calories">
+                              <i className="fas fa-fire"></i>
+                              {recipe.calories.toFixed(0)} cal
+                            </span>
+                            <span className="time">
+                              <i className="fas fa-clock"></i>
+                              20 min
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-            <h3>Discover</h3>
-            <p>Find recipes that match your taste and goals</p>
-          </div>
-          <div className="step">
-            <div className="step-icon">
-              <i className="fas fa-heart"></i>
-            </div>
-            <h3>Save</h3>
-            <p>Build your personal recipe collection</p>
-          </div>
-          <div className="step">
-            <div className="step-icon">
-              <i className="fas fa-chart-line"></i>
-            </div>
-            <h3>Track</h3>
-            <p>Monitor your nutrition journey</p>
           </div>
         </div>
       </div>
+
+      <section className="features-section">
+        <div className="features-grid">
+          <div className="feature-card">
+            <div className="feature-icon">
+              <i className="fas fa-search"></i>
+            </div>
+            <h3>Smart Recipe Search</h3>
+            <p>Find recipes that match your dietary preferences and restrictions</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">
+              <i className="fas fa-chart-line"></i>
+            </div>
+            <h3>Nutrition Tracking</h3>
+            <p>Monitor your daily intake and track your progress over time</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">
+              <i className="fas fa-calendar-alt"></i>
+            </div>
+            <h3>Meal Planning</h3>
+            <p>Plan your meals ahead and stay organized throughout the week</p>
+          </div>
+        </div>
+      </section>
 
       {showAuthModal && (
         isSignup ? (

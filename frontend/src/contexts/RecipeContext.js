@@ -39,6 +39,45 @@ function recipeReducer(state, action) {
   }
 }
 
+const FALLBACK_RECIPES = [
+  {
+    uri: '1',
+    label: 'Mediterranean Salad',
+    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80',
+    calories: 350
+  },
+  {
+    uri: '2',
+    label: 'Grilled Chicken Bowl',
+    image: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=800&q=80',
+    calories: 450
+  },
+  {
+    uri: '3',
+    label: 'Vegetable Stir-Fry',
+    image: 'https://images.unsplash.com/photo-1572453800999-e8d2d1589b7c?w=800&q=80',
+    calories: 300
+  },
+  {
+    uri: '4',
+    label: 'Quinoa Buddha Bowl',
+    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80',
+    calories: 400
+  },
+  {
+    uri: '5',
+    label: 'Salmon with Vegetables',
+    image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80',
+    calories: 500
+  },
+  {
+    uri: '6',
+    label: 'Fresh Spring Rolls',
+    image: 'https://images.unsplash.com/photo-1541014741259-de529411b96a?w=800&q=80',
+    calories: 250
+  }
+];
+
 export function RecipeProvider({ children }) {
   const [state, dispatch] = useReducer(recipeReducer, initialState);
 
@@ -149,6 +188,22 @@ export function RecipeProvider({ children }) {
     }
   }, []);
 
+  const getCuratedDishes = async (count) => {
+    try {
+      const recipes = []; // Your current API call result
+      
+      if (!recipes || recipes.length === 0) {
+        console.warn('Using fallback recipes due to empty API response');
+        return FALLBACK_RECIPES;
+      }
+      
+      return recipes;
+    } catch (error) {
+      console.error('Error fetching curated dishes:', error);
+      return FALLBACK_RECIPES;
+    }
+  };
+
   const value = useMemo(() => ({
     ...state,
     fetchRecipes,
@@ -158,11 +213,8 @@ export function RecipeProvider({ children }) {
     setShowFilters: (value) => dispatch({ type: 'SET_SHOW_FILTERS', payload: value }),
     fetchLikedRecipes,
     getRandomRecipes,
-    getCuratedDishes: async (count) => {
-      const curatedRecipes = [/* ... your existing curated recipes ... */];
-      return curatedRecipes.sort(() => 0.5 - Math.random()).slice(0, count);
-    },
-  }), [state, fetchRecipes, toggleLikedRecipe, fetchLikedRecipes, getRandomRecipes]);
+    getCuratedDishes,
+  }), [state, fetchRecipes, toggleLikedRecipe, fetchLikedRecipes, getRandomRecipes, getCuratedDishes]);
 
   return (
     <RecipeContext.Provider value={value}>

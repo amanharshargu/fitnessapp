@@ -63,7 +63,7 @@ exports.getSavedRecipes = async (req, res) => {
       include: [
         {
           model: Recipe,
-          attributes: ['uri'],
+          attributes: ["uri"],
         },
       ],
     });
@@ -72,12 +72,16 @@ exports.getSavedRecipes = async (req, res) => {
       return res.json([]);
     }
 
-    const savedRecipeUris = userRecipes.map((ur) => ur.Recipe?.uri).filter(Boolean);
+    const savedRecipeUris = userRecipes
+      .map((ur) => ur.Recipe?.uri)
+      .filter(Boolean);
 
     res.json(savedRecipeUris);
   } catch (error) {
-    console.error('Error in getSavedRecipes:', error);
-    res.status(500).json({ message: "Error fetching saved recipes", error: error.message });
+    console.error("Error in getSavedRecipes:", error);
+    res
+      .status(500)
+      .json({ message: "Error fetching saved recipes", error: error.message });
   }
 };
 
@@ -96,23 +100,25 @@ exports.saveRecipe = async (req, res) => {
 
     const [recipe] = await Recipe.findOrCreate({
       where: { uri },
-      defaults: { uri }
+      defaults: { uri },
     });
 
     const [userRecipe, created] = await UserRecipe.findOrCreate({
-      where: { UserId: userId, RecipeId: recipe.id }
+      where: { UserId: userId, RecipeId: recipe.id },
     });
 
-    res.status(201).json({ 
-      message: created ? "Recipe saved successfully" : "Recipe was already saved",
-      uri: uri
+    res.status(201).json({
+      message: created
+        ? "Recipe saved successfully"
+        : "Recipe was already saved",
+      uri: uri,
     });
   } catch (error) {
     console.error("Error in saveRecipe:", error);
-    res.status(500).json({ 
-      message: "Error saving recipe", 
+    res.status(500).json({
+      message: "Error saving recipe",
       error: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
@@ -148,10 +154,10 @@ exports.deleteRecipe = async (req, res) => {
     res.json({ message: "Recipe deleted successfully" });
   } catch (error) {
     console.error("Error deleting recipe:", error);
-    res.status(500).json({ 
-      message: "Error deleting recipe", 
+    res.status(500).json({
+      message: "Error deleting recipe",
       error: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };

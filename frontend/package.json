@@ -9,6 +9,7 @@
     "chart.js": "^4.4.6",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
+    "eslint-define-config": "^2.1.0",
     "ldrs": "^1.0.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.4",
@@ -48,7 +49,14 @@
     ]
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.25.9",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "autoprefixer": "^10.4.20"
+    "@eslint/js": "^9.15.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-react": "^7.37.2",
+    "globals": "^15.12.0"
   }
 }

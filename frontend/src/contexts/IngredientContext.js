@@ -1,4 +1,7 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, {
+  createContext, useContext, useState, useCallback,
+  useMemo,
+} from 'react';
 import { useAuth } from './AuthContext';
 
 const IngredientContext = createContext();
@@ -13,7 +16,7 @@ export function IngredientProvider({ children }) {
       setLoading(true);
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         credentials: 'include',
       });
@@ -37,7 +40,7 @@ export function IngredientProvider({ children }) {
       await fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         credentials: 'include',
@@ -55,7 +58,7 @@ export function IngredientProvider({ children }) {
       await fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         credentials: 'include',
@@ -73,7 +76,7 @@ export function IngredientProvider({ children }) {
       await fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         credentials: 'include',
       });
@@ -83,16 +86,18 @@ export function IngredientProvider({ children }) {
     }
   };
 
+  const contextValue = useMemo(() => ({
+    ingredients,
+    setIngredients,
+    deleteIngredient,
+    refreshIngredients,
+    addIngredient,
+    updateIngredient,
+    loading,
+  }), [ingredients, loading]);
+
   return (
-    <IngredientContext.Provider value={{
-      ingredients,
-      setIngredients,
-      deleteIngredient,
-      refreshIngredients,
-      addIngredient,
-      updateIngredient,
-      loading,
-    }}>
+    <IngredientContext.Provider value={contextValue}>
       {children}
     </IngredientContext.Provider>
   );

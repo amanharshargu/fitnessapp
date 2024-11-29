@@ -19,7 +19,7 @@ before(async function () {
         min: 0,
         acquire: 60000,
         idle: 20000,
-      }
+      },
     });
 
     // Test connection

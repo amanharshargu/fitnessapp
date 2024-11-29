@@ -1,5 +1,8 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
-import api from "../services/api";
+import React, {
+  createContext, useContext, useState, useCallback,
+  useMemo,
+} from 'react';
+import api from '../services/api';
 
 const UserDetailsContext = createContext();
 
@@ -10,13 +13,13 @@ export function useUserDetails() {
 export function UserDetailsProvider({ children }) {
   const [userDetails, setUserDetails] = useState({});
   const [tempUserDetails, setTempUserDetails] = useState({
-    weight: "",
-    height: "",
-    age: "",
-    gender: "",
-    goal: "",
-    activityLevel: "",
-    photo: "",
+    weight: '',
+    height: '',
+    age: '',
+    gender: '',
+    goal: '',
+    activityLevel: '',
+    photo: '',
   });
 
   const updateUserDetails = useCallback((newDetails) => {
@@ -26,7 +29,7 @@ export function UserDetailsProvider({ children }) {
   const updateTempUserDetails = useCallback((newDetails) => {
     setTempUserDetails((prevDetails) => {
       const updatedDetails = { ...prevDetails, ...newDetails };
-      
+
       if ('weight' in newDetails) updatedDetails.weight = String(newDetails.weight);
       if ('height' in newDetails) updatedDetails.height = String(newDetails.height);
       if ('age' in newDetails) updatedDetails.age = String(newDetails.age);
@@ -37,7 +40,7 @@ export function UserDetailsProvider({ children }) {
 
   const fetchUserDetails = useCallback(async () => {
     try {
-      const response = await api.get("/dashboard/user-details");
+      const response = await api.get('/dashboard/user-details');
       if (response.data) {
         const formattedDetails = {
           ...response.data,
@@ -52,7 +55,7 @@ export function UserDetailsProvider({ children }) {
       }
       return null;
     } catch (error) {
-      console.error("Error fetching user details:", error);
+      console.error('Error fetching user details:', error);
       throw error;
     }
   }, []);
@@ -62,31 +65,31 @@ export function UserDetailsProvider({ children }) {
       const formData = new FormData();
       formData.append('photo', file);
 
-      const response = await api.post("/users/upload-photo", formData, {
+      const response = await api.post('/users/upload-photo', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      if (response.data && response.data.message === "Photo uploaded successfully") {
+      if (response.data && response.data.message === 'Photo uploaded successfully') {
         await fetchUserDetails();
         return true;
       }
       return false;
     } catch (error) {
-      console.error("Error uploading photo:", error);
+      console.error('Error uploading photo:', error);
       throw error;
     }
   }, [fetchUserDetails]);
 
-  const value = {
+  const value = useMemo(() => ({
     userDetails,
     updateUserDetails,
     fetchUserDetails,
     tempUserDetails,
     updateTempUserDetails,
     uploadPhoto,
-  };
+  }), []);
 
   return (
     <UserDetailsContext.Provider value={value}>

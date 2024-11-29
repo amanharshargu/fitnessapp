@@ -10,12 +10,12 @@ router.post("/logout", authController.logout);
 router.get("/check", authMiddleware, authController.checkAuth);
 router.get(
   "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", { scope: ["profile", "email"] }),
 );
 router.get(
   "/google/callback",
   passport.authenticate("google", { session: false }),
-  authController.googleAuthCallback
+  authController.googleAuthCallback,
 );
 router.post("/forgot-password", authController.forgotPassword);
 router.post("/reset-password", authController.resetPassword);

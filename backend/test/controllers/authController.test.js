@@ -13,10 +13,10 @@ describe("Auth Controller", () => {
       await User.destroy({
         where: {},
         force: true,
-        truncate: { cascade: true }
+        truncate: { cascade: true },
       });
     } catch (error) {
-      console.error('Error cleaning up User table:', error);
+      console.error("Error cleaning up User table:", error);
       throw error;
     }
   });
@@ -32,12 +32,12 @@ describe("Auth Controller", () => {
         age: 25,
         gender: "male",
         goal: "maintain_weight",
-        activityLevel: "moderatelyActive"
+        activityLevel: "moderatelyActive",
       };
 
       try {
         const existingUser = await User.findOne({
-          where: { email: testUser.email }
+          where: { email: testUser.email },
         });
         expect(existingUser).to.be.null;
 
@@ -53,13 +53,16 @@ describe("Auth Controller", () => {
         expect(res.body.user).to.have.property("email", testUser.email);
 
         const user = await User.findOne({
-          where: { email: testUser.email }
+          where: { email: testUser.email },
         });
         expect(user).to.not.be.null;
         expect(user.email).to.equal(testUser.email);
         expect(user.username).to.equal(testUser.username);
 
-        const validPassword = await bcrypt.compare(testUser.password, user.password);
+        const validPassword = await bcrypt.compare(
+          testUser.password,
+          user.password,
+        );
         expect(validPassword).to.be.true;
       } catch (error) {
         console.error("Test Error Details:", {
@@ -68,9 +71,9 @@ describe("Auth Controller", () => {
           response: error.response
             ? {
                 status: error.response.status,
-                body: error.response.body
+                body: error.response.body,
               }
-            : null
+            : null,
         });
         throw error;
       }
@@ -80,22 +83,19 @@ describe("Auth Controller", () => {
       await User.create({
         username: "existing",
         email: "existing@example.com",
-        password: await bcrypt.hash("Password123!", 10)
+        password: await bcrypt.hash("Password123!", 10),
       });
 
-      const res = await chai
-        .request(app)
-        .post("/api/auth/register")
-        .send({
-          username: "newuser",
-          email: "existing@example.com",
-          password: "Password123!"
-        });
+      const res = await chai.request(app).post("/api/auth/register").send({
+        username: "newuser",
+        email: "existing@example.com",
+        password: "Password123!",
+      });
 
       expect(res).to.have.status(400);
       expect(res.body).to.have.property(
         "message",
-        "An account with this email already exists"
+        "An account with this email already exists",
       );
     });
 
@@ -103,35 +103,29 @@ describe("Auth Controller", () => {
       await User.create({
         username: "testuser",
         email: "test1@example.com",
-        password: await bcrypt.hash("Password123!", 10)
+        password: await bcrypt.hash("Password123!", 10),
       });
 
-      const res = await chai
-        .request(app)
-        .post("/api/auth/register")
-        .send({
-          username: "testuser",
-          email: "test2@example.com",
-          password: "Password123!"
-        });
+      const res = await chai.request(app).post("/api/auth/register").send({
+        username: "testuser",
+        email: "test2@example.com",
+        password: "Password123!",
+      });
 
       expect(res).to.have.status(400);
       expect(res.body).to.have.property("message", "Username taken");
     });
 
     it("should return 400 if password format is invalid", async () => {
-      const res = await chai
-        .request(app)
-        .post("/api/auth/register")
-        .send({
-          username: "newuser",
-          email: "new@example.com",
-          password: "weak"
-        });
+      const res = await chai.request(app).post("/api/auth/register").send({
+        username: "newuser",
+        email: "new@example.com",
+        password: "weak",
+      });
 
       expect(res).to.have.status(400);
       expect(res.body.message).to.equal(
-        "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter"
+        "Password must be at least 8 characters long and contain at least one uppercase and one lowercase letter",
       );
     });
   });

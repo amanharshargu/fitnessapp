@@ -23,7 +23,7 @@ passport.use(
             googleId: profile.id,
             email: profile.emails[0].value,
             username: profile.displayName,
-            photo: profile.photos[0].value, 
+            photo: profile.photos[0].value,
           });
           isNewUser = true;
         } else {
@@ -40,8 +40,8 @@ passport.use(
       } catch (error) {
         return done(error, null);
       }
-    }
-  )
+    },
+  ),
 );
 
 module.exports = passport;

@@ -8,8 +8,17 @@ const { Op } = require("sequelize");
 
 const register = async (req, res) => {
   try {
-    const { username, email, password, weight, height, age, gender, goal, activityLevel } =
-      req.body;
+    const {
+      username,
+      email,
+      password,
+      weight,
+      height,
+      age,
+      gender,
+      goal,
+      activityLevel,
+    } = req.body;
 
     const existingUserEmail = await User.findOne({ where: { email } });
     if (existingUserEmail) {
@@ -53,7 +62,7 @@ const register = async (req, res) => {
         age,
         gender,
         goal,
-        activityLevel
+        activityLevel,
       );
     }
 

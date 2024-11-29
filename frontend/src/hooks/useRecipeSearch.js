@@ -1,8 +1,10 @@
-import { useState, useCallback } from "react";
-import { useRecipes } from "../contexts/RecipeContext";
+import { useState, useCallback } from 'react';
+import { useRecipes } from '../contexts/RecipeContext';
 
-export function useRecipeSearch() {
-  const { recipes, isLoading, fetchRecipes, searchTerm } = useRecipes();
+export default function useRecipeSearch() {
+  const {
+    recipes, isLoading, fetchRecipes, searchTerm,
+  } = useRecipes();
   const [filters, setFilters] = useState({
     diet: [],
     health: [],

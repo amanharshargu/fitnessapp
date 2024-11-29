@@ -1,16 +1,16 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable("Users", {
       // Define User table schema
     });
 
-    await queryInterface.createTable('Ingredients', {
+    await queryInterface.createTable("Ingredients", {
       // Define Ingredient table schema
     });
 
-    await queryInterface.createTable('Recipes', {
+    await queryInterface.createTable("Recipes", {
       // Define Recipe table schema
     });
 
@@ -18,9 +18,9 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Recipes');
-    await queryInterface.dropTable('Ingredients');
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable("Recipes");
+    await queryInterface.dropTable("Ingredients");
+    await queryInterface.dropTable("Users");
     // Drop other tables in reverse order
-  }
+  },
 };

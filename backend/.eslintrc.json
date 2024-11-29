@@ -1,0 +1,53 @@
+{
+    "env": {
+      "node": true,
+      "es2021": true,
+      "jest/globals": true,
+      "mocha": true
+    },
+    "plugins": [
+      "jest",
+      "mocha"
+    ],
+    "rules": {
+      // Jest-related rules disabled
+      "jest/no-disabled-tests": "off",
+      "jest/no-focused-tests": "off",
+      "jest/no-identical-title": "off",
+      "jest/prefer-to-have-length": "off",
+      "jest/valid-expect": "off",
+      
+      // Mocha-related rules disabled
+      "mocha/no-exclusive-tests": "off",
+      "mocha/no-skipped-tests": "off",
+      
+      // Disable chai-related rule for unused expressions
+      "no-unused-expressions": "off",
+      
+      // Other rules you might want to disable
+      "no-console": "off"
+    },
+    "overrides": [
+      {
+        "files": [
+          "*.test.js",
+          "*.spec.js",
+          "tests/**/*",
+          "__tests__/**/*"
+        ],
+        "rules": {
+          "jest/no-disabled-tests": "off",
+          "jest/no-focused-tests": "off",
+          "jest/no-identical-title": "off",
+          "jest/prefer-to-have-length": "off",
+          "jest/valid-expect": "off",
+          
+          "mocha/no-exclusive-tests": "off",
+          "mocha/no-skipped-tests": "off",
+          
+          "no-unused-expressions": "off"
+        }
+      }
+    ]
+  }
+  

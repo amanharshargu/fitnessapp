@@ -273,19 +273,19 @@ describe("Dashboard Controller", () => {
         // Delete related records first
         await Water.destroy({
           where: { userId: testUser.id },
-          force: true
+          force: true,
         });
-        
+
         await EatenDish.destroy({
           where: { userId: testUser.id },
-          force: true
+          force: true,
         });
 
         // Then delete the user
         await testUser.destroy({ force: true });
       }
     } catch (error) {
-      console.error('Error in test cleanup:', error);
+      console.error("Error in test cleanup:", error);
     }
   });
 });

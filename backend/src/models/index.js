@@ -15,7 +15,7 @@ if (!dbUrl) {
     `Database URL not found for environment: ${env}\n` +
       `Make sure ${
         env === "test" ? "TEST_DB_URL" : "DB_URL"
-      } is set in your .env file`
+      } is set in your .env file`,
   );
 }
 
@@ -23,12 +23,15 @@ console.log(`Connecting to ${env} database...`);
 
 const sequelize = new Sequelize(dbUrl, {
   dialect: "postgres",
-  dialectOptions: env === "test" ? {} : {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
-  },
+  dialectOptions:
+    env === "test"
+      ? {}
+      : {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false,
+          },
+        },
   logging: env === "test" ? false : console.log,
   define: {
     timestamps: true,
@@ -42,12 +45,12 @@ const modelsDir = path.join(__dirname);
 fs.readdirSync(modelsDir)
   .filter(
     (file) =>
-      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js"
+      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js",
   )
   .forEach((file) => {
     const model = require(path.join(modelsDir, file))(
       sequelize,
-      Sequelize.DataTypes
+      Sequelize.DataTypes,
     );
     db[model.name] = model;
     console.log(`Loaded model: ${model.name}`);
@@ -66,7 +69,7 @@ sequelize
   .authenticate()
   .then(() => {
     console.log(
-      `Connection to ${env} database has been established successfully.`
+      `Connection to ${env} database has been established successfully.`,
     );
   })
   .catch((err) => {
@@ -79,10 +82,13 @@ db.Sequelize = Sequelize;
 module.exports = db;
 
 // After loading and associating models
-if (env !== 'production') {
-  sequelize.sync({ alter: true }).then(() => {
-    console.log('Database synced');
-  }).catch(err => {
-    console.error('Error syncing database:', err);
-  });
+if (env !== "production") {
+  sequelize
+    .sync({ alter: true })
+    .then(() => {
+      console.log("Database synced");
+    })
+    .catch((err) => {
+      console.error("Error syncing database:", err);
+    });
 }

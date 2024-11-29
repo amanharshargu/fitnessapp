@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import RecipeCard from "./RecipeCard";
-import { useRecipeSearch } from "../../hooks/useRecipeSearch";
+import useRecipeSearch  from "../../hooks/useRecipeSearch";
 import { useRecipes } from "../../contexts/RecipeContext";
 import "../../styles/Recipes.css";
 

@@ -1,8 +1,8 @@
 const { User, EatenDish, Water } = require("../models");
 const { calculateCalories } = require("../utils/calorieCalculator");
 const { Op } = require("sequelize");
-const moment = require('moment');
-const sequelize = require('../models').sequelize;
+const moment = require("moment");
+const sequelize = require("../models").sequelize;
 
 exports.getUserDetails = async (req, res) => {
   try {
@@ -60,7 +60,7 @@ exports.getCalorieGoal = async (req, res) => {
       age,
       gender,
       goal,
-      activityLevel
+      activityLevel,
     );
 
     res.json({ dailyCalories });
@@ -90,7 +90,7 @@ exports.addEatenDish = async (req, res) => {
     console.error("Error adding eaten dish:", error);
     res.status(500).json({
       message: "Error adding eaten dish",
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -117,7 +117,7 @@ exports.editEatenDish = async (req, res) => {
     console.error("Error editing eaten dish:", error);
     res.status(500).json({
       message: "Error editing eaten dish",
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -129,12 +129,12 @@ exports.getEatenDishes = async (req, res) => {
     today.setHours(0, 0, 0, 0);
 
     const eatenDishes = await EatenDish.findAll({
-      where: { 
+      where: {
         userId,
         eatenAt: {
-          [Op.gte]: today
-        }
-      }
+          [Op.gte]: today,
+        },
+      },
     });
 
     res.json(eatenDishes);
@@ -142,7 +142,7 @@ exports.getEatenDishes = async (req, res) => {
     console.error("Error fetching eaten dishes:", error);
     res.status(500).json({
       message: "Error fetching eaten dishes",
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -167,7 +167,7 @@ exports.deleteEatenDish = async (req, res) => {
     console.error("Error deleting eaten dish:", error);
     res.status(500).json({
       message: "Error deleting eaten dish",
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -175,8 +175,8 @@ exports.deleteEatenDish = async (req, res) => {
 exports.getWeeklyCalorieData = async (req, res) => {
   try {
     const userId = req.user.id;
-    const today = moment().endOf('day');
-    const startOfWeek = moment().startOf('week');
+    const today = moment().endOf("day");
+    const startOfWeek = moment().startOf("week");
 
     const user = await User.findByPk(userId, {
       attributes: [
@@ -200,32 +200,34 @@ exports.getWeeklyCalorieData = async (req, res) => {
       age,
       gender,
       goal,
-      activityLevel
+      activityLevel,
     );
 
     const weeklyData = await EatenDish.findAll({
       where: {
         userId,
         eatenAt: {
-          [Op.between]: [startOfWeek.toDate(), today.toDate()]
-        }
+          [Op.between]: [startOfWeek.toDate(), today.toDate()],
+        },
       },
       attributes: [
-        [sequelize.fn('date', sequelize.col('eatenAt')), 'date'],
-        [sequelize.fn('sum', sequelize.col('calories')), 'totalCalories']
+        [sequelize.fn("date", sequelize.col("eatenAt")), "date"],
+        [sequelize.fn("sum", sequelize.col("calories")), "totalCalories"],
       ],
-      group: [sequelize.fn('date', sequelize.col('eatenAt'))],
-      order: [[sequelize.fn('date', sequelize.col('eatenAt')), 'ASC']]
+      group: [sequelize.fn("date", sequelize.col("eatenAt"))],
+      order: [[sequelize.fn("date", sequelize.col("eatenAt")), "ASC"]],
     });
 
     const formattedWeeklyData = Array.from({ length: 7 }, (_, i) => {
-      const date = moment(startOfWeek).add(i, 'days');
-      const dayData = weeklyData.find(d => moment(d.getDataValue('date')).isSame(date, 'day'));
+      const date = moment(startOfWeek).add(i, "days");
+      const dayData = weeklyData.find((d) =>
+        moment(d.getDataValue("date")).isSame(date, "day"),
+      );
       return {
-        day: date.format('ddd'),
-        date: date.format('YYYY-MM-DD'),
-        calories: dayData ? parseInt(dayData.getDataValue('totalCalories')) : 0,
-        goal: dailyCalorieGoal
+        day: date.format("ddd"),
+        date: date.format("YYYY-MM-DD"),
+        calories: dayData ? parseInt(dayData.getDataValue("totalCalories")) : 0,
+        goal: dailyCalorieGoal,
       };
     });
 
@@ -234,7 +236,7 @@ exports.getWeeklyCalorieData = async (req, res) => {
     console.error("Error fetching weekly calorie data:", error);
     res.status(500).json({
       message: "Error fetching weekly calorie data",
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -242,22 +244,25 @@ exports.getWeeklyCalorieData = async (req, res) => {
 exports.getWaterIntake = async (req, res) => {
   try {
     const userId = req.user.id;
-    const today = moment().startOf('day');
+    const today = moment().startOf("day");
 
     const waterIntakes = await Water.findAll({
       where: {
         userId,
-        date: today.format('YYYY-MM-DD')
-      }
+        date: today.format("YYYY-MM-DD"),
+      },
     });
 
-    const totalIntake = waterIntakes.reduce((sum, record) => sum + record.amount, 0);
+    const totalIntake = waterIntakes.reduce(
+      (sum, record) => sum + record.amount,
+      0,
+    );
     res.json({ intake: totalIntake });
   } catch (error) {
-    console.error('Error fetching water intake:', error);
+    console.error("Error fetching water intake:", error);
     res.status(500).json({
-      message: 'Error fetching water intake',
-      error: error.message
+      message: "Error fetching water intake",
+      error: error.message,
     });
   }
 };
@@ -268,19 +273,19 @@ exports.addWaterIntake = async (req, res) => {
     const { amount } = req.body;
 
     if (!amount || amount <= 0) {
-      return res.status(400).json({ message: 'Invalid amount' });
+      return res.status(400).json({ message: "Invalid amount" });
     }
 
-    const today = moment().format('YYYY-MM-DD');
+    const today = moment().format("YYYY-MM-DD");
 
     const [waterIntake, created] = await Water.findOrCreate({
       where: {
         userId,
-        date: today
+        date: today,
       },
       defaults: {
-        amount: 0
-      }
+        amount: 0,
+      },
     });
 
     const updatedAmount = waterIntake.amount + amount;
@@ -288,10 +293,10 @@ exports.addWaterIntake = async (req, res) => {
 
     res.status(201).json({ intake: updatedAmount });
   } catch (error) {
-    console.error('Error adding water intake:', error);
+    console.error("Error adding water intake:", error);
     res.status(500).json({
-      message: 'Error adding water intake',
-      error: error.message
+      message: "Error adding water intake",
+      error: error.message,
     });
   }
 };

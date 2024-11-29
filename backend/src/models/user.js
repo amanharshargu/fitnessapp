@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
           "lightlyActive",
           "moderatelyActive",
           "veryActive",
-          "extraActive"
+          "extraActive",
         ),
         allowNull: true,
       },
@@ -80,8 +80,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: true,
         get() {
-          const rawValue = this.getDataValue('photo');
-          if (rawValue && rawValue.startsWith('http')) {
+          const rawValue = this.getDataValue("photo");
+          if (rawValue && rawValue.startsWith("http")) {
             return rawValue;
           } else if (rawValue) {
             return `data:image/png;base64,${rawValue}`;
@@ -89,26 +89,26 @@ module.exports = (sequelize, DataTypes) => {
           return null;
         },
         set(value) {
-          if (value && typeof value === 'object' && value.buffer) {
-            this.setDataValue('photo', value.buffer.toString('base64'));
+          if (value && typeof value === "object" && value.buffer) {
+            this.setDataValue("photo", value.buffer.toString("base64"));
           } else {
-            this.setDataValue('photo', value);
+            this.setDataValue("photo", value);
           }
-        }
+        },
       },
     },
     {
       tableName: "User",
-    }
+    },
   );
 
   User.associate = (models) => {
     User.hasMany(models.Ingredient);
-    User.belongsToMany(models.Recipe, { 
+    User.belongsToMany(models.Recipe, {
       through: models.UserRecipe,
-      foreignKey: 'UserId'
+      foreignKey: "UserId",
     });
-    User.hasMany(models.EatenDish, { foreignKey: 'userId' });
+    User.hasMany(models.EatenDish, { foreignKey: "userId" });
   };
 
   return User;

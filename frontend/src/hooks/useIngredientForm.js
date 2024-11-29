@@ -1,6 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
-import { useIngredients } from "../contexts/IngredientContext";
-import { useAuth } from "../contexts/AuthContext";
+import { useState, useMemo } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 
 const initialState = {
   name: '',
@@ -12,7 +11,16 @@ const initialState = {
   carbs: 0,
   fat: 0,
   servingSize: 100,
-  servingUnit: 'g'
+  servingUnit: 'g',
+};
+
+export const convertToBaseUnit = (quantity, unit) => {
+  const lowerUnit = unit.toLowerCase();
+  if (lowerUnit === 'kg') return quantity * 1000;
+  if (lowerUnit === 'g') return quantity;
+  if (lowerUnit === 'l') return quantity * 1000;
+  if (lowerUnit === 'ml') return quantity;
+  return quantity;
 };
 
 export const useIngredientForm = (editingIngredient = null) => {
@@ -21,9 +29,9 @@ export const useIngredientForm = (editingIngredient = null) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setIngredient(prev => ({
+    setIngredient((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -34,14 +42,14 @@ export const useIngredientForm = (editingIngredient = null) => {
       const url = editingIngredient
         ? `${baseUrl}/ingredients/${editingIngredient.id}`
         : `${baseUrl}/ingredients`;
-      
+
       const method = editingIngredient ? 'PUT' : 'POST';
-      
+
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(ingredientData),
         credentials: 'include',
@@ -61,6 +69,21 @@ export const useIngredientForm = (editingIngredient = null) => {
   return { ingredient, handleInputChange, handleSubmit };
 };
 
+export const formatQuantity = (quantity, unit) => {
+  const numericQuantity = parseFloat(quantity);
+  if (Number.isNaN(numericQuantity)) return '';
+
+  if (unit === 'kg' || unit === 'g') {
+    if (numericQuantity >= 1000 && unit === 'g') {
+      return `${(numericQuantity / 1000).toFixed(2)} kg`;
+    } if (numericQuantity < 1 && unit === 'kg') {
+      return `${(numericQuantity * 1000).toFixed(0)} g`;
+    }
+  }
+
+  return `${numericQuantity} ${unit}`;
+};
+
 export function useExpiringIngredients(ingredients) {
   const today = new Date();
   const sevenDaysFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -77,10 +100,9 @@ export function useExpiringIngredients(ingredients) {
 
     if (daysDiff < 1) {
       const hoursDiff = Math.ceil(timeDiff / (1000 * 3600));
-      return `Expires in ${hoursDiff} hour${hoursDiff !== 1 ? "s" : ""}`;
-    } else {
-      return `Expires in ${daysDiff} day${daysDiff !== 1 ? "s" : ""}`;
+      return `Expires in ${hoursDiff} hour${hoursDiff !== 1 ? 's' : ''}`;
     }
+    return `Expires in ${daysDiff} day${daysDiff !== 1 ? 's' : ''}`;
   };
 
   return { expiringIngredients, formatExpirationDate };
@@ -90,32 +112,33 @@ export function useIngredientList(ingredients) {
   const [expandedItems, setExpandedItems] = useState({});
 
   const toggleExpand = (name) => {
-    setExpandedItems(prev => ({ ...prev, [name]: !prev[name] }));
+    setExpandedItems((prev) => ({ ...prev, [name]: !prev[name] }));
   };
 
-  const groupedIngredients = useMemo(() => {
-    return ingredients.reduce((acc, ingredient) => {
-      if (!acc[ingredient.name]) {
-        acc[ingredient.name] = [];
-      }
-      acc[ingredient.name].push(ingredient);
-      return acc;
-    }, {});
-  }, [ingredients]);
+  const groupedIngredients = useMemo(() => ingredients.reduce((acc, ingredient) => {
+    if (!acc[ingredient.name]) {
+      acc[ingredient.name] = [];
+    }
+    acc[ingredient.name].push(ingredient);
+    return acc;
+  }, {}), [ingredients]);
 
-  const processedIngredients = useMemo(() => {
-    return Object.entries(groupedIngredients).map(([name, items]) => {
-      const totalQuantity = items.reduce((sum, item) => sum + convertToBaseUnit(item.quantity, item.unit), 0);
+  const processedIngredients = useMemo(() => Object
+    .entries(groupedIngredients).map(([name, items]) => {
+      const totalQuantity = items
+        .reduce(
+          (sum, item) => sum + convertToBaseUnit(item.quantity, item.unit),
+          0,
+        );
       const baseUnit = items[0].unit;
 
       return {
         name,
         items,
         totalQuantity: formatQuantity(totalQuantity, baseUnit),
-        isExpanded: expandedItems[name] || false
+        isExpanded: expandedItems[name] || false,
       };
-    });
-  }, [groupedIngredients, expandedItems]);
+    }), [groupedIngredients, expandedItems]);
 
   return {
     processedIngredients,
@@ -126,9 +149,9 @@ export function useIngredientList(ingredients) {
 export function aggregateIngredients(ingredients, options = {}) {
   const {
     keyExtractor = (ingredient) => ingredient.name.toLowerCase(),
-    quantityConverter = (quantity, unit) => quantity,
+    quantityConverter = (quantity) => quantity,
     unitNormalizer = (unit) => unit,
-    sorter = null
+    sorter = null,
   } = options;
 
   const aggregated = ingredients.reduce((acc, ingredient) => {
@@ -136,20 +159,20 @@ export function aggregateIngredients(ingredients, options = {}) {
     if (!acc[key]) {
       acc[key] = {
         name: ingredient.name,
-        items: []
+        items: [],
       };
     }
     acc[key].items.push({
       id: ingredient.id,
       quantity: quantityConverter(parseFloat(ingredient.quantity), ingredient.unit),
       unit: unitNormalizer(ingredient.unit),
-      expirationDate: ingredient.expirationDate
+      expirationDate: ingredient.expirationDate,
     });
     return acc;
   }, {});
 
   if (sorter) {
-    Object.values(aggregated).forEach(group => {
+    Object.values(aggregated).forEach((group) => {
       group.items.sort(sorter);
     });
   }
@@ -157,30 +180,4 @@ export function aggregateIngredients(ingredients, options = {}) {
   return aggregated;
 }
 
-export const isCountBasedUnit = (unit) => {
-  return ['count', 'piece', 'pcs', ''].includes(unit.toLowerCase());
-};
-
-export const convertToBaseUnit = (quantity, unit) => {
-  const lowerUnit = unit.toLowerCase();
-  if (lowerUnit === 'kg') return quantity * 1000;
-  if (lowerUnit === 'g') return quantity;
-  if (lowerUnit === 'l') return quantity * 1000;
-  if (lowerUnit === 'ml') return quantity;
-  return quantity;
-};
-
-export const formatQuantity = (quantity, unit) => {
-  const numericQuantity = parseFloat(quantity);
-  if (isNaN(numericQuantity)) return '';
-
-  if (unit === 'kg' || unit === 'g') {
-    if (numericQuantity >= 1000 && unit === 'g') {
-      return `${(numericQuantity / 1000).toFixed(2)} kg`;
-    } else if (numericQuantity < 1 && unit === 'kg') {
-      return `${(numericQuantity * 1000).toFixed(0)} g`;
-    }
-  }
-
-  return `${numericQuantity} ${unit}`;
-};
+export const isCountBasedUnit = (unit) => ['count', 'piece', 'pcs', ''].includes(unit.toLowerCase());

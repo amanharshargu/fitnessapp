@@ -1,47 +1,47 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('water_intake', {
+    await queryInterface.createTable("water_intake", {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
-        primaryKey: true
+        primaryKey: true,
       },
       userId: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'User',
-          key: 'id'
+          model: "User",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       amount: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       date: {
         type: Sequelize.DATEONLY,
         allowNull: false,
-        defaultValue: Sequelize.fn('NOW')
+        defaultValue: Sequelize.fn("NOW"),
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
 
     // Add index for faster queries
-    await queryInterface.addIndex('water_intake', ['userId', 'date']);
+    await queryInterface.addIndex("water_intake", ["userId", "date"]);
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('water_intake');
-  }
-}; 
+    await queryInterface.dropTable("water_intake");
+  },
+};

@@ -29,7 +29,7 @@ module.exports = (sequelize) => {
     },
     {
       tableName: "EatenDishes",
-    }
+    },
   );
 
   EatenDish.associate = (models) => {

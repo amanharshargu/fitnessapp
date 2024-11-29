@@ -4,90 +4,88 @@ import React, {
   useContext,
   useCallback,
   useMemo,
-} from "react";
-import axios from "axios";
-import api from "../services/api";
+} from 'react';
+import axios from 'axios';
+import api from '../services/api';
 
 const RecipeContext = createContext();
 
 export const useRecipes = () => {
   const context = useContext(RecipeContext);
   if (!context) {
-    throw new Error("useRecipes must be used within a RecipeProvider");
+    throw new Error('useRecipes must be used within a RecipeProvider');
   }
   return context;
 };
 
-export const RecipeProvider = ({ children }) => {
+export function RecipeProvider({ children }) {
   const [recipes, setRecipes] = useState([]);
   const [likedRecipes, setLikedRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+
+  const fetchRecipeDetails = async (uri) => {
+    const params = new URLSearchParams({
+      type: 'public',
+      app_id: process.env.REACT_APP_EDAMAM_APP_ID,
+      app_key: process.env.REACT_APP_EDAMAM_APP_KEY,
+      uri,
+    });
+
+    const response = await axios.get(
+      `https://api.edamam.com/api/recipes/v2/by-uri?${params}`,
+    );
+    return response.data.hits[0].recipe;
+  };
 
   const fetchLikedRecipes = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await api.get("/recipes/saved");
+      const response = await api.get('/recipes/saved');
       const uris = response.data;
       const detailedRecipes = await Promise.all(
-        uris.map((uri) => fetchRecipeDetails(uri))
+        uris.map((uri) => fetchRecipeDetails(uri)),
       );
       setLikedRecipes(detailedRecipes);
     } catch (error) {
-      console.error("Error fetching liked recipes:", error);
+      console.error('Error fetching liked recipes:', error);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  const fetchRecipeDetails = async (uri) => {
-    const params = new URLSearchParams({
-      type: "public",
-      app_id: process.env.REACT_APP_EDAMAM_APP_ID,
-      app_key: process.env.REACT_APP_EDAMAM_APP_KEY,
-      uri: uri,
-    });
-
-    const response = await axios.get(
-      `https://api.edamam.com/api/recipes/v2/by-uri?${params}`
-    );
-    return response.data.hits[0].recipe;
-  };
-
   const toggleLikedRecipe = useCallback(
     async (recipe) => {
       try {
         const isCurrentlyLiked = likedRecipes.some(
-          (likedRecipe) => likedRecipe.uri === recipe.uri
+          (likedRecipe) => likedRecipe.uri === recipe.uri,
         );
         if (isCurrentlyLiked) {
           await api.delete(`/recipes/save/${encodeURIComponent(recipe.uri)}`);
-          setLikedRecipes((prevLikedRecipes) =>
-            prevLikedRecipes.filter(
-              (likedRecipe) => likedRecipe.uri !== recipe.uri
-            )
-          );
+          setLikedRecipes((prevLikedRecipes) => prevLikedRecipes.filter(
+            (likedRecipe) => likedRecipe.uri !== recipe.uri,
+          ));
         } else {
           await api.post(
             `/recipes/save/${encodeURIComponent(recipe.uri)}`,
-            recipe
+            recipe,
           );
           setLikedRecipes((prevLikedRecipes) => [...prevLikedRecipes, recipe]);
         }
       } catch (error) {
-        console.error("Error toggling liked recipe:", error);
+        console.error('Error toggling liked recipe:', error);
       }
     },
-    [likedRecipes]
+    [likedRecipes],
   );
 
   const fetchRecipes = useCallback(async (term, filters = {}) => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams({
-        type: "public",
+        type: 'public',
         q: term,
         app_id: process.env.REACT_APP_EDAMAM_APP_ID,
         app_key: process.env.REACT_APP_EDAMAM_APP_KEY,
@@ -102,12 +100,12 @@ export const RecipeProvider = ({ children }) => {
       });
 
       const response = await axios.get(
-        `https://api.edamam.com/api/recipes/v2?${params.toString()}`
+        `https://api.edamam.com/api/recipes/v2?${params.toString()}`,
       );
       setRecipes(response.data.hits.map((hit) => hit.recipe));
       setHasSearched(true);
     } catch (error) {
-      console.error("Error fetching recipes:", error);
+      console.error('Error fetching recipes:', error);
     } finally {
       setIsLoading(false);
     }
@@ -126,23 +124,23 @@ export const RecipeProvider = ({ children }) => {
         const ingredientRange = calculateIngredientRange();
 
         const response = await axios.get(
-          "https://api.edamam.com/api/recipes/v2",
+          'https://api.edamam.com/api/recipes/v2',
           {
             params: {
-              type: "any",
+              type: 'any',
               app_id: process.env.REACT_APP_EDAMAM_APP_ID,
               app_key: process.env.REACT_APP_EDAMAM_APP_KEY,
               random: true,
-              q: "",
+              q: '',
               ingr: ingredientRange,
             },
-          }
+          },
         );
 
         if (
-          response.data &&
-          response.data.hits &&
-          response.data.hits.length > 0
+          response.data
+          && response.data.hits
+          && response.data.hits.length > 0
         ) {
           const randomRecipes = response.data.hits
             .slice(0, count)
@@ -153,25 +151,25 @@ export const RecipeProvider = ({ children }) => {
         const numIngredients = Math.floor(Math.random() * 2) + 2; // 2 or 3
         const shuffled = ingredients.sort(() => 0.5 - Math.random());
         const selectedIngredients = shuffled.slice(0, numIngredients);
-        const ingredientQuery = selectedIngredients.join(" ");
+        const ingredientQuery = selectedIngredients.join(' ');
 
         const response = await axios.get(
-          "https://api.edamam.com/api/recipes/v2",
+          'https://api.edamam.com/api/recipes/v2',
           {
             params: {
-              type: "any",
+              type: 'any',
               app_id: process.env.REACT_APP_EDAMAM_APP_ID,
               app_key: process.env.REACT_APP_EDAMAM_APP_KEY,
               q: ingredientQuery,
               random: true,
             },
-          }
+          },
         );
 
         if (
-          response.data &&
-          response.data.hits &&
-          response.data.hits.length > 0
+          response.data
+          && response.data.hits
+          && response.data.hits.length > 0
         ) {
           const randomRecipes = response.data.hits
             .slice(0, count)
@@ -180,10 +178,10 @@ export const RecipeProvider = ({ children }) => {
         }
       }
 
-      return getFallbackRecipes(count);
+      return [];
     } catch (error) {
-      console.error("Error fetching random recipes:", error);
-      return getFallbackRecipes(count);
+      console.error('Error fetching random recipes:', error);
+      return [];
     } finally {
       setIsLoading(false);
     }
@@ -192,84 +190,84 @@ export const RecipeProvider = ({ children }) => {
   const getCuratedDishes = useCallback(async (count) => {
     const curatedRecipes = [
       {
-        uri: "recipe_1",
-        label: "Mediterranean Buddha Bowl",
+        uri: 'recipe_1',
+        label: 'Mediterranean Buddha Bowl',
         image:
-          "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800",
+          'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800',
         calories: 450,
-        url: "https://unsplash.com/photos/buddha-bowl",
+        url: 'https://unsplash.com/photos/buddha-bowl',
       },
       {
-        uri: "recipe_2",
-        label: "Grilled Salmon with Asparagus",
+        uri: 'recipe_2',
+        label: 'Grilled Salmon with Asparagus',
         image:
-          "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800",
+          'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800',
         calories: 380,
-        url: "https://unsplash.com/photos/grilled-salmon",
+        url: 'https://unsplash.com/photos/grilled-salmon',
       },
       {
-        uri: "recipe_3",
-        label: "Colorful Quinoa Salad",
+        uri: 'recipe_3',
+        label: 'Colorful Quinoa Salad',
         image:
-          "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=800",
+          'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=800',
         calories: 320,
-        url: "https://unsplash.com/photos/quinoa-salad",
+        url: 'https://unsplash.com/photos/quinoa-salad',
       },
       {
-        uri: "recipe_4",
-        label: "Avocado Toast with Eggs",
+        uri: 'recipe_4',
+        label: 'Avocado Toast with Eggs',
         image:
-          "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800",
+          'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800',
         calories: 280,
-        url: "https://unsplash.com/photos/avocado-toast",
+        url: 'https://unsplash.com/photos/avocado-toast',
       },
       {
-        uri: "recipe_5",
-        label: "Berry Smoothie Bowl",
+        uri: 'recipe_5',
+        label: 'Berry Smoothie Bowl',
         image:
-          "https://images.unsplash.com/photo-1494597564530-871f2b93ac55?w=800",
+          'https://images.unsplash.com/photo-1494597564530-871f2b93ac55?w=800',
         calories: 290,
-        url: "https://unsplash.com/photos/smoothie-bowl",
+        url: 'https://unsplash.com/photos/smoothie-bowl',
       },
       {
-        uri: "recipe_6",
-        label: "Grilled Chicken & Vegetables",
+        uri: 'recipe_6',
+        label: 'Grilled Chicken & Vegetables',
         image:
-          "https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=800",
+          'https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=800',
         calories: 410,
-        url: "https://unsplash.com/photos/grilled-chicken",
+        url: 'https://unsplash.com/photos/grilled-chicken',
       },
       {
-        uri: "recipe_7",
-        label: "Fresh Poke Bowl",
+        uri: 'recipe_7',
+        label: 'Fresh Poke Bowl',
         image:
-          "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800",
+          'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800',
         calories: 440,
-        url: "https://unsplash.com/photos/poke-bowl",
+        url: 'https://unsplash.com/photos/poke-bowl',
       },
       {
-        uri: "recipe_8",
-        label: "Mediterranean Mezze Platter",
+        uri: 'recipe_8',
+        label: 'Mediterranean Mezze Platter',
         image:
-          "https://images.unsplash.com/photo-1544510808-91bcbee1df55?w=800",
+          'https://images.unsplash.com/photo-1544510808-91bcbee1df55?w=800',
         calories: 520,
-        url: "https://unsplash.com/photos/mezze-platter",
+        url: 'https://unsplash.com/photos/mezze-platter',
       },
       {
-        uri: "recipe_9",
-        label: "Green Power Salad",
+        uri: 'recipe_9',
+        label: 'Green Power Salad',
         image:
-          "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800",
+          'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800',
         calories: 280,
-        url: "https://unsplash.com/photos/power-salad",
+        url: 'https://unsplash.com/photos/power-salad',
       },
       {
-        uri: "recipe_10",
-        label: "Roasted Sweet Potato Bowl",
+        uri: 'recipe_10',
+        label: 'Roasted Sweet Potato Bowl',
         image:
-          "https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?w=800",
+          'https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?w=800',
         calories: 390,
-        url: "https://unsplash.com/photos/sweet-potato-bowl",
+        url: 'https://unsplash.com/photos/sweet-potato-bowl',
       },
     ];
 
@@ -307,10 +305,10 @@ export const RecipeProvider = ({ children }) => {
       fetchLikedRecipes,
       getRandomRecipes,
       getCuratedDishes,
-    ]
+    ],
   );
 
   return (
     <RecipeContext.Provider value={value}>{children}</RecipeContext.Provider>
   );
-};
+}

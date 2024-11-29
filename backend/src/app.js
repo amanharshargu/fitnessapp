@@ -27,7 +27,7 @@ app.use(
       "Accept",
       "Authorization",
     ],
-  })
+  }),
 );
 app.use(helmet());
 app.use(express.json());

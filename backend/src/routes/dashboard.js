@@ -10,15 +10,23 @@ router.get("/eaten-dishes", authMiddleware, dashboardController.getEatenDishes);
 router.put(
   "/eaten-dishes/:id",
   authMiddleware,
-  dashboardController.editEatenDish
+  dashboardController.editEatenDish,
 );
 router.delete(
   "/eaten-dishes/:id",
   authMiddleware,
-  dashboardController.deleteEatenDish
+  dashboardController.deleteEatenDish,
 );
-router.get("/weekly-calorie-data", authMiddleware, dashboardController.getWeeklyCalorieData);
+router.get(
+  "/weekly-calorie-data",
+  authMiddleware,
+  dashboardController.getWeeklyCalorieData,
+);
 router.get("/water-intake", authMiddleware, dashboardController.getWaterIntake);
-router.post("/water-intake", authMiddleware, dashboardController.addWaterIntake);
+router.post(
+  "/water-intake",
+  authMiddleware,
+  dashboardController.addWaterIntake,
+);
 
 module.exports = router;

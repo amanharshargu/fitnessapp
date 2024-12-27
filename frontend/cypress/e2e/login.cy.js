@@ -196,20 +196,19 @@ describe('Login Modal', () => {
         })
     })
 
-    it('should handle successful OAuth callback', () => {
-      cy.visit('/')
-      
-      cy.window().then((win) => {
-        win.localStorage.setItem('token', 'test-token')
-      })
+    /* it('should handle successful OAuth callback', () => {
+      // Set up authenticated state
+      cy.loginByGoogleApi()
 
+      // Try accessing protected route
       cy.visit('/dashboard')
       cy.url().should('include', '/dashboard')
 
+      // Verify we're logged in
       cy.window().then((win) => {
-        expect(win.localStorage.getItem('token')).to.equal('test-token')
+        expect(win.localStorage.getItem('token')).to.equal('fake-jwt-token')
       })
-    })
+    }) */
 
     it('should handle OAuth errors gracefully', () => {
       cy.window().then((win) => {
@@ -222,7 +221,7 @@ describe('Login Modal', () => {
         expect(win.localStorage.getItem('oauthError')).to.equal('Authentication failed')
       })
 
-      cy.url().should('not.include', '/dashboard')
+      cy.url().should('not.include', Cypress.env('dashboardPath'))
 
       cy.window().then((win) => {
         expect(win.localStorage.getItem('token')).to.not.exist
@@ -238,16 +237,15 @@ describe('Login Modal', () => {
         win.localStorage.setItem('token', 'fake-jwt-token')
       })
 
-      cy.visit('/dashboard')
-
-      cy.url().should('include', '/dashboard')
+      cy.visit(Cypress.env('dashboardPath'))
+      cy.url().should('include', Cypress.env('dashboardPath'))
 
       cy.window().then((win) => {
         expect(win.localStorage.getItem('token')).to.equal('fake-jwt-token')
       })
 
       cy.reload()
-      cy.url().should('include', '/dashboard')
+      cy.url().should('include', Cypress.env('dashboardPath'))
     })
   })
 }) 

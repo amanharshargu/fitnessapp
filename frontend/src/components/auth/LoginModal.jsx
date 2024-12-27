@@ -269,6 +269,7 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
                 <button
                   className="btn btn-outline-light btn-lg px-5"
                   type="submit"
+                  data-testid="login-submit"
                 >
                   Login
                 </button>

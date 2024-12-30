@@ -196,19 +196,27 @@ describe('Login Modal', () => {
         })
     })
 
-    /* it('should handle successful OAuth callback', () => {
-      // Set up authenticated state
+    it('should handle successful OAuth callback', () => {
+      // Login using Google OAuth
       cy.loginByGoogleApi()
 
-      // Try accessing protected route
-      cy.visit('/dashboard')
+      // Verify we're logged in and redirected to dashboard
       cy.url().should('include', '/dashboard')
 
-      // Verify we're logged in
+      // Verify user data is stored
       cy.window().then((win) => {
-        expect(win.localStorage.getItem('token')).to.equal('fake-jwt-token')
+        const token = win.localStorage.getItem('token')
+        const user = JSON.parse(win.localStorage.getItem('user'))
+        
+        expect(token).to.exist
+        expect(user).to.exist
+        expect(user.email).to.equal(Cypress.env('googleEmail'))
+
+        // Verify dashboard header shows user name
+        cy.get('.wisheat-header__btn')
+          .should('be.visible')
       })
-    }) */
+    })
 
     it('should handle OAuth errors gracefully', () => {
       cy.window().then((win) => {

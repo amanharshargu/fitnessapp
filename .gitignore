@@ -152,3 +152,9 @@ thumb
 sketch
 
 # End of https://www.toptal.com/developers/gitignore/api/node,react
+
+# Cypress
+cypress.env.json
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/

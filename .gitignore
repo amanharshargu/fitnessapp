@@ -151,7 +151,47 @@ psd
 thumb
 sketch
 
-# End of https://www.toptal.com/developers/gitignore/api/node,react
+# EndEnumerating objects: 46, done.
+Counting objects: 100% (46/46), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (32/32), done.
+Writing objects: 100% (33/33), 25.07 KiB | 2.79 MiB/s, done.
+Total 33 (delta 15), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (15/15), completed with 12 local objects.
+remote: error: GH013: Repository rule violations found for refs/heads/feature/cypress-oauth-tests.
+remote: 
+remote: - GITHUB PUSH PROTECTION
+remote:   —————————————————————————————————————————
+remote:     Resolve the following violations before pushing again
+remote: 
+remote:     - Push cannot contain secrets
+remote: 
+remote:     
+remote:      (?) Learn how to resolve a blocked push
+remote:      https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection/working-with-push-protection-from-the-command-line#resolving-a-blocked-push
+remote:     
+remote:     
+remote:       —— Google OAuth Client ID ————————————————————————————
+remote:        locations:
+remote:          - commit: 8c458addef8958768338484c2cd71d6910fc22d6
+remote:            path: E2E/cypress.env.json:2
+remote:     
+remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.
+remote:        https://github.com/amanharshargu/fitnessapp/security/secret-scanning/unblock-secret/2rFas5Ss2LNg39i27yYOc7vKeWc
+remote:     
+remote:     
+remote:       —— Google OAuth Client Secret ————————————————————————
+remote:        locations:
+remote:          - commit: 8c458addef8958768338484c2cd71d6910fc22d6
+remote:            path: E2E/cypress.env.json:3
+remote:     
+remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.
+remote:        https://github.com/amanharshargu/fitnessapp/security/secret-scanning/unblock-secret/2rFarz7kpVKbXJRJoEfkPksP1YX
+remote:     
+remote: 
+remote: 
+To https://github.com/amanharshargu/fitnessapp
+ ! [remote rejected] feature/cypress-oauth-tests -> feature/cypress-oauth-tests (push declined due to repository rule violations)of https://www.toptal.com/developers/gitignore/api/node,react
 
 # Cypress
 cypress.env.json

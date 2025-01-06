@@ -65,27 +65,31 @@ function Header() {
               <button
                 className="wisheat-header__btn wisheat-header__btn--outline"
                 onClick={() => setShowDropdown(!showDropdown)}
+                data-test="user-menu-button"
               >
                 {user?.photo && (
                   <img
                     src={user?.photo}
                     className="wisheat-header__user-photo"
+                    alt="User"
                   />
                 )}
                 {displayName}
                 <FaCaretDown className={`wisheat-header__dropdown-icon ${showDropdown ? 'open' : ''}`} />
               </button>
               {showDropdown && (
-                <div className="wisheat-header__dropdown-content">
+                <div className="wisheat-header__dropdown-content" data-test="user-menu-dropdown">
                   <button
                     className="wisheat-header__dropdown-item"
                     onClick={handleProfileClick}
+                    data-test="profile-button"
                   >
                     My Profile
                   </button>
                   <button
                     className="wisheat-header__dropdown-item"
                     onClick={handleLogout}
+                    data-test="logout-button"
                   >
                     Logout
                   </button>
@@ -99,6 +103,7 @@ function Header() {
                 setShowAuthModal(true);
                 setIsSignup(false);
               }}
+              data-test="login-button"
             >
               Sign Up / Log In
             </button>

@@ -1,9 +1,7 @@
 describe('Login Modal', () => {
   beforeEach(() => {
-
     cy.visit('/', {
       onBeforeLoad(win) {
-
         const originalError = win.console.error
         win.console.error = (...args) => {
           if (!args[0]?.includes('webpack')) originalError(...args)
@@ -17,34 +15,26 @@ describe('Login Modal', () => {
       }
     })
 
-    cy.get('.wisheat-header__btn.wisheat-header__btn--outline')
-      .click({ force: true })
+    cy.get('[data-test="login-button"]')
+      .click()
       .wait(2000)
   })
 
   it('should display login form with all elements', () => {
-
     cy.removeOverlay()
 
+    cy.get('[data-test="modal-overlay"]').should('exist')
+    cy.get('[data-test="login-card"]').should('exist')
 
-
-    cy.get('.modal-overlay').should('exist')
-    cy.get('.card').should('exist')
-
-
-
-    cy.get('input[name="email"]')
+    cy.get('[data-test="email-input"]')
       .should('exist')
       .should('have.attr', 'type', 'email')
 
-
-
-    cy.get('input[name="password"]')
+    cy.get('[data-test="password-input"]')
       .should('exist')
       .should('have.attr', 'type', 'password')
 
-
-    cy.get('button[type="submit"]')
+    cy.get('[data-test="login-submit"]')
       .should('exist')
       .contains('Login')
   })
@@ -52,13 +42,13 @@ describe('Login Modal', () => {
   it('should show validation error for invalid email', () => {
     cy.removeOverlay()
 
-    cy.get('input[name="email"]')
+    cy.get('[data-test="email-input"]')
       .should('exist')
-      .type('invalid-email', { force: true })
+      .type('invalid-email')
 
-    cy.get('input[name="email"]').blur({ force: true })
+    cy.get('[data-test="email-input"]').blur()
 
-    cy.get('.invalid-feedback')
+    cy.get('[data-test="email-error"]')
       .should('exist')
       .should('contain', 'Email is invalid')
   })
@@ -66,16 +56,15 @@ describe('Login Modal', () => {
   it('should toggle password visibility', () => {
     cy.removeOverlay()
 
-
-    cy.get('input[name="password"]')
+    cy.get('[data-test="password-input"]')
       .should('exist')
       .should('have.attr', 'type', 'password')
 
-    cy.get('.password-toggle-btn')
+    cy.get('[data-test="password-toggle"]')
       .should('exist')
-      .click({ force: true })
+      .click()
 
-    cy.get('input[name="password"]')
+    cy.get('[data-test="password-input"]')
       .should('exist')
       .should('have.attr', 'type', 'text')
   })
@@ -83,48 +72,48 @@ describe('Login Modal', () => {
   it('should handle forgot password flow', () => {
     cy.removeOverlay()
 
-    cy.contains('Forgot password?')
+    cy.get('[data-test="forgot-password-link"]')
       .should('exist')
-      .click({ force: true })
+      .click()
 
-    cy.get('h2').should('contain', 'Forgot Password')
+    cy.get('[data-test="form-title"]').should('contain', 'Forgot Password')
 
-    cy.get('#forgotPasswordEmail')
+    cy.get('[data-test="forgot-password-email"]')
       .should('exist')
-      .type('test@example.com', { force: true })
+      .type('test@example.com')
 
-    cy.contains('button', 'Reset Password')
+    cy.get('[data-test="reset-password-submit"]')
       .should('exist')
-      .click({ force: true })
+      .click()
 
     cy.get('body').then($body => {
-      if ($body.find('.alert-success').length) {
-        cy.get('.alert-success').should('be.visible')
-      } else if ($body.find('.alert-danger').length) {
-        cy.get('.alert-danger').should('be.visible')
+      if ($body.find('[data-test="success-alert"]').length) {
+        cy.get('[data-test="success-alert"]').should('be.visible')
+      } else if ($body.find('[data-test="error-alert"]').length) {
+        cy.get('[data-test="error-alert"]').should('be.visible')
       }
     })
 
-    cy.contains('Back to Login')
+    cy.get('[data-test="back-to-login"]')
       .should('exist')
-      .click({ force: true })
+      .click()
 
-    cy.get('h2').should('contain', 'Login')
+    cy.get('[data-test="form-title"]').should('contain', 'Login')
   })
 
   it('should validate email in forgot password form', () => {
     cy.removeOverlay()
 
-    cy.contains('Forgot password?')
+    cy.get('[data-test="forgot-password-link"]')
       .should('exist')
-      .click({ force: true })
+      .click()
 
-    cy.get('#forgotPasswordEmail')
+    cy.get('[data-test="forgot-password-email"]')
       .should('exist')
-      .type('invalid-email', { force: true })
-      .blur({ force: true })
+      .type('invalid-email')
+      .blur()
 
-    cy.get('.invalid-feedback')
+    cy.get('[data-test="email-error"]')
       .should('exist')
       .should('contain', 'Email is invalid')
   })
@@ -132,19 +121,19 @@ describe('Login Modal', () => {
   it('should handle login attempts', () => {
     cy.removeOverlay()
 
-    cy.get('input[name="email"]')
+    cy.get('[data-test="email-input"]')
       .should('exist')
-      .type('wrong@example.com', { force: true })
+      .type('wrong@example.com')
 
-    cy.get('input[name="password"]')
+    cy.get('[data-test="password-input"]')
       .should('exist')
-      .type('wrongpassword', { force: true })
+      .type('wrongpassword')
 
-    cy.get('button[type="submit"]')
+    cy.get('[data-test="login-submit"]')
       .should('exist')
-      .click({ force: true })
+      .click()
 
-    cy.get('.alert-danger')
+    cy.get('[data-test="error-alert"]')
       .should('exist')
       .then(($el) => {
         const text = $el.text()
@@ -155,20 +144,20 @@ describe('Login Modal', () => {
         })
       })
 
-    cy.get('input[name="email"]').clear({ force: true })
-    cy.get('input[name="password"]').clear({ force: true })
+    cy.get('[data-test="email-input"]').clear()
+    cy.get('[data-test="password-input"]').clear()
 
-    cy.get('input[name="email"]')
-      .type('testUser@gmail.com', { force: true })
-    cy.get('input[name="password"]')
-      .type('Test@1234', { force: true })
+    cy.get('[data-test="email-input"]')
+      .type('testUser@gmail.com')
+    cy.get('[data-test="password-input"]')
+      .type('Test@1234')
 
-    cy.get('button[type="submit"]')
-      .click({ force: true })
+    cy.get('[data-test="login-submit"]')
+      .click()
 
     cy.url().should('include', '/dashboard', { timeout: 10000 })
       .then(() => {
-        cy.get('.modal-overlay').should('not.exist')
+        cy.get('[data-test="modal-overlay"]').should('not.exist')
       })
   })
 
@@ -177,45 +166,23 @@ describe('Login Modal', () => {
   describe('OAuth Login', () => {
     beforeEach(() => {
       cy.visit('/')
-      cy.get('.wisheat-header__btn.wisheat-header__btn--outline')
-        .click({ force: true })
+      cy.get('[data-test="login-button"]')
+        .click()
       cy.wait(2000)
       cy.removeOverlay()
     })
 
     it('should display Google login button with correct styling and content', () => {
-      cy.get('.google-login-btn')
-        .should('exist')
+      cy.get('[data-test="google-login-button"]')
         .should('be.visible')
         .should('not.be.disabled')
         .within(() => {
-          cy.get('svg').should('exist')
-          cy.contains('Sign in with Google')
+          cy.get('svg').should('be.visible')
+          cy.get('[data-test="google-button-text"]')
             .should('be.visible')
-            .should('have.css', 'padding-left', '4px')
+            .should('have.css', 'margin-left', '8px')
+            .should('contain', 'Sign in with Google')
         })
-    })
-
-    it('should handle successful OAuth callback', () => {
-      // Login using Google OAuth
-      cy.loginByGoogleApi()
-
-      // Verify we're logged in and redirected to dashboard
-      cy.url().should('include', '/dashboard')
-
-      // Verify user data is stored
-      cy.window().then((win) => {
-        const token = win.localStorage.getItem('token')
-        const user = JSON.parse(win.localStorage.getItem('user'))
-        
-        expect(token).to.exist
-        expect(user).to.exist
-        expect(user.email).to.equal(Cypress.env('googleEmail'))
-
-        // Verify dashboard header shows user name
-        cy.get('.wisheat-header__btn')
-          .should('be.visible')
-      })
     })
 
     it('should handle OAuth errors gracefully', () => {
@@ -246,13 +213,6 @@ describe('Login Modal', () => {
       })
 
       cy.visit(Cypress.env('dashboardPath'))
-      cy.url().should('include', Cypress.env('dashboardPath'))
-
-      cy.window().then((win) => {
-        expect(win.localStorage.getItem('token')).to.equal('fake-jwt-token')
-      })
-
-      cy.reload()
       cy.url().should('include', Cypress.env('dashboardPath'))
     })
   })

@@ -22,9 +22,9 @@ function OAuthCallback() {
   }, [loginWithOAuth, navigate]);
 
   return (
-    <div className="oauth-callback-container">
-      <CardioSpinner size="60" color="#007bff" />
-      <p>Processing your login...</p>
+    <div className="oauth-callback-container" data-test="oauth-callback-container">
+      <CardioSpinner size="60" color="#007bff" data-test="oauth-loading-spinner" />
+      <p data-test="oauth-loading-text">Processing your login...</p>
     </div>
   );
 }

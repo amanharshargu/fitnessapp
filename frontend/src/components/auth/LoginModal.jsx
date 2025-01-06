@@ -172,13 +172,15 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
     <div
       className="modal-overlay d-flex justify-content-center align-items-center h-100"
       onClick={onClose}
+      data-test="modal-overlay"
     >
       <div
         className="card bg-dark text-white"
         onClick={(e) => e.stopPropagation()}
+        data-test="login-card"
       >
         <div className="card-body d-flex flex-column align-items-center mx-auto w-100">
-          <h2 className="fw-bold mb-2 text-uppercase">
+          <h2 className="fw-bold mb-2 text-uppercase" data-test="form-title">
             {showForgotPassword ? "Forgot Password" : "Login"}
           </h2>
           <p className="text-white-50 mb-5">
@@ -187,9 +189,9 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
               : "Please enter your login and password!"}
           </p>
 
-          {!showForgotPassword && error && <div className="alert alert-danger">{error}</div>}
-          {showForgotPassword && forgotPasswordError && <div className="alert alert-danger">{forgotPasswordError}</div>}
-          {forgotPasswordMessage && <div className="alert alert-success">{forgotPasswordMessage}</div>}
+          {!showForgotPassword && error && <div className="alert alert-danger" data-test="error-alert">{error}</div>}
+          {showForgotPassword && forgotPasswordError && <div className="alert alert-danger" data-test="error-alert">{forgotPasswordError}</div>}
+          {forgotPasswordMessage && <div className="alert alert-success" data-test="success-alert">{forgotPasswordMessage}</div>}
 
           {!showForgotPassword ? (
             <form onSubmit={handleLogin} className="w-100">
@@ -210,12 +212,13 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
                   onFocus={() => handleInputFocus("email")}
                   onBlur={handleInputBlur}
                   required
+                  data-test="email-input"
                 />
                 <label className="form-label" htmlFor="loginEmail">
                   Email address
                 </label>
                 {errors.email && (
-                  <div className="invalid-feedback">{errors.email}</div>
+                  <div className="invalid-feedback" data-test="email-error">{errors.email}</div>
                 )}
               </div>
 
@@ -239,11 +242,13 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
                     onFocus={() => handleInputFocus("password")}
                     onBlur={handleInputBlur}
                     required
+                    data-test="password-input"
                   />
                   <button
                     type="button"
                     className="password-toggle-btn"
                     onClick={togglePasswordVisibility}
+                    data-test="password-toggle"
                   >
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
@@ -252,97 +257,92 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
                   Password
                 </label>
                 {errors.password && (
-                  <div className="invalid-feedback d-block">{errors.password}</div>
+                  <div className="invalid-feedback">{errors.password}</div>
                 )}
               </div>
-              <p className="" style={{ marginTop: '10px', marginBottom: '20px' }}>
+
+              <p className="small mb-3 pb-lg-2">
                 <a
                   className="text-white-50"
-                  href="#"
+                  href="#!"
                   onClick={handleForgotPasswordClick}
+                  data-test="forgot-password-link"
                 >
                   Forgot password?
                 </a>
               </p>
 
-              <div className="text-center">
+              <button
+                className="btn btn-outline-light btn-lg px-5"
+                type="submit"
+                data-test="login-submit"
+              >
+                Login
+              </button>
+
+              <div className="d-flex justify-content-center text-center mt-4 pt-1">
                 <button
-                  className="btn btn-outline-light btn-lg px-5"
-                  type="submit"
-                  data-testid="login-submit"
+                  onClick={handleGoogleLogin}
+                  className="google-login-btn"
+                  data-test="google-login-button"
+                  type="button"
                 >
-                  Login
+                  <FcGoogle />
+                  <span data-test="google-button-text">Sign in with Google</span>
                 </button>
               </div>
             </form>
           ) : (
             <form onSubmit={handleForgotPassword} className="w-100">
-              <div className={`form-outline form-white mb-4 ${focusedInput === "forgotPasswordEmail" || forgotPasswordEmail ? "focused" : ""} ${forgotPasswordEmailError ? "is-invalid" : ""}`}>
+              <div
+                className={`form-outline form-white mb-4 ${
+                  focusedInput === "forgotPasswordEmail" || forgotPasswordEmail
+                    ? "focused"
+                    : ""
+                }`}
+              >
                 <input
                   type="email"
                   id="forgotPasswordEmail"
-                  className={`form-control form-control-lg ${forgotPasswordEmailError ? "is-invalid" : ""}`}
+                  className={`form-control form-control-lg ${
+                    forgotPasswordEmailError ? "is-invalid" : ""
+                  }`}
                   value={forgotPasswordEmail}
                   onChange={handleForgotPasswordEmailChange}
                   onFocus={handleForgotPasswordEmailFocus}
                   onBlur={handleForgotPasswordEmailBlur}
                   required
+                  data-test="forgot-password-email"
                 />
                 <label className="form-label" htmlFor="forgotPasswordEmail">
                   Email address
                 </label>
                 {forgotPasswordEmailError && (
-                  <div className="invalid-feedback">{forgotPasswordEmailError}</div>
+                  <div className="invalid-feedback" data-test="email-error">
+                    {forgotPasswordEmailError}
+                  </div>
                 )}
               </div>
-              <div className="text-center">
-                <button 
-                  className="btn btn-outline-light btn-lg px-5" 
-                  type="submit"
-                  disabled={!!forgotPasswordEmailError}
-                >
-                  Reset Password
-                </button>
-              </div>
-              <p className="mt-3 text-center">
+
+              <button
+                className="btn btn-outline-light btn-lg px-5"
+                type="submit"
+                data-test="reset-password-submit"
+              >
+                Reset Password
+              </button>
+
+              <p className="small mb-3 pb-lg-2 mt-3">
                 <a
                   className="text-white-50"
-                  href="#"
+                  href="#!"
                   onClick={handleBackToLogin}
+                  data-test="back-to-login"
                 >
                   Back to Login
                 </a>
               </p>
             </form>
-          )}
-
-          {!showForgotPassword && (
-            <>
-              <div className="mt-4">
-                <button
-                  className="google-login-btn"
-                  onClick={handleGoogleLogin}
-                  aria-label="Sign in with Google"
-                >
-                  <FcGoogle size={20} />
-                  <span style={{ paddingLeft: '4px' }}>Sign in with Google</span>
-                </button>
-              </div>
-
-              <div className="mt-4 text-center">
-                <p className="mb-0">Don't have an account?</p>
-                <a
-                  href="#"
-                  className="text-white-50 fw-bold"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onSwitchToSignup();
-                  }}
-                >
-                  Sign Up
-                </a>
-              </div>
-            </>
           )}
         </div>
       </div>

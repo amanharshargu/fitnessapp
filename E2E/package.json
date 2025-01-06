@@ -1,0 +1,15 @@
+{
+  "name": "wisheat-e2e",
+  "version": "1.0.0",
+  "description": "E2E tests for WishEat application",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:deploy": "cd ../backend && npm start & cd ../frontend && PORT=3001 npm start & cypress open",
+    "cypress:deployAndRun": "cd ../backend && npm start & cd ../frontend && PORT=3001 npm start & cypress run",
+    "cypress:stop": "pkill -f 'node' || true"
+  },
+  "devDependencies": {
+    "cypress": "^13.17.0"
+  }
+} 

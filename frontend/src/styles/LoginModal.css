@@ -205,12 +205,19 @@ body.modal-open {
   min-width: 220px;
   margin: 0 auto;
   backdrop-filter: blur(5px);
+  outline: none;
 }
 
 .google-login-btn svg {
-  margin-right: 12px;
   font-size: 20px;
   transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.google-login-btn [data-test="google-button-text"] {
+  margin-left: 8px;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .google-login-btn:hover {
@@ -228,6 +235,11 @@ body.modal-open {
 .google-login-btn:active {
   transform: translateY(0);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.google-login-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
 .mt-4::before,

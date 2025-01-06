@@ -153,7 +153,7 @@ sketch
 
 
 # Cypress
-E2E/cypress.env.json/
+E2E/cypress.env.json
 cypress/videos/
 cypress/screenshots/
 cypress/downloads/

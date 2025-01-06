@@ -107,15 +107,15 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
   if (!show) return null;
 
   return (
-    <div className="modal-overlay d-flex justify-content-center align-items-center h-100" onClick={onClose}>
-      <div className="card bg-dark text-white" style={{borderRadius: '1rem', maxWidth: '400px'}} onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay d-flex justify-content-center align-items-center h-100" onClick={onClose} data-test="modal-overlay">
+      <div className="card bg-dark text-white" style={{borderRadius: '1rem', maxWidth: '400px'}} onClick={(e) => e.stopPropagation()} data-test="signup-card">
         <div className="card-body p-5 d-flex flex-column align-items-center mx-auto w-100">
-          <h2 className="fw-bold mb-2 text-uppercase">Sign Up</h2>
+          <h2 className="fw-bold mb-2 text-uppercase" data-test="form-title">Sign Up</h2>
           <p className="text-white-50 mb-5">Please enter your details to create an account!</p>
 
-          {error && <div className="alert alert-danger">{error}</div>}
+          {error && <div className="alert alert-danger" data-test="error-alert">{error}</div>}
 
-          <form onSubmit={handleSubmit} className="w-100">
+          <form onSubmit={handleSubmit} className="w-100" data-test="signup-form">
             <div className={`form-outline form-white mb-4 ${focusedInput === 'username' || signupData.username ? 'focused' : ''} ${errors.username ? 'is-invalid' : ''}`}>
               <input
                 type="text"
@@ -127,12 +127,13 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
                 onFocus={() => handleInputFocus('username')}
                 onBlur={handleInputBlur}
                 required
+                data-test="username-input"
               />
               <label className="form-label" htmlFor="signupUsername">Username</label>
               {errors.username && (
                 <>
                   <div className="error-icon">!</div>
-                  <div className="invalid-feedback">{errors.username}</div>
+                  <div className="invalid-feedback" data-test="username-error">{errors.username}</div>
                 </>
               )}
             </div>
@@ -148,46 +149,43 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
                 onFocus={() => handleInputFocus('email')}
                 onBlur={handleInputBlur}
                 required
+                data-test="email-input"
               />
               <label className="form-label" htmlFor="signupEmail">Email address</label>
               {errors.email && (
                 <>
                   <div className="error-icon">!</div>
-                  <div className="invalid-feedback">{errors.email}</div>
+                  <div className="invalid-feedback" data-test="email-error">{errors.email}</div>
                 </>
               )}
             </div>
 
-            <div
-              className={`form-outline form-white mb-4 ${
-                focusedInput === 'password' || signupData.password ? 'focused' : ''
-              }`}
-            >
+            <div className={`form-outline form-white mb-4 ${focusedInput === 'password' || signupData.password ? 'focused' : ''}`}>
               <div className={`password-input-wrapper ${errors.password ? "is-invalid" : ""}`}>
                 <input
                   type={showPassword ? "text" : "password"}
                   id="signupPassword"
-                  className={`form-control form-control-lg ${
-                    errors.password ? 'is-invalid' : ''
-                  }`}
+                  className={`form-control form-control-lg ${errors.password ? 'is-invalid' : ''}`}
                   name="password"
                   value={signupData.password}
                   onChange={handleSignupInputChange}
                   onFocus={() => handleInputFocus('password')}
                   onBlur={handleInputBlur}
                   required
+                  data-test="password-input"
                 />
                 <button
                   type="button"
                   className="password-toggle-btn"
                   onClick={togglePasswordVisibility}
+                  data-test="toggle-password"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
               <label className="form-label" htmlFor="signupPassword">Password</label>
               {errors.password && (
-                <div className="invalid-feedback d-block">{errors.password}</div>
+                <div className="invalid-feedback d-block" data-test="password-error">{errors.password}</div>
               )}
             </div>
 
@@ -196,6 +194,7 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
                 className="btn btn-outline-light btn-lg px-5" 
                 type="submit"
                 disabled={Object.values(errors).some(error => error !== "")}
+                data-test="signup-submit"
               >
                 Sign Up
               </button>
@@ -207,7 +206,7 @@ function SignupModal({ show, onClose, onSignupSuccess, onSwitchToLogin }) {
             <a href="#" className="text-white-50 fw-bold" onClick={(e) => {
               e.preventDefault();
               onSwitchToLogin();
-            }}>Login</a>
+            }} data-test="switch-to-login">Login</a>
           </div>
         </div>
       </div>

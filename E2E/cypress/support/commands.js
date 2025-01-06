@@ -1,8 +1,3 @@
-// Webpack overlay removal command
-Cypress.Commands.add("removeOverlay", () => {
-  Cypress.$("#webpack-dev-server-client-overlay").remove();
-});
-
 // Custom command for login
 Cypress.Commands.add('login', (email, password) => {
   cy.get('#loginEmail').type(email)
@@ -15,40 +10,72 @@ Cypress.Commands.add('modalIsVisible', () => {
   cy.get('.modal-overlay').should('be.visible')
 })
 
-// Custom command for checking if modal is hidden
-Cypress.Commands.add('modalIsHidden', () => {
-  cy.get('.modal-overlay').should('not.exist')
-})
+// Custom command for Google OAuth login
+Cypress.Commands.add('loginByGoogleApi', () => {
+  cy.log('Logging in with Google')
 
-// Custom command for checking error messages
-Cypress.Commands.add('checkErrorMessage', (message) => {
-  cy.get('[data-testid="error-message"]').should('contain', message)
-})
+  // Verify required environment variables
+  const clientId = Cypress.env('googleClientId')
+  const clientSecret = Cypress.env('googleClientSecret')
+  const refreshToken = Cypress.env('googleRefreshToken')
 
-// Custom command for checking success messages
-Cypress.Commands.add('checkSuccessMessage', (message) => {
-  cy.get('[data-testid="success-message"]').should('contain', message)
-})
+  if (!clientId || !clientSecret || !refreshToken) {
+    throw new Error(
+      'Missing required Google OAuth credentials. Please set googleClientId, googleClientSecret, and googleRefreshToken in cypress.env.json'
+    )
+  }
 
-// Custom command for checking if user is logged in
-Cypress.Commands.add('isLoggedIn', () => {
-  cy.window().its('localStorage').invoke('getItem', 'token').should('exist')
-})
+  const options = {
+    method: 'POST',
+    url: 'https://www.googleapis.com/oauth2/v4/token',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    form: true,
+    body: {
+      grant_type: 'refresh_token',
+      client_id: clientId,
+      client_secret: clientSecret,
+      refresh_token: refreshToken
+    },
+    failOnStatusCode: false
+  }
 
-// Custom command for checking if user is logged out
-Cypress.Commands.add('isLoggedOut', () => {
-  cy.window().its('localStorage').invoke('getItem', 'token').should('not.exist')
-})
+  // First, try to get the access token
+  cy.request(options).then((tokenResponse) => {
+    if (tokenResponse.status !== 200) {
+      throw new Error(`Failed to get access token: ${JSON.stringify(tokenResponse.body)}`)
+    }
 
-// Custom command for logging out
-Cypress.Commands.add('logout', () => {
-  cy.window().then((win) => {
-    win.localStorage.clear()
+    const { access_token, id_token } = tokenResponse.body
+
+    // Then, get the user info
+    cy.request({
+      method: 'GET',
+      url: 'https://www.googleapis.com/oauth2/v3/userinfo',
+      headers: { Authorization: `Bearer ${access_token}` },
+      failOnStatusCode: false
+    }).then((userResponse) => {
+      if (userResponse.status !== 200) {
+        throw new Error(`Failed to get user info: ${JSON.stringify(userResponse.body)}`)
+      }
+
+      // Set up authentication state
+      cy.window().then((win) => {
+        win.localStorage.setItem('token', id_token)
+        win.localStorage.setItem('user', JSON.stringify({
+          email: userResponse.body.email,
+          given_name: userResponse.body.given_name,
+          family_name: userResponse.body.family_name,
+          picture: userResponse.body.picture
+        }))
+      })
+
+      // Visit dashboard directly
+      cy.visit('/dashboard')
+
+      // Verify we're on dashboard
+      cy.url().should('include', '/dashboard')
+    })
   })
-  cy.visit('/')
-})
-
-// Custom command for checking navigation
-Cypress.Commands.add('checkNavigation', (path) => {
-  cy.url().should('include', path)
 }) 

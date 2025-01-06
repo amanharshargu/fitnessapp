@@ -291,6 +291,21 @@ function LoginModal({ show, onClose, onLoginSuccess, onSwitchToSignup }) {
                   <span data-test="google-button-text">Sign in with Google</span>
                 </button>
               </div>
+
+              <div className="mt-4 text-center">
+                <p className="mb-0">Don't have an account?</p>
+                <a 
+                  href="#" 
+                  className="text-white-50 fw-bold" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onSwitchToSignup();
+                  }}
+                  data-test="switch-to-signup"
+                >
+                  Sign Up
+                </a>
+              </div>
             </form>
           ) : (
             <form onSubmit={handleForgotPassword} className="w-100">

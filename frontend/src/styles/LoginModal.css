@@ -95,6 +95,9 @@ body.modal-open {
   font-weight: 600;
   box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
   transition: transform 0.2s, box-shadow 0.2s;
+  display: block !important;
+  margin: 0 auto !important;
+  width: fit-content !important;
 }
 
 .btn-outline-light:hover {

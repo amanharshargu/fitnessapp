@@ -1,15 +1,10 @@
-import "./commands";
-
-// Prevent uncaught exceptions from failing tests
-Cypress.on("uncaught:exception", (err, runnable) => {
-  return false;
-});
+import './commands';
 
 // Disable webpack overlay before tests
-Cypress.on("window:before:load", (win) => {
+Cypress.on('window:before:load', (win) => {
   const originalConsoleError = win.console.error;
   win.console.error = (...args) => {
-    if (args[0]?.includes("webpack-dev-server")) {
+    if (args[0]?.includes('webpack-dev-server')) {
       return;
     }
     originalConsoleError.apply(win.console, args);
@@ -19,6 +14,6 @@ Cypress.on("window:before:load", (win) => {
   }
 });
 
-Cypress.Commands.add("removeOverlay", () => {
-  Cypress.$("#webpack-dev-server-client-overlay").remove();
+Cypress.Commands.add('removeOverlay', () => {
+  Cypress.$('#webpack-dev-server-client-overlay').remove();
 });

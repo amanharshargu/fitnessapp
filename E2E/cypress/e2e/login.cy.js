@@ -1,6 +1,5 @@
 describe('Login Modal', () => {
   beforeEach(() => {
-
     cy.visit('/');
     cy.get('[data-test="login-button"]').click();
     cy.get('[data-test="modal-overlay"]', { timeout: 10000 }).should('be.visible');
@@ -17,7 +16,7 @@ describe('Login Modal', () => {
     cy.get('[data-test="password-input"]').should('have.attr', 'type', 'password');
 
     cy.get('[data-test="login-submit"]').should('exist');
-    cy.get('[data-test="login-submit"]').contains('Login'); //1
+    cy.get('[data-test="login-submit"]').should('have.text', 'Login');
   });
 
   it('should show validation error for invalid email', () => {
@@ -26,7 +25,7 @@ describe('Login Modal', () => {
     cy.get('[data-test="email-input"]').blur();
 
     cy.get('[data-test="email-error"]').should('exist');
-    cy.get('[data-test="email-error"]').should('contain', 'Email is invalid'); //2
+    cy.get('[data-test="email-error"]').should('have.text', 'Email is invalid');
   });
 
   it('should toggle password visibility', () => {
@@ -44,7 +43,7 @@ describe('Login Modal', () => {
     cy.get('[data-test="forgot-password-link"]').should('exist');
     cy.get('[data-test="forgot-password-link"]').click();
 
-    cy.get('[data-test="form-title"]').should('contain', 'Forgot Password');
+    cy.get('[data-test="form-title"]').should('have.text', 'Forgot Password');
 
     cy.get('[data-test="forgot-password-email"]').should('exist');
     cy.get('[data-test="forgot-password-email"]').type('test@example.com');
@@ -63,7 +62,7 @@ describe('Login Modal', () => {
     cy.get('[data-test="back-to-login"]').should('exist');
     cy.get('[data-test="back-to-login"]').click();
 
-    cy.get('[data-test="form-title"]').should('contain', 'Login');
+    cy.get('[data-test="form-title"]').should('have.text', 'Login');
   });
 
   it('should validate email in forgot password form', () => {
@@ -75,7 +74,7 @@ describe('Login Modal', () => {
     cy.get('[data-test="forgot-password-email"]').blur();
 
     cy.get('[data-test="email-error"]').should('exist');
-    cy.get('[data-test="email-error"]').should('contain', 'Email is invalid');
+    cy.get('[data-test="email-error"]').should('have.text', 'Email is invalid');
   });
 
   it('should handle login attempts', () => {
@@ -92,11 +91,12 @@ describe('Login Modal', () => {
     cy.get('[data-test="error-alert"]').should('exist');
     cy.get('[data-test="error-alert"]').then(($el) => {
       const text = $el.text();
-      expect(text).to.satisfy((msg) => {
-        return msg.includes('User not found') ||
-          msg.includes('Login failed') ||
-          msg.includes('Invalid credentials');
-      });
+      const validMessages = [
+        'User not found',
+        'Login failed',
+        'Invalid credentials'
+      ];
+      expect(validMessages).to.include(text);
     });
 
     cy.get('[data-test="email-input"]').clear();
@@ -109,7 +109,7 @@ describe('Login Modal', () => {
 
     cy.get('[data-test="login-submit"]').click();
 
-    cy.wait('@loginRequest').then((interception) => {//then
+    cy.wait('@loginRequest').then((interception) => {
       if (interception.response?.statusCode === 200) {
         cy.url().should('include', '/dashboard', { timeout: 10000 });
         cy.get('[data-test="modal-overlay"]').should('not.exist');
@@ -119,8 +119,6 @@ describe('Login Modal', () => {
       }
     });
   });
-
-  ///////////////////OAuth//////////////////
 
   describe('OAuth Login', () => {
     beforeEach(() => {
@@ -136,7 +134,7 @@ describe('Login Modal', () => {
         cy.get('svg').should('be.visible');
         cy.get('[data-test="google-button-text"]').should('be.visible');
         cy.get('[data-test="google-button-text"]').should('have.css', 'margin-left', '8px');
-        cy.get('[data-test="google-button-text"]').should('contain', 'Sign in with Google');//3
+        cy.get('[data-test="google-button-text"]').should('have.text', 'Sign in with Google');
       });
     });
 
@@ -146,7 +144,7 @@ describe('Login Modal', () => {
       cy.get('.google-login-btn').should('not.be.disabled');
       cy.get('.google-login-btn').within(() => {
         cy.get('svg').should('exist');
-        cy.contains('Sign in with Google').should('be.visible');
+        cy.get('span').should('have.text', 'Sign in with Google');
       });
     });
 

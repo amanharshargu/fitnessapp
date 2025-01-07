@@ -1,11 +1,10 @@
 describe('Signup Modal', () => {
   beforeEach(() => {
-
     cy.visit('/');
     cy.get('[data-test="login-button"]').click();
     cy.get('[data-test="modal-overlay"]', { timeout: 10000 }).should('be.visible');
     cy.get('[data-test="switch-to-signup"]').click();
-    cy.get('[data-test="form-title"]').should('contain', 'Sign Up');
+    cy.get('[data-test="form-title"]').should('have.text', 'Sign Up');
   });
 
   it('should display signup form correctly', () => {
@@ -19,12 +18,12 @@ describe('Signup Modal', () => {
     cy.get('[data-test="username-input"]').focus();
     cy.get('[data-test="username-input"]').blur();
     cy.get('[data-test="username-error"]').should('be.visible');
-    cy.get('[data-test="username-error"]').should('contain', 'Username is required');
+    cy.get('[data-test="username-error"]').should('have.text', 'Username is required');
 
     cy.get('[data-test="username-input"]').type('ab');
     cy.get('[data-test="username-input"]').blur();
     cy.get('[data-test="username-error"]').should('be.visible');
-    cy.get('[data-test="username-error"]').should('contain', 'Username must be at least 3 characters long');
+    cy.get('[data-test="username-error"]').should('have.text', 'Username must be at least 3 characters long');
 
     cy.get('[data-test="username-input"]').clear();
     cy.get('[data-test="username-input"]').type('validuser');
@@ -36,12 +35,12 @@ describe('Signup Modal', () => {
     cy.get('[data-test="email-input"]').focus();
     cy.get('[data-test="email-input"]').blur();
     cy.get('[data-test="email-error"]').should('be.visible');
-    cy.get('[data-test="email-error"]').should('contain', 'Email is required');
+    cy.get('[data-test="email-error"]').should('have.text', 'Email is required');
 
     cy.get('[data-test="email-input"]').type('invalid-email');
     cy.get('[data-test="email-input"]').blur();
     cy.get('[data-test="email-error"]').should('be.visible');
-    cy.get('[data-test="email-error"]').should('contain', 'Email is invalid');
+    cy.get('[data-test="email-error"]').should('have.text', 'Email is invalid');
 
     cy.get('[data-test="email-input"]').clear();
     cy.get('[data-test="email-input"]').type('valid@example.com');
@@ -53,18 +52,18 @@ describe('Signup Modal', () => {
     cy.get('[data-test="password-input"]').focus();
     cy.get('[data-test="password-input"]').blur();
     cy.get('[data-test="password-error"]').should('be.visible');
-    cy.get('[data-test="password-error"]').should('contain', 'Password is required');
+    cy.get('[data-test="password-error"]').should('have.text', 'Password is required');
 
     cy.get('[data-test="password-input"]').type('weak');
     cy.get('[data-test="password-input"]').blur();
     cy.get('[data-test="password-error"]').should('be.visible');
-    cy.get('[data-test="password-error"]').should('contain', 'Password must be at least 6 characters long');
+    cy.get('[data-test="password-error"]').should('have.text', 'Password must be at least 6 characters long');
 
     cy.get('[data-test="password-input"]').clear();
     cy.get('[data-test="password-input"]').type('password123');
     cy.get('[data-test="password-input"]').blur();
     cy.get('[data-test="password-error"]').should('be.visible');
-    cy.get('[data-test="password-error"]').should('contain', 'Password must contain at least one uppercase letter, one lowercase letter, and one number');
+    cy.get('[data-test="password-error"]').should('have.text', 'Password must contain at least one uppercase letter, one lowercase letter, and one number');
 
     cy.get('[data-test="password-input"]').clear();
     cy.get('[data-test="password-input"]').type('ValidPass@123');
@@ -108,21 +107,11 @@ describe('Signup Modal', () => {
     cy.get('[data-test="password-input"]').type(Cypress.env('testPassword'));
     cy.get('[data-test="signup-submit"]').click();
 
-    // Wait for the signup request to complete
     cy.wait('@signupRequest').then((interception) => {
-      // Verify we got the expected response
       expect(interception.response.statusCode).to.equal(200);
-      
-      // Check if token is present in response
       expect(interception.response.body).to.have.property('token');
-      
-      // Verify we're redirected to profile page
       cy.url().should('include', '/profile');
-      
-      // Wait for the user details request
       cy.wait('@userDetailsRequest');
-      
-      // Verify we stay on the profile page
       cy.url().should('include', '/profile');
     });
   });
@@ -140,11 +129,11 @@ describe('Signup Modal', () => {
 
     cy.wait('@signupRequest');
     cy.get('[data-test="error-alert"]').should('be.visible');
-    cy.get('[data-test="error-alert"]').should('contain', 'User already exists');
+    cy.get('[data-test="error-alert"]').should('have.text', 'User already exists');
   });
 
   it('should switch back to login', () => {
     cy.get('[data-test="switch-to-login"]').click();
-    cy.get('[data-test="form-title"]').should('contain', 'Login');
+    cy.get('[data-test="form-title"]').should('have.text', 'Login');
   });
 });

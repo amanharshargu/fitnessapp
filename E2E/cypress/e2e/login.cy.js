@@ -1,14 +1,8 @@
 describe('Login Modal', () => {
   beforeEach(() => {
-    // Configure how to handle uncaught exceptions
-    cy.on('uncaught:exception', (err) => {
-      // Return false to prevent the error from failing the test
-      return false;
-    });
 
     cy.visit('/');
     cy.get('[data-test="login-button"]').click();
-    // Wait for modal to be visible and interactive
     cy.get('[data-test="modal-overlay"]', { timeout: 10000 }).should('be.visible');
   });
 
@@ -23,7 +17,7 @@ describe('Login Modal', () => {
     cy.get('[data-test="password-input"]').should('have.attr', 'type', 'password');
 
     cy.get('[data-test="login-submit"]').should('exist');
-    cy.get('[data-test="login-submit"]').contains('Login');
+    cy.get('[data-test="login-submit"]').contains('Login'); //1
   });
 
   it('should show validation error for invalid email', () => {
@@ -32,7 +26,7 @@ describe('Login Modal', () => {
     cy.get('[data-test="email-input"]').blur();
 
     cy.get('[data-test="email-error"]').should('exist');
-    cy.get('[data-test="email-error"]').should('contain', 'Email is invalid');
+    cy.get('[data-test="email-error"]').should('contain', 'Email is invalid'); //2
   });
 
   it('should toggle password visibility', () => {
@@ -105,11 +99,9 @@ describe('Login Modal', () => {
       });
     });
 
-    // Now try with valid credentials
     cy.get('[data-test="email-input"]').clear();
     cy.get('[data-test="password-input"]').clear();
 
-    // Set up the intercept before the login action
     cy.intercept('POST', '/api/auth/login').as('loginRequest');
 
     cy.get('[data-test="email-input"]').type(Cypress.env('testUserEmail'));
@@ -117,19 +109,18 @@ describe('Login Modal', () => {
 
     cy.get('[data-test="login-submit"]').click();
 
-    // Wait for the login request to complete
-    cy.wait('@loginRequest').then((interception) => {
+    cy.wait('@loginRequest').then((interception) => {//then
       if (interception.response?.statusCode === 200) {
-        // Check if we're redirected to dashboard
         cy.url().should('include', '/dashboard', { timeout: 10000 });
         cy.get('[data-test="modal-overlay"]').should('not.exist');
       } else {
-        // If login fails, log the response for debugging
         cy.log('Login failed:', interception.response?.body);
         cy.log('Status code:', interception.response?.statusCode);
       }
     });
   });
+
+  ///////////////////OAuth//////////////////
 
   describe('OAuth Login', () => {
     beforeEach(() => {
@@ -145,7 +136,7 @@ describe('Login Modal', () => {
         cy.get('svg').should('be.visible');
         cy.get('[data-test="google-button-text"]').should('be.visible');
         cy.get('[data-test="google-button-text"]').should('have.css', 'margin-left', '8px');
-        cy.get('[data-test="google-button-text"]').should('contain', 'Sign in with Google');
+        cy.get('[data-test="google-button-text"]').should('contain', 'Sign in with Google');//3
       });
     });
 
